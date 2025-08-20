@@ -1,79 +1,143 @@
 #!/bin/bash
 
-# ==============================================================================
-# Fedora KDE Plasma 完美中文环境自动化配置脚本 (最终修正版)
-#
-# 描述: 本脚本为 Fedora KDE Plasma 设计，旨在自动化完成以下任务：
-#       1. 设置系统 locale 为简体中文 (zh_CN.UTF-8)
-#       2. 安装 Fcitx5 输入法框架、中文引擎及优化字体 (使用最终确认的软件包名)
-#       3. 配置全局输入法环境变量
-#       4. 为 Flatpak 应用添加输入法支持
-#
-# 使用方法: sudo ./setup_fedora_kde_chinese.sh
-#
-# 作者: Your AI Assistant
-# 日期: 2025-08-09
-# 版本: 1.2 - 最终修正字体软件包名称为 sarasa-fonts
-# ==============================================================================
+# =================================================================================================
+# 脚本名称：   setup_fedora_kde_chinese.sh
+# 描述：       Fedora KDE Plasma 中文环境自动化配置脚本
+#              完成以下配置任务：
+#              1. 设置系统 locale 为简体中文 (zh_CN.UTF-8)
+#              2. 安装 Fcitx5 输入法框架、中文引擎及优化字体
+#              3. 配置全局输入法环境变量
+#              4. 为 Flatpak 应用添加输入法支持
+# 作者：       XianYin with AI toolkit
+# 日期：       2025-08-19
+# =================================================================================================
 
-# 检查脚本是否以 root 权限运行
+set -e  # 遇到错误立即退出
+
+# --- 颜色常量定义 ---
+readonly COLOR_INFO="\033[34m"      # 蓝色
+readonly COLOR_SUCCESS="\033[32m"    # 绿色
+readonly COLOR_ERROR="\033[31m"      # 红色
+readonly COLOR_WARN="\033[33m"       # 黄色
+readonly COLOR_RESET="\033[0m"       # 重置颜色
+
+# --- 日志工具函数 ---
+log_info() {
+    echo -e "${COLOR_INFO}[信息]${COLOR_RESET} $1"
+}
+
+log_success() {
+    echo -e "${COLOR_SUCCESS}[成功]${COLOR_RESET} $1"
+}
+
+log_error() {
+    echo -e "${COLOR_ERROR}[错误]${COLOR_RESET} $1"
+}
+
+log_warn() {
+    echo -e "${COLOR_WARN}[警告]${COLOR_RESET} $1"
+}
+
+# --- 常量定义 ---
+readonly LOCALE_SETTING="zh_CN.UTF-8"
+readonly REQUIRED_PACKAGES=(
+    "fcitx5"
+    "fcitx5-chinese-addons"
+    "fcitx5-configtool"
+    "fcitx5-qt"
+    "fcitx5-gtk"
+    "sarasa-fonts"
+    "google-noto-cjk-fonts"
+)
+
+# --- 检查root权限 ---
 if [[ $(id -u) -ne 0 ]]; then
-   echo "错误：本脚本需要以 root 权限运行。"
-   echo "请使用 sudo 运行: sudo $0"
-   exit 1
-fi
-
-echo "--- Fedora KDE Plasma 完美中文环境配置脚本启动 (最终修正版) ---"
-echo ""
-
-# --- 步骤 1: 设置系统区域设置为简体中文 ---
-echo "--> 步骤 1/5: 正在设置系统区域为 zh_CN.UTF-8 ..."
-localectl set-locale LANG=zh_CN.UTF-8
-if [ $? -eq 0 ]; then
-    echo "    [成功] 系统区域已设置为 zh_CN.UTF-8。"
-else
-    echo "    [失败] 设置系统区域失败！"
+    log_error "本脚本需要以 root 权限运行"
+    log_error "请使用 sudo 运行: sudo $0"
     exit 1
 fi
-echo ""
 
+# --- 主程序函数 ---
+main() {
+    log_info "==================================================="
+    log_info "    Fedora KDE Plasma 中文环境配置工具"
+    log_info "==================================================="
+    echo
 
-# --- 步骤 2: 更新软件源并安装必要的软件包 ---
-echo "--> 步骤 2/5: 正在安装 Fcitx5 输入法、中文引擎和推荐字体 ..."
-echo "    这将安装: fcitx5, fcitx5-chinese-addons, sarasa-fonts 等。"
-# 最终修正了 sarasa-gothic-fonts 的包名为 sarasa-fonts
-# dnf 会自动跳过已安装的包，所以保留 google-noto-cjk-fonts 是安全的
-dnf install -y fcitx5 fcitx5-configtool fcitx5-autostart fcitx5-gtk fcitx5-qt fcitx5-chinese-addons google-noto-cjk-fonts kde-l10n-Chinese glibc-langpack-zh langpacks-zh_CN --skip-unavailable
-if [ $? -eq 0 ]; then
-    echo "    [成功] 所有软件包均已成功安装。"
-else
-    echo "    [失败] 软件包安装过程中出现错误！"
-    exit 1
-fi
-echo ""
+    # 步骤1: 设置系统区域
+    log_info "步骤 1/5: 设置系统区域为 ${LOCALE_SETTING}"
+    if localectl set-locale LANG="${LOCALE_SETTING}"; then
+        log_success "系统区域已设置为 ${LOCALE_SETTING}"
+    else
+        log_error "设置系统区域失败！"
+        exit 1
+    fi
+    echo
 
+    # 步骤2: 安装必要软件包
+    log_info "步骤 2/5: 安装 Fcitx5 输入法及相关组件"
+    log_info "将安装以下软件包："
+    for package in "${REQUIRED_PACKAGES[@]}"; do
+        log_info "- $package"
+    done
+    # 安装软件包
+    if dnf install -y "${REQUIRED_PACKAGES[@]}" \
+        kde-l10n-Chinese \
+        glibc-langpack-zh \
+        langpacks-zh_CN \
+        --skip-unavailable; then
+        log_success "所有软件包均已成功安装"
+    else
+        log_error "软件包安装过程中出现错误"
+        exit 1
+    fi
+    echo
 
-# --- 步骤 3: 配置全局输入法环境变量 ---
-echo "--> 步骤 3/5: 正在配置全局输入法环境变量 (/etc/environment)..."
-ENV_FILE="/etc/environment"
+    # 步骤3: 配置输入法环境
+    readonly ENV_FILE="/etc/environment"
+    readonly IM_CONFIG=(
+        "export GTK_IM_MODULE=fcitx"
+        "export QT_IM_MODULE=fcitx"
+        "export XMODIFIERS=@im=fcitx"
+        "export SDL_IM_MODULE=fcitx"
+    )
 
-# 为保证幂等性（可重复运行），先检查变量是否已存在
-if ! grep -q "GTK_IM_MODULE=fcitx" "$ENV_FILE"; then
-    echo 'GTK_IM_MODULE=fcitx' >> "$ENV_FILE"
-    echo "    [写入] GTK_IM_MODULE=fcitx"
-else
-    echo "    [跳过] GTK_IM_MODULE 已存在。"
-fi
+    log_info "步骤 3/5: 配置全局输入法环境变量"
+    log_info "配置文件：${ENV_FILE}"
 
-if ! grep -q "QT_IM_MODULE=fcitx" "$ENV_FILE"; then
-    echo 'QT_IM_MODULE=fcitx' >> "$ENV_FILE"
-    echo "    [写入] QT_IM_MODULE=fcitx"
-else
-    echo "    [跳过] QT_IM_MODULE 已存在。"
-fi
+    # 创建环境文件备份
+    if [ -f "${ENV_FILE}" ]; then
+        cp "${ENV_FILE}" "${ENV_FILE}.bak.$(date +%s)" || log_warn "无法创建环境文件备份"
+    fi
 
-if ! grep -q "XMODIFIERS=@im=fcitx" "$ENV_FILE"; then
-    echo 'XMODIFIERS=@im=fcitx' >> "$ENV_FILE"
+    # 为保证幂等性，先检查变量是否已存在
+# 添加或更新环境变量
+    local changes_made=0
+    for config in "${IM_CONFIG[@]}"; do
+        local var_name="${config%%=*}"
+        if ! grep -q "^${var_name}=" "$ENV_FILE"; then
+            echo "$config" >> "$ENV_FILE"
+            log_info "[写入] $config"
+            changes_made=1
+        else
+            log_info "[跳过] $var_name 已存在"
+            # 检查值是否需要更新
+            if ! grep -q "^$config\$" "$ENV_FILE"; then
+                sed -i "s|^${var_name}=.*|$config|" "$ENV_FILE"
+                log_info "[更新] $config"
+                changes_made=1
+            fi
+        fi
+    done
+
+    if [ $changes_made -eq 1 ]; then
+        log_success "环境变量配置已更新"
+    else
+        log_info "环境变量配置无需更改"
+    fi
+
+if ! grep -q "export XMODIFIERS=@im=fcitx" "$ENV_FILE"; then
+    echo 'export XMODIFIERS=@im=fcitx' >> "$ENV_FILE"
     echo "    [写入] XMODIFIERS=@im=fcitx"
 else
     echo "    [跳过] XMODIFIERS 已存在。"

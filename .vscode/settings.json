@@ -1,0 +1,9 @@
+{
+    "workbench.activityBar.iconClickBehavior": "toggle",
+    "workbench.iconTheme": "vs-minimal",
+    "workbench.colorTheme": "Visual Studio 2017 Light - C++",
+    "workbench.preferredDarkColorTheme": "Visual Studio 2017 Light - C++",
+    "workbench.preferredHighContrastColorTheme": "Visual Studio 2017 Dark - C++",
+    "workbench.preferredHighContrastLightColorTheme": "Visual Studio 2017 Dark - C++",
+    "workbench.preferredLightColorTheme": "Visual Studio 2019 Light"
+}

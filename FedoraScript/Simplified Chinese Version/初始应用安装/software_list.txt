@@ -1,0 +1,29 @@
+SOFTWARE_LIST=(
+    "wine"
+    "winetricks"
+    "qemu"
+    "krita"
+    "steam"
+    "gimp"
+    "darktable"
+    "kdenlive"
+    "libreoffice"
+    "gnome-boxes"
+    "visual-studio-code"
+    "android-studio"
+    "vlc"
+    "firefox"
+    "kde-applications"
+    "blender"
+    "aline"
+    "git"
+)
+
+# 对于这些软件，Snap 是首选或唯一的安装方式。
+SNAP_PREFERRED_LIST=(
+    #"wechat"
+    #"dingtalk"
+    "visual-studio-code"
+    "android-studio"
+    "cider"
+)

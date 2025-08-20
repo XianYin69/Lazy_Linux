@@ -1,23 +1,50 @@
 #!/bin/bash
 
-# 定义颜色代码
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# =================================================================================================
+# 脚本名称：   uninstall_from_archive.sh
+# 描述：       通用软件卸载脚本
+#              支持多种Linux发行版的软件包卸载
+# 作者：       XianYin with AI toolkit
+# 日期：       2025-08-19
+# =================================================================================================
+
+set -e  # 遇到错误立即退出
+
+# --- 颜色常量定义 ---
+readonly COLOR_INFO="\033[34m"      # 蓝色
+readonly COLOR_SUCCESS="\033[32m"    # 绿色
+readonly COLOR_ERROR="\033[31m"      # 红色
+readonly COLOR_WARN="\033[33m"       # 黄色
+readonly COLOR_RESET="\033[0m"       # 重置颜色
+
+# --- 日志工具函数 ---
+log_info() {
+    echo -e "${COLOR_INFO}[信息]${COLOR_RESET} $1"
+}
+
+log_success() {
+    echo -e "${COLOR_SUCCESS}[成功]${COLOR_RESET} $1"
+}
+
+log_error() {
+    echo -e "${COLOR_ERROR}[错误]${COLOR_RESET} $1"
+}
+
+log_warn() {
+    echo -e "${COLOR_WARN}[警告]${COLOR_RESET} $1"
+}
 
 # 检测Linux发行版
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     DISTRO=$ID
 else
-    echo -e "${RED}错误:${NC} 无法检测Linux发行版"
+    log_error "无法检测Linux发行版"
     exit 1
 fi
 
 # 提示用户输入要卸载的程序名
-echo -e "${YELLOW}请输入要卸载的程序名称：${NC}"
+log_info "请输入要卸载的程序名称："
 read -e PROGRAM_NAME
 
 # 如果用户输入为空，退出脚本

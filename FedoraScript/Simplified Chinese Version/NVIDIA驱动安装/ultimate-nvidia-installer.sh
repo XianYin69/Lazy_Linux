@@ -1,56 +1,95 @@
 #!/bin/bash
 
-# ==============================================================================
-#                 NVIDIA 驱动终极安装与清理脚本 (单一文件版)
-# ==============================================================================
-# 作者: Your AI Assistant (基于与 EthanYan 的排错经验)
-# 版本: Final Ultimate - FIXED
-# 目标: 自动检测系统状态，并执行清理或安装操作。
-#
-# 用法:
-# 1. 保存为 'ultimate-nvidia-installer.sh'
-# 2. chmod +x ultimate-nvidia-installer.sh
-# 3. sudo bash ultimate-nvidia-installer.sh
-# ==============================================================================
+# =================================================================================================
+# 脚本名称：   ultimate-nvidia-installer.sh
+# 描述：       NVIDIA驱动终极安装与清理脚本（单一文件版）
+#              - 自动检测系统状态
+#              - 清理现有驱动
+#              - 安装新驱动
+#              - 配置系统设置
+# 作者：       XianYin with AI toolkit
+# 日期：       2025-08-19
+# =================================================================================================
 
-# 定义颜色常量
-RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; BLUE='\033[0;34m'; NC='\033[0m'
+set -e  # 遇到错误立即退出
 
-# 确保以 root 权限运行
-if [[ $EUID -ne 0 ]]; then
-   echo -e "${RED}此脚本需要 root 权限。请使用 'sudo bash $0' 运行。${NC}"; exit 1
-fi
+# --- 日志工具函数 ---
+log_info() {
+    echo -e "\033[34m[信息]\033[0m $1"
+}
 
-# 全局变量
-GRUB_DEFAULT_FILE="/etc/default/grub"
-GRUB_OUTPUT_PATH="/boot/grub2/grub.cfg"
-# 保留 NVIDIA_PACKAGES 用于清理检查
-NVIDIA_PACKAGES=( "akmod-nvidia" "xorg-x11-drv-nvidia-cuda" "xorg-x11-drv-nvidia" "nvidia-settings" "nvidia-powerd" )
+log_success() {
+    echo -e "\033[32m[成功]\033[0m $1"
+}
 
-# 函数：使用 rpm -q 确保准确性
-is_package_installed() { rpm -q "$1" >/dev/null 2>&1; }
+log_error() {
+    echo -e "\033[31m[错误]\033[0m $1"
+}
 
-# --- 清理函数 (保持不变) ---
+log_warn() {
+    echo -e "\033[33m[警告]\033[0m $1"
+}
+
+# --- 全局常量 ---
+readonly GRUB_DEFAULT_FILE="/etc/default/grub"
+readonly GRUB_OUTPUT_PATH="/boot/grub2/grub.cfg"
+readonly NVIDIA_PACKAGES=(
+    "akmod-nvidia"
+    "xorg-x11-drv-nvidia-cuda"
+    "xorg-x11-drv-nvidia"
+    "nvidia-settings"
+    "nvidia-powerd"
+)
+
+# --- 工具函数 ---
+# 检查包是否已安装
+is_package_installed() {
+    local package_name="$1"
+    if rpm -q "$package_name" >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# --- 清理函数 ---
 run_cleanup() {
-    echo -e "\n${CYAN}--- 阶段：焦土式清理 ---${NC}"
-    echo "--------------------------------------------------------"
+    log_info "开始执行系统清理..."
+    log_info "--------------------------------------------------------"
 
-    echo -e "${YELLOW}正在停止所有相关服务...${NC}"
-    sudo systemctl stop nvidia-powerd.service 2>/dev/null
-    sudo systemctl disable nvidia-powerd.service 2>/dev/null
+    # 停止相关服务
+    log_info "正在停止所有相关服务..."
+    systemctl stop nvidia-powerd.service 2>/dev/null || true
+    systemctl disable nvidia-powerd.service 2>/dev/null || true
 
-    echo -e "${YELLOW}正在强制卸载所有NVIDIA软件包...${NC}"
-    sudo dnf remove -y "*nvidia*"
-    sudo dnf autoremove -y
+    # 卸载NVIDIA软件包
+    log_info "正在卸载所有NVIDIA软件包..."
+    dnf remove -y "*nvidia*" || log_warn "部分包可能未完全卸载"
+    dnf autoremove -y || log_warn "自动清理可能未完全完成"
 
-    echo -e "${YELLOW}正在清理所有已知NVIDIA残留文件和目录...${NC}"
-    sudo rm -rf /etc/pki/akmods /etc/modprobe.d/blacklist-nouveau.conf /var/cache/akmods/* /usr/src/nvidia-* /etc/nvidia
-    sudo find /etc/X11/xorg.conf.d -name '*-nvidia.conf' -delete
+    # 清理文件系统
+    log_info "正在清理NVIDIA残留文件..."
+    local nvidia_paths=(
+        "/etc/pki/akmods"
+        "/etc/modprobe.d/blacklist-nouveau.conf"
+        "/var/cache/akmods/*"
+        "/usr/src/nvidia-*"
+        "/etc/nvidia"
+    )
+    
+    for path in "${nvidia_paths[@]}"; do
+        rm -rf "$path" 2>/dev/null || log_warn "无法删除 $path"
+    done
+    
+    find /etc/X11/xorg.conf.d -name '*-nvidia.conf' -delete || log_warn "清理X11配置文件失败"
 
-    echo -e "${YELLOW}正在强制重置 GRUB 引导参数...${NC}"
+    # 重置GRUB配置
+    log_info "正在重置GRUB引导参数..."
     if [ -f "$GRUB_DEFAULT_FILE" ]; then
-        sudo cp "$GRUB_DEFAULT_FILE" "${GRUB_DEFAULT_FILE}.bak.$(date +%s)"
-        sudo tee "$GRUB_DEFAULT_FILE" > /dev/null << EOF
+        local backup_file="${GRUB_DEFAULT_FILE}.bak.$(date +%s)"
+        cp "$GRUB_DEFAULT_FILE" "$backup_file" || log_error "备份GRUB配置失败"
+        
+        tee "$GRUB_DEFAULT_FILE" > /dev/null << EOF || log_error "写入GRUB配置失败"
 GRUB_TIMEOUT=5
 GRUB_DISTRIBUTOR="\$(sed 's, release .*\$,,g' /etc/system-release)"
 GRUB_DEFAULT=saved
@@ -60,20 +99,29 @@ GRUB_CMDLINE_LINUX="rhgb quiet"
 GRUB_DISABLE_RECOVERY="true"
 GRUB_ENABLE_BLSCFG=true
 EOF
-        sudo grub2-mkconfig -o "$GRUB_OUTPUT_PATH"
+        grub2-mkconfig -o "$GRUB_OUTPUT_PATH" || log_error "更新GRUB配置失败"
+        log_success "GRUB配置已重置，原配置已备份至 $backup_file"
+    else
+        log_warn "未找到GRUB配置文件"
     fi
 
-    echo -e "${YELLOW}正在重新生成initramfs以恢复Nouveau...${NC}"
-    sudo dracut --force --verbose
+    # 重新生成initramfs
+    log_info "正在重新生成initramfs以恢复Nouveau..."
+    if dracut --force --verbose; then
+        log_success "initramfs重新生成成功"
+    else
+        log_error "initramfs重新生成失败"
+        exit 1
+    fi
 
-    echo -e "\n${GREEN}==============================================${NC}"
-    echo -e "${GREEN}      清理阶段完成。                        ${NC}"
-    echo -e "${GREEN}==============================================${NC}"
-    echo -e "${YELLOW}为了确保系统处于绝对干净的状态，现在必须重启。${NC}"
-    echo -e "${RED}!!! 重启后，请再次运行此脚本以开始安装过程。!!!${NC}"
-    read -p "按 Enter 键立即重启。"
-    sudo systemctl reboot
-    exit 0
+    log_success "=========================================="
+    log_success "            清理阶段完成"
+    log_success "=========================================="
+    log_warn "为确保系统处于干净状态，需要重启系统"
+    log_warn "!!! 重启后，请再次运行此脚本以开始安装过程 !!!"
+    
+    read -p "按 Enter 键立即重启系统..."
+    systemctl reboot
 }
 
 # --- 安装函数 (基于 .run 文件) ---

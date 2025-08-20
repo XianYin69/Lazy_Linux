@@ -6,53 +6,39 @@
 set -e # 如果命令以非零状态退出，则立即退出。
 
 # --- 配置 ---
-# 需要安装的所有软件列表。
-# 此处使用通用名称，稍后将映射到特定的软件包名称。
-SOFTWARE_LIST=(
-    "wine"
-    "winetricks"
-    "qemu"
-    "krita"
-    "steam"
-    "gimp"
-    "darktable"
-    "kdenlive"
-    "libreoffice"
-    "gnome-boxes"
-    "visual-studio-code"
-    "android-studio"
-    "vlc"
-    "firefox"
-    "kde-applications"
-    "blender"
-    "aline"
-    "git"
-)
+# 从配置文件加载软件列表
+CONFIG_FILE="$(dirname "$0")/software_list.txt"
 
-# 对于这些软件，Snap 是首选或唯一的安装方式。
-SNAP_PREFERRED_LIST=(
-    #"wechat"
-    #"dingtalk"
-    "visual-studio-code"
-    "android-studio"
-    "cider"
-)
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "错误：找不到配置文件 $CONFIG_FILE"
+    exit 1
+fi
 
-# --- 日志记录工具 ---
+# 加载软件列表
+source "$CONFIG_FILE"
+
+# --- 颜色常量定义 ---
+readonly COLOR_INFO="\033[34m"      # 蓝色
+readonly COLOR_SUCCESS="\033[32m"    # 绿色
+readonly COLOR_ERROR="\033[31m"      # 红色
+readonly COLOR_WARN="\033[33m"       # 黄色
+readonly COLOR_RESET="\033[0m"       # 重置颜色
+
+# --- 日志工具函数 ---
 log_info() {
-    echo -e "\033[34m[信息]\033[0m $1"
+    echo -e "${COLOR_INFO}[信息]${COLOR_RESET} $1"
 }
 
 log_success() {
-    echo -e "\033[32m[成功]\033[0m $1"
+    echo -e "${COLOR_SUCCESS}[成功]${COLOR_RESET} $1"
 }
 
 log_error() {
-    echo -e "\033[31m[错误]\033[0m $1"
+    echo -e "${COLOR_ERROR}[错误]${COLOR_RESET} $1"
 }
 
 log_warn() {
-    echo -e "\033[33m[警告]\033[0m $1"
+    echo -e "${COLOR_WARN}[警告]${COLOR_RESET} $1"
 }
 
 # --- 系统检测 ---
