@@ -5,6 +5,7 @@
 # 描述：       NVIDIA驱动安装脚本 - 第1部分
 #              执行系统状态检查和初始化清理操作
 # 作者：       XianYin with AI toolkit
+# 参考来源：   https://www.if-not-true-then-false.com/2015/fedora-nvidia-guide/
 # 日期：       2025-08-19
 # =================================================================================================
 
@@ -64,7 +65,6 @@ echo -e "\n${GREEN}文件验证成功: $RUN_FILE_PATH${NC}"
 
 # 2. 安装编译依赖
 echo -e "\n${CYAN}--- 步骤 2: 安装编译依赖 ---${NC}"
-sudo dnf update --refresh -y
 sudo dnf groupinstall "Development Tools"
 sudo dnf install -y kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx libglvnd-opengl libglvnd-devel pkgconfig kmodtool mokutil openssl dkms nvidia-vaapi-driver libva-utils vdpauinfo xrong-x11-server-Xwayland libxcb egl-wayland --skip-unavailable
 

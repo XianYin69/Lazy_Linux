@@ -40,12 +40,37 @@ log_warn() {
 
 # --- 常量定义 ---
 readonly LOCALE_SETTING="zh_CN.UTF-8"
-readonly REQUIRED_PACKAGES=(
+readonly REQUIRED_PACKAGES_FCITX5=(
     "fcitx5"
     "fcitx5-chinese-addons"
     "fcitx5-configtool"
     "fcitx5-qt"
     "fcitx5-gtk"
+    "sarasa-fonts"
+    "google-noto-cjk-fonts"
+)
+readonly REQUIRED_PACKAGES_IBUS=(
+    "ibus"
+    "ibus-pinyin"
+    "ibus-rime"
+    "rime-luna-pinyin"          
+    "rime-terra-pinyin" 
+    "rime-double-pinyin"         
+    "rime-pinyin-simp"           
+    "rime-cantonese"         
+    "rime-cangjie"           
+    "rime-quick"                
+    "rime-stroke"           
+    "rime-wubi"                
+    "rime-wugniu"               
+    "rime-bopomofoo"       
+    "rime-emoji"             
+    "rime-flypy"           
+    "rime-ice-git"           
+    "ibus-libpinyin"
+    "ibus-gtk"
+    "ibus-gtk3"
+    "ibus-qt"
     "sarasa-fonts"
     "google-noto-cjk-fonts"
 )
@@ -57,12 +82,90 @@ if [[ $(id -u) -ne 0 ]]; then
     exit 1
 fi
 
+# --- 输入法选择函数 ---
+select_input_method() {
+    echo "请选择要安装的输入法框架："
+    echo "1) Fcitx5 (默认，推荐)"
+    echo "2) IBUS"
+    read -p "请输入选项 [1-2]: " choice
+
+    case "$choice" in
+        2)
+            INPUT_METHOD="IBUS"
+            REQUIRED_PACKAGES=("${REQUIRED_PACKAGES_IBUS[@]}")
+            ;;
+        *|1)
+            INPUT_METHOD="Fcitx5"
+            REQUIRED_PACKAGES=("${REQUIRED_PACKAGES_FCITX5[@]}")
+            ;;
+    esac
+
+    log_info "已选择 $INPUT_METHOD 输入法框架"
+}
+
+# 检测操作系统类型和包管理器
+detect_os() {
+    if [ -f "/etc/os-release" ]; then
+        . /etc/os-release
+        case "$ID" in
+            "fedora")
+                OS_TYPE="fedora"
+                PACKAGE_MANAGER="dnf"
+                ;;
+            "ubuntu"|"debian")
+                OS_TYPE="debian"
+                PACKAGE_MANAGER="apt"
+                ;;
+            "arch"|"manjaro")
+                OS_TYPE="arch"
+                PACKAGE_MANAGER="pacman"
+                ;;
+            *)
+                log_error "不支持的Linux发行版：$ID"
+                exit 1
+                ;;
+        esac
+        echo "$OS_TYPE"
+    else
+        log_error "无法检测操作系统类型"
+        exit 1
+    fi
+}
+
+# 安装软件包的通用函数
+install_packages() {
+    local packages=("$@")
+    case "$PACKAGE_MANAGER" in
+        "dnf")
+            sudo dnf install -y "${packages[@]}" --skip-unavailable
+            ;;
+        "apt")
+            sudo apt install -y "${packages[@]}"
+            ;;
+        "pacman")
+            sudo pacman -S --noconfirm "${packages[@]}"
+            ;;
+        *)
+            log_error "未知的包管理器：$PACKAGE_MANAGER"
+            return 1
+            ;;
+    esac
+    return $?
+}
+
 # --- 主程序函数 ---
 main() {
     log_info "==================================================="
-    log_info "    Fedora KDE Plasma 中文环境配置工具"
+    log_info "    Linux 中文环境配置工具"
     log_info "==================================================="
     echo
+
+    # 检测系统类型
+    OS_TYPE=$(detect_os)
+    log_info "检测到系统类型: $OS_TYPE"
+
+    # 选择输入法
+    select_input_method
 
     # 步骤1: 设置系统区域
     log_info "步骤 1/5: 设置系统区域为 ${LOCALE_SETTING}"
@@ -75,17 +178,40 @@ main() {
     echo
 
     # 步骤2: 安装必要软件包
-    log_info "步骤 2/5: 安装 Fcitx5 输入法及相关组件"
+    log_info "步骤 2/5: 安装 ${INPUT_METHOD} 输入法及相关组件"
     log_info "将安装以下软件包："
     for package in "${REQUIRED_PACKAGES[@]}"; do
         log_info "- $package"
     done
-    # 安装软件包
-    if dnf install -y "${REQUIRED_PACKAGES[@]}" \
-        kde-l10n-Chinese \
-        glibc-langpack-zh \
-        langpacks-zh_CN \
-        --skip-unavailable; then
+
+    # 根据不同的系统安装语言包
+    case "$OS_TYPE" in
+        "fedora")
+            EXTRA_PACKAGES=(
+                "kde-l10n-Chinese"
+                "glibc-langpack-zh"
+                "langpacks-zh_CN"
+            )
+            ;;
+        "ubuntu"|"debian")
+            EXTRA_PACKAGES=(
+                "language-pack-zh-hans"
+                "language-pack-kde-zh-hans"
+                "fonts-noto-cjk"
+            )
+            ;;
+        "arch"|"manjaro")
+            EXTRA_PACKAGES=(
+                "adobe-source-han-sans-cn-fonts"
+                "adobe-source-han-serif-cn-fonts"
+                "wqy-microhei"
+                "wqy-zenhei"
+            )
+            ;;
+    esac
+
+    # 安装所有软件包
+    if install_packages "${REQUIRED_PACKAGES[@]}" "${EXTRA_PACKAGES[@]}"; then
         log_success "所有软件包均已成功安装"
     else
         log_error "软件包安装过程中出现错误"
@@ -95,12 +221,33 @@ main() {
 
     # 步骤3: 配置输入法环境
     readonly ENV_FILE="/etc/environment"
-    readonly IM_CONFIG=(
-        "export GTK_IM_MODULE=fcitx"
-        "export QT_IM_MODULE=fcitx"
-        "export XMODIFIERS=@im=fcitx"
-        "export SDL_IM_MODULE=fcitx"
-    )
+    
+    # 根据选择的输入法设置环境变量
+    if [ "$INPUT_METHOD" = "fcitx" ]; then
+        readonly IM_CONFIG=(
+            "export GTK_IM_MODULE=fcitx"
+            "export QT_IM_MODULE=fcitx"
+            "export XMODIFIERS=@im=fcitx"
+            "export SDL_IM_MODULE=fcitx"
+            "export GLFW_IM_MODULE=ibus"  # 为 GLFW 应用添加支持
+            # Electron 应用支持
+            "export XIM_PROGRAM=fcitx"
+            "export XIM=fcitx"
+            "export GTK_IM_MODULE_FILE=/usr/lib/gtk-3.0/3.0.0/immodules-fcitx.cache"
+        )
+    else
+        readonly IM_CONFIG=(
+            "export GTK_IM_MODULE=ibus"
+            "export QT_IM_MODULE=ibus"
+            "export XMODIFIERS=@im=ibus"
+            "export SDL_IM_MODULE=ibus"
+            "export GLFW_IM_MODULE=ibus"
+            # Electron 应用支持
+            "export XIM_PROGRAM=ibus-daemon"
+            "export XIM=ibus"
+            "export GTK_IM_MODULE_FILE=/usr/lib/gtk-3.0/3.0.0/immodules-ibus.cache"
+        )
+    fi
 
     log_info "步骤 3/5: 配置全局输入法环境变量"
     log_info "配置文件：${ENV_FILE}"
@@ -183,6 +330,6 @@ echo "   打开任意文本编辑器，按 Ctrl + Space 键，即可开始输入
 echo ""
 echo "=============================================================================="
 echo ""
-echo "祝您在 Fedora KDE 上体验愉快！"
+echo "祝您使用愉快！"
 
 exit 0

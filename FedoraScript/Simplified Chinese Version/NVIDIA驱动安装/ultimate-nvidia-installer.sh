@@ -145,7 +145,6 @@ run_install() {
 
     # 2. 安装编译依赖
     echo -e "\n${CYAN}--- 步骤 2: 安装编译依赖 ---${NC}"
-    sudo dnf update --refresh -y
     sudo dnf install -y kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx libglvnd-opengl libglvnd-devel pkgconfig nvidia-vaapi-driver libva-utils vdpauinfo
 
 

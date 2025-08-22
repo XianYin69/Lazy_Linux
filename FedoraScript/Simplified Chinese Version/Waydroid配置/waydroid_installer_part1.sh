@@ -83,7 +83,6 @@ main() {
     case "$OS_NAME" in
         "Ubuntu"|"Debian GNU/Linux")
             log_info "检测到 Debian/Ubuntu 系统，开始安装 Waydroid..."
-            apt update || log_error "更新软件源失败"
             apt install -y "${DEBIAN_DEPS[@]}" || log_error "依赖包安装失败"
             curl "${WAYDROID_REPO_URL}" | bash || log_error "添加Waydroid仓库失败"
             apt install -y waydroid || log_error "Waydroid安装失败"
@@ -118,7 +117,7 @@ main
 #arch linux 系统安装
 if [[ "$OS_NAME" == "Arch Linux" ]]; then
     echo "检测到 Arch Linux 系统，正在安装 Waydroid..."
-    sudo pacman -Syu lxc python3 adb
+    sudo pacman -S lxc python3 adb --noconfirm
     curl https://repo.waydro.id | sudo bash
     sudo pacman -S waydroid --noconfirm
 fi
