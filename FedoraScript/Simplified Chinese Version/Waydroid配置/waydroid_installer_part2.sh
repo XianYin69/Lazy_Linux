@@ -77,7 +77,8 @@ fi
 
 #克隆 Waydroid ARM 支持仓库
 log_info "正在克隆 Waydroid ARM 支持仓库..."
-git clone https://github.com/casualsnek/waydroid_script cd waydroid_script
+cd /home/$USER
+git clone https://github.com/casualsnek/waydroid_script
 if [[ $? -ne 0 ]]; then
     log_error "克隆仓库失败，请检查网络连接或仓库地址。"
     exit 1
@@ -85,7 +86,8 @@ fi
 
 # 运行安装脚本
 log_info "正在运行安装脚本..."
-if ! bash waydroiod_script/install.sh; then
+cd /home/$USER/waydroid_script
+if ! bash install.sh; then
     log_error "安装脚本运行失败，请检查错误信息。"
     exit 1
     else
