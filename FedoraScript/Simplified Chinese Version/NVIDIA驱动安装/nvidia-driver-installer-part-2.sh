@@ -2,52 +2,39 @@
 
 # =================================================================================================
 # 脚本名称：   nvidia-driver-installer-part-2.sh
-# 描述：       NVIDIA驱动安装脚本 - 第2部分
-#              执行系统配置和驱动准备工作
-# 作者：       XianYin with AI toolkit
+# 描述：       NVIDIA驱动安装脚本 - 第1部分
+#              执行系统状态检查和初始化清理操作
+# 作者：       XianYin
+# 参考来源：   https://www.if-not-true-then-false.com/2015/fedora-nvidia-guide/
 # 日期：       2025-08-19
 # =================================================================================================
 
-set -e  # 遇到错误立即退出
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+RESET = "\033[0m"
 
-# --- 颜色常量定义 ---
-readonly COLOR_INFO="\033[34m"      # 蓝色
-readonly COLOR_SUCCESS="\033[32m"    # 绿色
-readonly COLOR_ERROR="\033[31m"      # 红色
-readonly COLOR_WARN="\033[33m"       # 黄色
-readonly COLOR_RESET="\033[0m"       # 重置颜色
-
-# --- 日志工具函数 ---
-log_info() {
-    echo -e "${COLOR_INFO}[信息]${COLOR_RESET} $1"
-}
-
-log_success() {
-    echo -e "${COLOR_SUCCESS}[成功]${COLOR_RESET} $1"
-}
-
-log_error() {
-    echo -e "${COLOR_ERROR}[错误]${COLOR_RESET} $1"
-}
-
-log_warn() {
-    echo -e "${COLOR_WARN}[警告]${COLOR_RESET} $1"
-}
-
-# 检查root权限
-if [[ $EUID -ne 0 ]]; then
-   echo -e "${RED}此脚本需要 root 权限。请使用 'sudo bash $0' 运行。${NC}"; exit 1
+#root check
+if ["EUID" -ne 0]; then
+  echo -e "$RED Please run its with root account $RESET"
+  exit 1
 fi
 
-# 全局变量
-GRUB_DEFAULT_FILE="/etc/default/grub"
-GRUB_OUTPUT_PATH="/boot/grub2/grub.cfg"
-
-# --- 安装函数 (基于 .run 文件) ---
-
-echo -e "\n${CYAN}--- 阶段2:进入tty模式 ---${NC}"
-echo "----------------------"
-echo -e"\n${YELLOW}按Enter进入tty模式,出现标志时按${RED}Ctrl+Alt+F1${YELLOW}登录tty,然后运行三阶段shell..."
-read -p ""
-sudo systemctl isolate multi-user.target
+#step 1
+echo -e "$BLUE ==================== NVIDIA driver installer - part 2 ==================== $RESET"
+echo -e "$BLUE Step 1-Install driver $RESET"
+read -p "Please enter the driver path:" DRIVER_PATH
+if [ ! -f "$DRIVER_PATH" ]; then
+  echo -e "$RED Driver file not found at $DRIVER_PATH $RESET"
+  exit 1
+fi
+chmod +x "$DRIVER_PATH"
+echo -e "$GREEN Driver file is ready $RESET"
+echo -e "$YELLOW !!!Warning: $RESET"
+echo -e "$YELLOW 1.if you enable the Secure Boot,please sign your moudle$RESET"
+echo -e "$YELLOW 2.after installing, don't reboot your pc and please run the third part installer$RESET"
+echo -e "Now,run the driver installer after you press Enter key"
+read -p "Press Enter to continue or Ctrl+C to cancel..."
+export CC="gcc -std=gnu17" ./"$DRIVER_PATH"
 exit 0
