@@ -9,15 +9,15 @@
 # 日期：       2025-08-19
 # =================================================================================================
 
-RED = "\033[31m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
-BLUE = "\033[34m"
-RESET = "\033[0m"
+readonly RED="\033[31m"
+readonly GREEN="\033[32m"
+readonly YELLOW="\033[33m"
+readonly BLUE="\033[34m"
+readonly RESET="\033[0m"
 
 #root check
-if ["EUID" -ne 0]; then
-  echo -e "$RED Please run its with root account $RESET"
+if [ $EUID -ne 0 ]; then
+  echo -e "$RED !!!Please run as root!!! $RESET"
   exit 1
 fi
 

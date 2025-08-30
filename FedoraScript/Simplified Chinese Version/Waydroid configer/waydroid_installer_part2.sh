@@ -58,7 +58,9 @@ fi
 
 #一些额外的配置
 log_info "正在配置 Waydroid..."
-waydroid prop set persost.waydroid.multi_windows true
+waydroid prop set persist.waydroid.multi_windows true
+waydroid prop set persist.waydroid.width ""
+waydroid prop set persist.waydroid.height ""
 waydroid prop set persist.waydroid.cursor_on_subsurface true
     log_info "正在安装ARM支持..."#检测是否安装git
 if ! command -v git &> /dev/null; then
@@ -77,7 +79,8 @@ fi
 
 #克隆 Waydroid ARM 支持仓库
 log_info "正在克隆 Waydroid ARM 支持仓库..."
-cd /home/$USER
+read -p "输入保存路径：" $GIT_PATH
+cd $GIT_PATH
 git clone https://github.com/casualsnek/waydroid_script
 if [[ $? -ne 0 ]]; then
     log_error "克隆仓库失败，请检查网络连接或仓库地址。"
@@ -86,7 +89,7 @@ fi
 
 # 运行安装脚本
 log_info "正在运行安装脚本..."
-cd /home/$USER/waydroid_script
+cd waydroid_script
 if ! bash install.sh; then
     log_error "安装脚本运行失败，请检查错误信息。"
     exit 1

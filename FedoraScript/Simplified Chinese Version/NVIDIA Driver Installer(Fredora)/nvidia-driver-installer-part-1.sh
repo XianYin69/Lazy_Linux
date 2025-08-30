@@ -9,14 +9,14 @@
 # 日期：       2025-08-19
 # =================================================================================================
 
-RED = "\033[31m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
-BLUE = "\033[34m"
-RESET = "\033[0m"
+readonly RED="\033[31m"
+readonly GREEN="\033[32m"
+readonly YELLOW="\033[33m"
+readonly BLUE="\033[34m"
+readonly RESET="\033[0m"
 
 #root check
-if ["EUID" -ne 0]; then
+if [ $EUID -ne 0 ]; then
   echo -e "$RED 请以root用户身份运行此脚本 $RESET"
   exit 1
 fi
@@ -39,8 +39,7 @@ sudo mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r)-nouveau-nova
 sudo dracut /boot/initramfs-$(uname -r).img $(uname -r)
 echo -e "$GREEN nouveau禁用完成 $RESET"
 
-echo -e "$RED 现在需要重启电脑以进入TTY模式后运行第二部分安装程序 $RESET"
+echo -e "$RED 现在需要重启电脑 $RESET"
 read -p "按回车键继续，按Ctrl+C取消..."
-sudo systemctl isolate multi-user.target
 sudo reboot
 exit 0

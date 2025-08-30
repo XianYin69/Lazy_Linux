@@ -12,12 +12,9 @@ Toolkit_for_Linux 是一个由我开发的面向小白的Linux工具集，旨在
 ## 使用方法
 1. 克隆此仓库：
    ```bash
-   git clone https://github.com/XianYin69/Toolkit-self.git
    ```
 2. 根据需求进入对应目录并运行脚本。
    ```bash
-   cd FedoraScript/初始设置
-   bash setup_fedora_kde_chinese.sh
    ```
 
 ---
