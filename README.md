@@ -5,18 +5,18 @@ Toolkit_for_Linux 是一个由我开发的面向小白的Linux工具集，旨在
 ---
 
 ## 注意事项
-> **警告**：由于之前对于AI的果地自信,我现在需要重构此脚本集!!!
-
+> 由于本人精力有限且主力系统是Fedora,故只开发了用于Fedora的脚本（部分脚本可以用于其他发行部）
 ---
 
 ## 使用方法
 1. 克隆此仓库：
    ```bash
+   git clone https://github.com/XianYin69/Toolkits_for_Linux.git
    ```
-2. 根据需求进入对应目录并运行脚本。
+2. 使用脚本 :
    ```bash
-   ```
-
+   chomod +x PATH/*
+   bash ./*.sh
 ---
 
 ## 许可证
