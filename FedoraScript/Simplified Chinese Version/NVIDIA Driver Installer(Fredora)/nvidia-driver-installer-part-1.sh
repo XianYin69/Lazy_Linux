@@ -9,27 +9,45 @@
 # 日期：       2025-08-19
 # =================================================================================================
 
-readonly RED="\033[31m"
-readonly GREEN="\033[32m"
-readonly YELLOW="\033[33m"
-readonly BLUE="\033[34m"
-readonly RESET="\033[0m"
+# --- 颜色常量定义 ---
+readonly COLOR_INFO="\033[34m"      # 蓝色
+readonly COLOR_SUCCESS="\033[32m"    # 绿色
+readonly COLOR_ERROR="\033[31m"      # 红色
+readonly COLOR_WARN="\033[33m"       # 黄色
+readonly COLOR_RESET="\033[0m"       # 重置颜色
+
+# --- 日志工具函数 ---
+log_info() {
+    echo -e "${COLOR_INFO}[信息]${COLOR_RESET} $1"
+}
+
+log_success() {
+    echo -e "${COLOR_SUCCESS}[成功]${COLOR_RESET} $1"
+}
+
+log_error() {
+    echo -e "${COLOR_ERROR}[错误]${COLOR_RESET} $1"
+}
+
+log_warn() {
+    echo -e "${COLOR_WARN}[警告]${COLOR_RESET} $1"
+}
 
 #root check
 if [ $EUID -ne 0 ]; then
-  echo -e "$RED 请以root用户身份运行此脚本 $RESET"
+  log_error "请以root用户身份运行此脚本"
   exit 1
 fi
 
 #step 1
-echo  -e "$BLUE ==================== NVIDIA驱动安装脚本 - 第1部分 ==================== $RESET"
-echo  -e "$BLUE 步骤 1-安装必要软件包 $RESET"
+echo  -e " ==================== NVIDIA驱动安装脚本 - 第1部分 ==================== "
+echo  -e " 步骤 1-安装必要软件包 "
 sudo dnf update -y
 sudo dnf install -y @base-x kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx libglvnd-opengl libglvnd-devel pkgconfig xorg-x11-server-Xwayland libxcb egl-wayland akmods vdpauinfo libva-vdpau-driver libva-utils
-echo -e "$GREEN 必要软件包安装完成 $RESET"
+log_success " 必要软件包安装完成 "
 
 #step 2
-echo  -e "$BLUE 步骤 2-禁用nouveau $RESET"
+echo  -e " 步骤 2-禁用nouveau "
 echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
 echo "blacklist nova_core" >> /etc/modprobe.d/blacklist.conf
 echo "options nvidia NVreg_PreserveVideoMemoryAllocations=1" >> /etc/modprobe.d/nvidia.conf
@@ -37,9 +55,9 @@ echo "options nvidia-drm modeset=1 fbdev=0" >> /etc/modprobe.d/nvidia.conf
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 sudo mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r)-nouveau-nova.img 
 sudo dracut /boot/initramfs-$(uname -r).img $(uname -r)
-echo -e "$GREEN nouveau禁用完成 $RESET"
+log_success " nouveau禁用完成 "
 
-echo -e "$RED 现在需要重启电脑 $RESET"
+log_warn " 现在需要重启电脑 "
 read -p "按回车键继续，按Ctrl+C取消..."
 sudo reboot
 exit 0
