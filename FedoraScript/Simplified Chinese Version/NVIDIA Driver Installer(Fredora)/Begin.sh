@@ -40,7 +40,7 @@ fi
 
 log_warn "!!! 此脚本只限于版本号大于570.181（2025.Aug.05）的英伟达驱动安装包(.run)使用 !!!"
 read -p "按回车键继续，按Ctrl+C取消..."
-echo -e "1. 开始安装前的准备工作..."
+echo "1. 开始安装前的准备工作..."
 FILE=(
     "./nvidia-driver-installer-part-1.sh"
     "./nvidia-driver-installer-part-2.sh"

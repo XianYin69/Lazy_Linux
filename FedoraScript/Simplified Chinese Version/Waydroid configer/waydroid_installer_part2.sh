@@ -38,6 +38,9 @@ log_warn() {
 if ! command -v waydroid &> /dev/null; then
     log_error "Waydroid 未安装，请先运行第一部分安装脚本。"
     exit 1
+    else
+    waydroid session stop
+    systemctl stop waydroid-container
 fi
 
 # 检查root权限
@@ -62,15 +65,15 @@ waydroid prop set persist.waydroid.multi_windows true
 waydroid prop set persist.waydroid.width ""
 waydroid prop set persist.waydroid.height ""
 waydroid prop set persist.waydroid.cursor_on_subsurface true
-    log_info "正在安装ARM支持..."#检测是否安装git
+log_info "正在安装ARM支持..."#检测是否安装git
 if ! command -v git &> /dev/null; then
     log_info "Git 未安装，正在安装..."
     if [[ "$OS_NAME" == "Ubuntu" || "$OS_NAME" == "Debian GNU/Linux" ]]; then
-        sudo apt install git -y
+        sudo apt install git lzip -y
     elif [[ "$OS_NAME" == "Fedora" || "$OS_NAME" == "CentOS Linux" || "$OS_NAME" == "Red Hat Enterprise Linux" ]]; then
-        sudo dnf install git -y
+        sudo dnf install git lzip -y
     elif [[ "$OS_NAME" == "Arch Linux" ]]; then
-        sudo pacman -S git --noconfirm
+        sudo pacman -S git lzip --noconfirm
     else
         log_error "不支持的操作系统，请手动安装 Git。"
         exit 1
@@ -79,27 +82,27 @@ fi
 
 #克隆 Waydroid ARM 支持仓库
 log_info "正在克隆 Waydroid ARM 支持仓库..."
-read -p "输入保存路径：" $GIT_PATH
-cd $GIT_PATH
-git clone https://github.com/casualsnek/waydroid_script
-if [[ $? -ne 0 ]]; then
-    log_error "克隆仓库失败，请检查网络连接或仓库地址。"
-    exit 1
-fi
+read -p "输入保存路径：" GIT_PATH
+cd "$GIT_PATH"
 
 # 运行安装脚本
 log_info "正在运行安装脚本..."
-cd waydroid_script
-if ! bash install.sh; then
-    log_error "安装脚本运行失败，请检查错误信息。"
-    exit 1
+while true; do
+    if [ -d waydroid_script ]; then
+            cd waydroid_script
+        python3 -m venv venv
+        ./venv/bin/pip install -r requirements.txt
+        venv/bin/python3 main.py
+        sudo venv/bin/python3 main.py install libhoudini
+        sudo systemctl restart waydroid-container
+        log_success "Waydroid ARM 支持安装成功！"
+        break
     else
-    python3 -rn venv
-    venv
-    ./venv/bin/pip install -r requirements.txt
-    sudo venv/bin/python3 main.py install libhoudini
-    sudo systemctl restart waydroid-container
-    log_success "Waydroid ARM 支持安装成功！"
-fi
-
+        git clone https://github.com/casualsnek/waydroid_script
+        if [[ $? -ne 0 ]]; then
+            log_error "克隆仓库失败，请检查网络连接或仓库地址。"
+            exit 1
+        fi
+    fi
+done
 log_success "Waydroid installer 全部运行脚本已完成运行！"
