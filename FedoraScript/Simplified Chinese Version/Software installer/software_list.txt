@@ -2,7 +2,10 @@ SOFTWARE_LIST=(
 
 )
 
-# 对于这些软件，Snap 是首选或唯一的安装方式。
 SNAP_PREFERRED_LIST=(
+
+)
+
+FLATPKG_LIST=(
 
 )
