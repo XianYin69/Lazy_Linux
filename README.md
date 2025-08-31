@@ -1,6 +1,6 @@
 # Toolkit_for_Linux
 
-Toolkit_for_Linux 是一个由我开发的面向小白的Linux工具集，旨在简化上手难度。部分工具由人工智能协助生成，涵盖了多种实用功能。
+Toolkit_for_Linux 是一个由我开发的面向小白的Linux工具集，旨在简化上手难度，涵盖了多种实用功能。
 
 ---
 
