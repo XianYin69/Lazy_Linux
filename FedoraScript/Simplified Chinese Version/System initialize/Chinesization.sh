@@ -41,19 +41,19 @@ check_root() {
 check_os() {
     case $ID in
         fedora)
-            echo -e " $COLOR_SUCCESS 系统是 $COLOR_RESET fedora"
+            echo -e " $COLOR_SUCCESS System is  $COLOR_RESET fedora"
             OS_TYPE="fedora"
             ;;
         debian|ubuntu)
-            echo -e " $COLOR_SUCCESS 系统是 $COLOR_RESET debian/ubuntu"
+            echo -e " $COLOR_SUCCESS System is $COLOR_RESET debian/ubuntu"
             OS_TYPE="debian"
             ;;
         arch)
-            echo -e " $COLOR_SUCCESS 系统是 $COLOR_RESET arch"
+            echo -e " $COLOR_SUCCESS System is $COLOR_RESET arch"
             OS_TYPE="arch"
             ;;
         *)
-            echo -e " $COLOR_ERROR 不支持的操作系统: $ID $COLOR_RESET "
+            echo -e " $COLOR_ERROR Unsupported System: $ID $COLOR_RESET "
             exit 1
             ;;
     esac
