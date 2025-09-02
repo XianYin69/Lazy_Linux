@@ -41,19 +41,19 @@ check_root() {
 check_os() {
     case $ID in
         fedora)
-            echo -e " $COLOR_SUCCESS 系统是 $COLOR_RESET fedora"
+            echo -e " $COLOR_SUCCESS System is  $COLOR_RESET fedora"
             OS_TYPE="fedora"
             ;;
         debian|ubuntu)
-            echo -e " $COLOR_SUCCESS 系统是 $COLOR_RESET debian/ubuntu"
+            echo -e " $COLOR_SUCCESS System is $COLOR_RESET debian/ubuntu"
             OS_TYPE="debian"
             ;;
         arch)
-            echo -e " $COLOR_SUCCESS 系统是 $COLOR_RESET arch"
+            echo -e " $COLOR_SUCCESS System is $COLOR_RESET arch"
             OS_TYPE="arch"
             ;;
         *)
-            echo -e " $COLOR_ERROR 不支持的操作系统: $ID $COLOR_RESET "
+            echo -e " $COLOR_ERROR Unsupported System: $ID $COLOR_RESET "
             exit 1
             ;;
     esac
@@ -193,7 +193,20 @@ UBUNTU_INSTALL() {
 #修改locale
 modify_locale() {
     echo -e " $COLOR_INFO Modifying system locale to zh_CN.UTF-8... $COLOR_RESET "
-    local locale_file="/etc/locale.conf"
+    if [ -f /etc/locale.conf ]; then
+        locale_file="/etc/locale.conf"
+    elif [ -f /etc/default/locale ]; then
+        locale_file="/etc/default/locale"
+    elif [ -f /etc/locale ]; then
+        locale_file="/etc/locale"
+    elif [ -f /etc/locale.gen ]; then
+        locale_file="/etc/locale.gen"
+    elif [ -d /etc/locale.gen.d/ ]; then
+        locale_file="/etc/locale.gen.d/zh_CN.conf"
+    else
+        log_error " Locale configuration file not found. "
+        return 1
+    fi
     
     # 备份当前locale文件
     cp "$locale_file" "${locale_file}.bak_$(date +%Y%m%d_%H%M%S)"
@@ -207,6 +220,9 @@ modify_locale() {
         locale-gen
     elif [ -f /etc/locale.gen.d/ ]; then
         echo "zh_CN.UTF-8 UTF-8" > /etc/locale.gen.d/zh_CN.conf
+        locale-gen
+    elif [ -f /etc/default/locale ]; then
+        echo "LANG=zh_CN.UTF-8" > /etc/default/locale
         locale-gen
     else
         log_warn " Locale generation file not found. Please ensure zh_CN.UTF-8 is generated manually if necessary. "
