@@ -33,6 +33,7 @@ if [ ! -d "/var/lib/waydroid" ]; then
     exit 1
 else
     log_success "检测到Waydroid已安装"
+    systemctl start waydroid-container
     echo "请输入要安装的APK文件路径："
     read APK_PATH
     if [ ! -f "$APK_PATH" ]; then
