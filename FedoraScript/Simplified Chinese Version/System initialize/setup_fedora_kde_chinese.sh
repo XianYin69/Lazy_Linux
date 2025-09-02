@@ -154,140 +154,137 @@ install_packages() {
 }
 
 # --- 主程序函数 ---
-main() {
-    log_info "==================================================="
-    log_info "    Linux 中文环境配置工具"
-    log_info "==================================================="
-    echo
+log_info "==================================================="
+log_info "    Linux 中文环境配置工具"
+log_info "==================================================="
+echo
 
-    # 检测系统类型
-    OS_TYPE=$(detect_os)
-    log_info "检测到系统类型: $OS_TYPE"
+# 检测系统类型
+OS_TYPE=$(detect_os)
+log_info "检测到系统类型: $OS_TYPE"
 
-    # 选择输入法
-    select_input_method
+# 选择输入法
+select_input_method
 
-    # 步骤1: 设置系统区域
-    log_info "步骤 1/5: 设置系统区域为 ${LOCALE_SETTING}"
-    if localectl set-locale LANG="${LOCALE_SETTING}"; then
-        log_success "系统区域已设置为 ${LOCALE_SETTING}"
-    else
-        log_error "设置系统区域失败！"
-        exit 1
-    fi
-    echo
+# 步骤1: 设置系统区域
+log_info "步骤 1/5: 设置系统区域为 ${LOCALE_SETTING}"
+if localectl set-locale LANG="${LOCALE_SETTING}"; then
+    log_success "系统区域已设置为 ${LOCALE_SETTING}"
+else
+    log_error "设置系统区域失败！"
+    exit 1
+fi
+echo
 
-    # 步骤2: 安装必要软件包
-    log_info "步骤 2/5: 安装 ${INPUT_METHOD} 输入法及相关组件"
-    log_info "将安装以下软件包："
-    for package in "${REQUIRED_PACKAGES[@]}"; do
-        log_info "- $package"
-    done
+# 步骤2: 安装必要软件包
+log_info "步骤 2/5: 安装 ${INPUT_METHOD} 输入法及相关组件"
+log_info "将安装以下软件包："
+for package in "${REQUIRED_PACKAGES[@]}"; do
+    log_info "- $package"
+done
 
-    # 根据不同的系统安装语言包
-    case "$OS_TYPE" in
-        "fedora")
-            EXTRA_PACKAGES=(
-                "kde-l10n-Chinese"
-                "glibc-langpack-zh"
-                "langpacks-zh_CN"
-            )
-            ;;
-        "ubuntu"|"debian")
-            EXTRA_PACKAGES=(
-                "language-pack-zh-hans"
-                "language-pack-kde-zh-hans"
-                "fonts-noto-cjk"
-            )
-            ;;
-        "arch"|"manjaro")
-            EXTRA_PACKAGES=(
-                "adobe-source-han-sans-cn-fonts"
-                "adobe-source-han-serif-cn-fonts"
-                "wqy-microhei"
-                "wqy-zenhei"
-            )
-            ;;
-    esac
-
-    # 安装所有软件包
-    if install_packages "${REQUIRED_PACKAGES[@]}" "${EXTRA_PACKAGES[@]}"; then
-        log_success "所有软件包均已成功安装"
-    else
-        log_error "软件包安装过程中出现错误"
-        exit 1
-    fi
-    echo
-
-    # 步骤3: 配置输入法环境
-    readonly ENV_FILE="/etc/environment"
-    
-    # 根据选择的输入法设置环境变量
-    if [ "$INPUT_METHOD" = "fcitx" ]; then
-        readonly IM_CONFIG=(
-            "export GTK_IM_MODULE=fcitx"
-            "export QT_IM_MODULE=fcitx"
-            "export XMODIFIERS=@im=fcitx"
-            "export SDL_IM_MODULE=fcitx"
-            "export GLFW_IM_MODULE=ibus"  # 为 GLFW 应用添加支持
-            # Electron 应用支持
-            "export XIM_PROGRAM=fcitx"
-            "export XIM=fcitx"
-            "export GTK_IM_MODULE_FILE=/usr/lib/gtk-3.0/3.0.0/immodules-fcitx.cache"
+# 根据不同的系统安装语言包
+case "$OS_TYPE" in
+    "fedora")
+        EXTRA_PACKAGES=(
+            "kde-l10n-Chinese"
+            "glibc-langpack-zh"
+            "langpacks-zh_CN"
         )
-    else
-        readonly IM_CONFIG=(
-            "export GTK_IM_MODULE=ibus"
-            "export QT_IM_MODULE=ibus"
-            "export XMODIFIERS=@im=ibus"
-            "export SDL_IM_MODULE=ibus"
-            "export GLFW_IM_MODULE=ibus"
-            # Electron 应用支持
-            "export XIM_PROGRAM=ibus-daemon"
-            "export XIM=ibus"
-            "export GTK_IM_MODULE_FILE=/usr/lib/gtk-3.0/3.0.0/immodules-ibus.cache"
+        ;;
+    "ubuntu"|"debian")
+        EXTRA_PACKAGES=(
+            "language-pack-zh-hans"
+            "language-pack-kde-zh-hans"
+            "fonts-noto-cjk"
         )
-    fi
+        ;;
+    "arch"|"manjaro")
+        EXTRA_PACKAGES=(
+            "adobe-source-han-sans-cn-fonts"
+            "adobe-source-han-serif-cn-fonts"
+            "wqy-microhei"
+            "wqy-zenhei"
+        )
+        ;;
+esac
 
-    log_info "步骤 3/5: 配置全局输入法环境变量"
-    log_info "配置文件：${ENV_FILE}"
+# 安装所有软件包
+if install_packages "${REQUIRED_PACKAGES[@]}" "${EXTRA_PACKAGES[@]}"; then
+    log_success "所有软件包均已成功安装"
+else
+    log_error "软件包安装过程中出现错误"
+    exit 1
+fi
+echo
 
-    # 创建环境文件备份
-    if [ -f "${ENV_FILE}" ]; then
-        cp "${ENV_FILE}" "${ENV_FILE}.bak.$(date +%s)" || log_warn "无法创建环境文件备份"
-    fi
+# 步骤3: 配置输入法环境
+readonly ENV_FILE="/etc/environment"
 
-    # 为保证幂等性，先检查变量是否已存在
+# 根据选择的输入法设置环境变量
+if [ "$INPUT_METHOD" = "fcitx" ]; then
+    readonly IM_CONFIG=(
+        "export GTK_IM_MODULE=fcitx"
+        "export QT_IM_MODULE=fcitx"
+        "export XMODIFIERS=@im=fcitx"
+        "export SDL_IM_MODULE=fcitx"
+        "export GLFW_IM_MODULE=ibus"
+        "export XIM_PROGRAM=fcitx"
+        "export XIM=fcitx"
+        "export GTK_IM_MODULE_FILE=/usr/lib/gtk-3.0/3.0.0/immodules-fcitx.cache"
+    )
+else
+    readonly IM_CONFIG=(
+        "export GTK_IM_MODULE=ibus"
+        "export QT_IM_MODULE=ibus"
+        "export XMODIFIERS=@im=ibus"
+        "export SDL_IM_MODULE=ibus"
+        "export GLFW_IM_MODULE=ibus"
+        "export XIM_PROGRAM=ibus-daemon"
+        "export XIM=ibus"
+        "export GTK_IM_MODULE_FILE=/usr/lib/gtk-3.0/3.0.0/immodules-ibus.cache"
+    )
+fi
+
+log_info "步骤 3/5: 配置全局输入法环境变量"
+log_info "配置文件：${ENV_FILE}"
+
+# 创建环境文件备份
+if [ -f "${ENV_FILE}" ]; then
+    cp "${ENV_FILE}" "${ENV_FILE}.bak.$(date +%s)" || log_warn "无法创建环境文件备份"
+fi
+
+# 为保证幂等性，先检查变量是否已存在
 # 添加或更新环境变量
-    local changes_made=0
-    for config in "${IM_CONFIG[@]}"; do
-        local var_name="${config%%=*}"
-        if ! grep -q "^${var_name}=" "$ENV_FILE"; then
-            echo "$config" >> "$ENV_FILE"
-            log_info "[写入] $config"
-            changes_made=1
-        else
-            log_info "[跳过] $var_name 已存在"
-            # 检查值是否需要更新
-            if ! grep -q "^$config\$" "$ENV_FILE"; then
-                sed -i "s|^${var_name}=.*|$config|" "$ENV_FILE"
-                log_info "[更新] $config"
-                changes_made=1
-            fi
-        fi
-    done
-
-    if [ $changes_made -eq 1 ]; then
-        log_success "环境变量配置已更新"
+local changes_made=0
+for config in "${IM_CONFIG[@]}"; do
+    local var_name="${config%%=*}"
+    if ! grep -q "^${var_name}=" "$ENV_FILE"; then
+        echo "$config" >> "$ENV_FILE"
+        log_info "[写入] $config"
+        changes_made=1
     else
-        log_info "环境变量配置无需更改"
+        log_info "[跳过] $var_name 已存在"
+        # 检查值是否需要更新
+        if ! grep -q "^$config\$" "$ENV_FILE"; then
+            sed -i "s|^${var_name}=.*|$config|" "$ENV_FILE"
+            log_info "[更新] $config"
+            changes_made=1
+        fi
     fi
+done
+
+if [ $changes_made -eq 1 ]; then
+    log_success "环境变量配置已更新"
+else
+    log_info "环境变量配置无需更改"
+fi
 
 if ! grep -q "export XMODIFIERS=@im=fcitx" "$ENV_FILE"; then
-    echo 'export XMODIFIERS=@im=fcitx' >> "$ENV_FILE"
-    echo "    [写入] XMODIFIERS=@im=fcitx"
+echo 'export XMODIFIERS=@im=fcitx' >> "$ENV_FILE"
+echo "    [写入] XMODIFIERS=@im=fcitx"
 else
-    echo "    [跳过] XMODIFIERS 已存在。"
+echo "    [跳过] XMODIFIERS 已存在。"
 fi
 echo "    [成功] 环境变量配置完成。"
 echo ""
@@ -297,14 +294,14 @@ echo ""
 echo "--> 步骤 4/5: 正在为 Flatpak 应用安装 Fcitx5 插件..."
 # 检查 flatpak 是否存在
 if command -v flatpak &> /dev/null; then
-    flatpak install -y flathub org.freedesktop.Platform.Addons.Fcitx5
-    if [ $? -eq 0 ]; then
-        echo "    [成功] Flatpak Fcitx5 插件已安装。"
-    else
-        echo "    [警告] Flatpak Fcitx5 插件安装失败。如果您不使用 Flatpak 应用，可忽略此条。"
-    fi
+flatpak install -y flathub org.freedesktop.Platform.Addons.Fcitx5
+if [ $? -eq 0 ]; then
+    echo "    [成功] Flatpak Fcitx5 插件已安装。"
 else
-    echo "    [跳过] 系统未安装 Flatpak，无需配置。"
+    echo "    [警告] Flatpak Fcitx5 插件安装失败。如果您不使用 Flatpak 应用，可忽略此条。"
+fi
+else
+echo "    [跳过] 系统未安装 Flatpak，无需配置。"
 fi
 echo ""
 
