@@ -159,31 +159,12 @@ UBUNTU_INSTALL() {
     apt upgrade -y
     #安装输入法
     if [ "$INPUT_METHOD" == "fcitx5" ]; then
-        for package in "${FCITX5_PACKAGE[@]}"; do
-            if dpkg -l | grep -qw "$package"; then
-                echo -e " $COLOR_WARN $package is already installed, skip. $COLOR_RESET
-            else
-                echo -e " $COLOR_INFO Installing $package ... $COLOR_RESET "
-                if apt install -y "$package"; then
-                    echo -e " $COLOR_SUCCESS $package installed successfully. $COLOR_RESET "
-                else
-                    echo -e " $COLOR_ERROR Failed to install $package. $COLOR_RESET "
-                fi
-            fi
-        done
-    elif [ "$INPUT_METHOD" == "ibus" ]; then
-        for package in "${IBUS_PACKAGE[@]}"; do
-            if dpkg -l | grep -qw "$package"; then
-                echo -e " $COLOR_WARN $package is already installed, skip. $COLOR_RESET
-            else
-                echo -e " $COLOR_INFO Installing $package ... $COLOR_RESET "
-                if apt install -y "$package"; then
-                    echo -e " $COLOR_SUCCESS $package installed successfully. $COLOR_RESET "
-                else
-                    echo -e " $COLOR_ERROR Failed to install $package. $COLOR_RESET "
-                fi
-            fi
-        done
+        dnf install fcitx5-* -y
+        dnf install fcitx-* -y
+        dnf install ibus-* -y
+    else
+        dnf install ibus-* -y
+        dnf rime-*
     fi
     #配置输入法
     INPUT_METHOD_CONFIG
