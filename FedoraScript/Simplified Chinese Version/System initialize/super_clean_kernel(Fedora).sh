@@ -24,21 +24,21 @@ check_root() {
 }
 
 # --- 获取最新安装的内核版本 ---
-get_latest_kernel_version() {
+get_lasted_kernel_version() {
     echo $(rpm -q kernel | sort -V | tail -n1 | sed 's/kernel-//')
 }
 
 
 #参数定义
 current_kernel=$(uname -r)
-latest_kernel=$(get_latest_kernel_version)
+lasted_kernel=$(get_lasted_kernel_version)
 
 # --- 检查并处理内核版本不一致 ---
 check_kernel_version() {
-    if [[ "$current_kernel" != "$latest_kernel" ]]; then
+    if [[ "$current_kernel" != "$lasted_kernel" ]]; then
         echo -e "== $COLOR_ERROR 检测到内核版本不一致 $COLOR_RESET =="
         echo -e "当前运行的内核版本: $current_kernel"
-        echo -e "最新安装的内核版本: $latest_kernel"
+        echo -e "最新安装的内核版本: $lasted_kernel"
         echo -e "将为最新内核生成initramfs并更新引导配置"
         return 1
     else
@@ -51,29 +51,9 @@ check_kernel_version() {
 clean_old_files() {
     local current_kernel=$(uname -r)
     echo -e "正在清理旧文件"
-    find /boot -name "config-*" ! -name "config-${current_kernel}" -type f -delete
-    find /boot -name "System.map-*" ! -name "System.map-${current_kernel}" -type f -delete
-    find /boot -name "vmlinuz-*" ! -name "vmlinuz-${current_kernel}" -type f ! -name "vmlinuz-0-rescue-*" -delete
-}
-
-# --- 清理旧内核 ---
-clean_old_kernels() {
-    local current_kernel=$(uname -r)
-    
-    echo -e "正在清理旧内核，将只保留当前内核和最新内核..."
-    
-    local installed_kernels=($(rpm -q kernel | sort -V))
-    local latest_kernel=${installed_kernels[-1]}
-            
-    # 遍历所有内核，除了当前和最新的都删除
-    for kernel in "${installed_kernels[@]}"; do
-    if [[ "$kernel" != *"$current_kernel"* ]] && [[ "$kernel" != "$latest_kernel" ]]; then
-        echo -e "正在删除内核：$kernel"
-        dnf remove -y "$kernel"
-    fi
-    done
-            
-    echo -e "$COLOR_SUCCESS 内核清理完成 $COLOR_RESET"
+    find /boot -name "config-*" ! -name "config-${lasted_kernel}" -type f ! -delete
+    find /boot -name "System.map-*" ! -name "System.map-${lasted_kernel}" -type f ! -delete
+    find /boot -name "vmlinuz-*" ! -name "vmlinuz-${lasted_kernel}" -type f ! -name "vmlinuz-0-rescue-*" -type f ! -name "vmlinuz-${current_kernel}" -delete
 }
 
 # --- 清理旧的initramfs文件 ---
@@ -83,24 +63,20 @@ clean_old_initramfs() {
     echo -e "正在清理旧的initramfs文件..."
     
     # 找到并删除旧的initramfs文件，保留当前内核的
-    find /boot -name "initramfs-*.img" ! -name "initramfs-${current_kernel}.img" -type f -delete
+    find /boot -name "initramfs-*.img" ! -name "initramfs-${lasted_kernel}.img" -type f -delete
     
     echo -e "$COLOR_SUCCESS 旧的initramfs文件已清理完成 $COLOR_RESET"
 }
 
 # --- 重新生成initramfs ---
 regenerate_initramfs() {
-    local current_kernel=$(uname -r)
-    local latest_kernel=$(get_latest_kernel_version)
-    
     echo -e "正在重新生成initramfs..."
-    
     # 为当前内核生成
     dracut --force "/boot/initramfs-${current_kernel}.img" "${current_kernel}"
     # 如果最新内核不同，也为其生成
-    if [[ "$current_kernel" != "$latest_kernel" ]]; then
-        echo -e "为最新内核 $latest_kernel 生成initramfs..."
-        dracut --force "/boot/initramfs-${latest_kernel}.img" "${latest_kernel}"
+    if [[ "$current_kernel" != "$lasted_kernel" ]]; then
+        echo -e "为最新内核 $lasted_kernel 生成initramfs..."
+        dracut --force "/boot/initramfs-${lasted_kernel}.img" "${lasted_kernel}"
     fi
     
     if [ $? -eq 0 ]; then
@@ -114,9 +90,7 @@ regenerate_initramfs() {
 # --- 更新GRUB ---
 update_grub() {
     echo -e "正在更新GRUB配置..."
-    
     grub2-mkconfig -o /boot/grub2/grub.cfg
-    
     if [ $? -eq 0 ]; then
         echo -e "$COLOR_SUCCESS GRUB配置更新完成 $COLOR_RESET"
     else
@@ -135,15 +109,14 @@ log_warn "如果你使用nvidia显卡，则重启后需要重新安装nvidia驱�
 # 检查root权限
 check_root
 
+#更新系统
+dnf update -y
+
 # 检查内核版本一致性
 check_kernel_version
-local kernel_check_result=$?
 
-# 清理旧内核
-clean_old_kernels
+# 清理旧boot
 clean_old_files
-
-# 清理旧的initramfs
 clean_old_initramfs
 
 # 重新生成initramfs（如果内核版本不一致，会同时生成最新内核的initramfs）
@@ -155,7 +128,8 @@ if [[ $kernel_check_result -eq 1 ]]; then
     update_grub
 fi
 
-
+#再次更新系统
+dnf update -y
 
 echo -e "$COLOR_INFO 所有操作已完成！"
 echo -e "建议重启系统以应用更改。"
