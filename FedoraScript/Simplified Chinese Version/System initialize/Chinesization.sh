@@ -160,7 +160,6 @@ UBUNTU_INSTALL() {
     #安装输入法
     if [ "$INPUT_METHOD" == "fcitx5" ]; then
         dnf install fcitx5-* -y
-        dnf install fcitx-* -y
         dnf install ibus-* -y
     else
         dnf install ibus-* -y

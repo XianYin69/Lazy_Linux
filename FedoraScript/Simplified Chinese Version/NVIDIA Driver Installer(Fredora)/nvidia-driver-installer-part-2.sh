@@ -43,7 +43,6 @@ fi
 if systemctl is-active graphical.target &> /dev/null; then
   log_info "  !!!现在需要在单用户模式下运行此脚本!!! "
   log_warn "  请保存所有工作并关闭所有应用程序 "
-  log_warn "  "
   log_warn " 请进入单用户模式后重新运行此脚本 "
   read -p "按回车键继续，按Ctrl+C取消..."
   systemctl isolate rescue.target
