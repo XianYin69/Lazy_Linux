@@ -23,30 +23,18 @@ check_root() {
     fi
 }
 
-# --- 检测系统类型 ---
-detect_os() {
-    case $ID in
-        fedora)
-            echo -e " $COLOR_SUCCESS 系统是 $COLOR_RESET fedora"
-            $OS_TYPE = "fedora"
-            ;;
-        *)
-            echo -e " $COLOR_ERROR 不支持的操作系统: $ID $COLOR_RESET "
-            exit 1
-            ;;
-    esac
-}
-
 # --- 获取最新安装的内核版本 ---
 get_latest_kernel_version() {
     echo $(rpm -q kernel | sort -V | tail -n1 | sed 's/kernel-//')
 }
 
+
+#参数定义
+current_kernel=$(uname -r)
+latest_kernel=$(get_latest_kernel_version)
+
 # --- 检查并处理内核版本不一致 ---
 check_kernel_version() {
-    local current_kernel=$(uname -r)
-    local latest_kernel=$(get_latest_kernel_version)
-    
     if [[ "$current_kernel" != "$latest_kernel" ]]; then
         echo -e "== $COLOR_ERROR 检测到内核版本不一致 $COLOR_RESET =="
         echo -e "当前运行的内核版本: $current_kernel"
@@ -59,28 +47,13 @@ check_kernel_version() {
     fi
 }
 
-# --- 备份当前initramfs ---
-backup_current_initramfs() {
+# ---清理boot文件夹下的旧文件
+clean_old_files() {
     local current_kernel=$(uname -r)
-    local backup_dir="/boot/backup_$(date +%Y%m%d_%H%M%S)"
-    
-    # 询问用户是否要备份
-    read -p "是否要备份当前的initramfs文件？(y/n): " backup_choice
-    
-    if [[ "$backup_choice" =~ ^[Yy]$ ]]; then
-        echo -e "正在备份当前initramfs..."
-        mkdir -p "$backup_dir"
-        cp "/boot/initramfs-${current_kernel}.img" "$backup_dir/"
-        
-        if [ $? -eq 0 ]; then
-            echo -e "$COLOR_SUCCESS 备份完成：$backup_dir $COLOR_RESET"
-        else
-            echo -e "$COLOR_ERROR 备份失败 $COLOR_RESET"
-            exit 1
-        fi
-    else
-        echo -e "跳过备份initramfs"
-    fi
+    echo -e "正在清理旧文件"
+    find /boot -name "config-*" ! -name "config-${current_kernel}" -type f -delete
+    find /boot -name "System.map-*" ! -name "System.map-${current_kernel}" -type f -delete
+    find /boot -name "vmlinuz-*" ! -name "vmlinuz-${current_kernel}" -type f ! -name "vmlinuz-0-rescue-*" -delete
 }
 
 # --- 清理旧内核 ---
@@ -162,22 +135,16 @@ log_warn "如果你使用nvidia显卡，则重启后需要重新安装nvidia驱�
 # 检查root权限
 check_root
 
-# 检测系统类型
-OS_TYPE=$(detect_os)
-echo -e "检测到系统类型: $OS_TYPE"
-
 # 检查内核版本一致性
 check_kernel_version
 local kernel_check_result=$?
 
 # 清理旧内核
 clean_old_kernels
+clean_old_files
 
 # 清理旧的initramfs
 clean_old_initramfs
-
-# 询问是否备份当前initramfs
-backup_current_initramfs
 
 # 重新生成initramfs（如果内核版本不一致，会同时生成最新内核的initramfs）
 regenerate_initramfs
@@ -187,6 +154,8 @@ if [[ $kernel_check_result -eq 1 ]]; then
     echo -e "由于存在新内核，将更新引导配置..."
     update_grub
 fi
+
+
 
 echo -e "$COLOR_INFO 所有操作已完成！"
 echo -e "建议重启系统以应用更改。"
