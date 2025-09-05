@@ -49,7 +49,6 @@ check_kernel_version() {
 
 # ---清理boot文件夹下的旧文件
 clean_old_files() {
-    local current_kernel=$(uname -r)
     echo -e "正在清理旧文件"
     find /boot -name "config-*" ! -name "config-${lasted_kernel}" -type f ! -delete
     find /boot -name "System.map-*" ! -name "System.map-${lasted_kernel}" -type f ! -delete
@@ -58,8 +57,6 @@ clean_old_files() {
 
 # --- 清理旧的initramfs文件 ---
 clean_old_initramfs() {
-    local current_kernel=$(uname -r)
-    
     echo -e "正在清理旧的initramfs文件..."
     
     # 找到并删除旧的initramfs文件，保留当前内核的
