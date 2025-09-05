@@ -1,0 +1,11 @@
+SOFTWARE_LIST=(
+
+)
+
+SNAP_PREFERRED_LIST=(
+
+)
+
+FLATPKG_LIST=(
+
+)

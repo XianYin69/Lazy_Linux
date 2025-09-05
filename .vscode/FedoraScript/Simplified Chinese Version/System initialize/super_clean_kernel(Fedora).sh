@@ -47,12 +47,40 @@ check_kernel_version() {
     fi
 }
 
+# --- 备份当前initramfs ---
+backup_current_initramfs() {
+    # 询问用户是否要备份
+    read -p "是否要备份当前的boot？(y/n): " backup_choice
+    
+    if [[ "$backup_choice" =~ ^[Yy]$ ]]; then
+        echo -e "正在备份当前boot..."
+        read -p "请输入你想要输出备份文件的目录：" user_dir
+        if [ ! -d $user_dir ]; then
+            echo "！！！你输入的地址有误！！！"
+            exit 0
+        else
+            cd "${user_dir}"
+            mkdir -p "boot_backup"
+            cp -r "/boot" "${uesr_dir}/boot_backup"       
+            if [ $? -eq 0 ]; then
+                echo -e "$COLOR_SUCCESS 备份完成：$backup_dir $COLOR_RESET"
+            else
+                echo -e "$COLOR_ERROR 备份失败 $COLOR_RESET"
+                exit 1
+            fi
+        fi
+    else
+        echo -e "跳过备份initramfs"
+    fi
+}
+
 # ---清理boot文件夹下的旧文件
 clean_old_files() {
     local current_kernel=$(uname -r)
     echo -e "正在清理旧文件"
-    find /boot -name "config-*" ! -name "config-${current_kernel}" -type f -delete
-    find /boot -name "System.map-*" ! -name "System.map-${current_kernel}" -type f -delete
+    find /boot -name "config-*" ! -name "config-${current_kernel}" -type f delete
+    find /boot -name "symvers-*" ! -name "symvers-${current_kernel}" -type f delete
+    find /boot -name "System.map-*" ! -name "System.map-${current_kernel}" -type f delete
     find /boot -name "vmlinuz-*" ! -name "vmlinuz-${current_kernel}" -type f ! -name "vmlinuz-0-rescue-*" -delete
 }
 
@@ -135,6 +163,10 @@ log_warn "如果你使用nvidia显卡，则重启后需要重新安装nvidia驱�
 # 检查root权限
 check_root
 
+# 检测系统类型
+OS_TYPE=$(detect_os)
+echo -e "检测到系统类型: $OS_TYPE"
+
 # 检查内核版本一致性
 check_kernel_version
 local kernel_check_result=$?
@@ -145,6 +177,9 @@ clean_old_files
 
 # 清理旧的initramfs
 clean_old_initramfs
+
+# 询问是否备份当前initramfs
+backup_current_initramfs
 
 # 重新生成initramfs（如果内核版本不一致，会同时生成最新内核的initramfs）
 regenerate_initramfs
