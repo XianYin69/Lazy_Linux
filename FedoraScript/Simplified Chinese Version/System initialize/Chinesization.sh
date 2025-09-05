@@ -60,58 +60,6 @@ check_os() {
 }
 
 #输入法
-#fcitx5
-FCITX5_PACKAGE=(
-    "fcitx5"
-    "fcitx5-chinese-addons"
-    "fcitx5-configtool"
-    "fcitx5-gtk"
-    "fcitx5-qt"
-    "fcitx5-rime"
-    "rime-cantonese"
-    "rime-simp"
-    "rime-traditional"
-    "rime-emoji"
-    "rime-quick"
-    "rime-words"
-    "liberime"
-    "fcitx5-qt5"
-    "fcitx5-qt6"
-    "fcitx5-gtk2"
-    "fcitx5-gtk3"
-    "fcitx5-gtk4"
-    "fcitx5-module-cloudpinyin"
-    "fcitx5-module-kimpanel"
-    "fcitx5-module-x11"
-    "fcitx5-module-wayland"
-    "fcitx5-module-dbus"
-    "fcitx5-module-gtk"
-    "fcitx5-module-qt"
-    "fcitx5-module-qt6"
-    "fcitx5-module-qt5"
-    "fcitx5-module-gtk3"
-    "fcitx5-module-gtk4"
-    "fcitx5-module-x11"
-    "fcitx5-module-wayland"
-    "fcitx5-module-dbus"
-)
-#ibus
-IBUS_PACKAGE=(
-    "ibus"
-    "ibus-clutter"
-    "ibus-gtk"
-    "ibus-gtk3"
-    "ibus-qt4"
-    "ibus-qt5"
-    "ibus-qt6"
-    "ibus-rime"
-    "rime-cantonese"
-    "rime-simp"
-    "rime-traditional"
-    "rime-emoji"
-    "rime-quick"
-    "rime-words"
-)
 #输入法选择
 INPUT_METHOD_SELECTION() {
     echo -e "Choose your input method firmware："
@@ -159,11 +107,11 @@ UBUNTU_INSTALL() {
     apt upgrade -y
     #安装输入法
     if [ "$INPUT_METHOD" == "fcitx5" ]; then
-        dnf install fcitx5-* -y
-        dnf install ibus-* -y
+        apt install fcitx5-* -y
+        apt install ibus-* -y
     else
-        dnf install ibus-* -y
-        dnf rime-*
+        apt install ibus-* -y
+        apt rime-*
     fi
     #配置输入法
     INPUT_METHOD_CONFIG
@@ -221,31 +169,9 @@ FEDORA_INSTALL() {
     dnf upgrade -y
     #安装输入法
     if [ "$INPUT_METHOD" == "fcitx5" ]; then
-        for package in "${FCITX5_PACKAGE[@]}"; do
-            if dnf list installed "$package" &> /dev/null; then
-                echo -e " $COLOR_WARN $package is already installed, skip. $COLOR_RESET
-            else
-                echo -e " $COLOR_INFO Installing $package ... $COLOR_RESET "
-                if dnf install -y "$package"; then
-                    echo -e " $COLOR_SUCCESS $package installed successfully. $COLOR_RESET "
-                else
-                    echo -e " $COLOR_ERROR Failed to install $package. $COLOR_RESET "
-                fi
-            fi
-        done
-    elif [ "$INPUT_METHOD" == "ibus" ]; then
-        for package in "${IBUS_PACKAGE[@]}"; do
-            if dnf list installed "$package" &> /dev/null; then
-                echo -e " $COLOR_WARN $package is already installed, skip. $COLOR_RESET
-            else
-                echo -e " $COLOR_INFO Installing $package ... $COLOR_RESET "
-                if dnf install -y "$package"; then
-                    echo -e " $COLOR_SUCCESS $package installed successfully. $COLOR_RESET "
-                else
-                    echo -e " $COLOR_ERROR Failed to install $package. $COLOR_RESET "
-                fi
-            fi
-        done
+        dnf install fcitx5-* -y
+    else
+        dnf install fcitx5-* -y
     fi
     #配置输入法
     INPUT_METHOD_CONFIG
@@ -259,31 +185,9 @@ ARCH_INSTALL() {
     pacman -Syu --noconfirm
     #安装输入法
     if [ "$INPUT_METHOD" == "fcitx5" ]; then
-        for package in "${FCITX5_PACKAGE[@]}"; do
-            if pacman -Qi "$package" &> /dev/null; then
-                echo -e " $COLOR_WARN $package is already installed, skip. $COLOR_RESET
-            else
-                echo -e " $COLOR_INFO Installing $package ... $COLOR_RESET "
-                if pacman -S --noconfirm "$package"; then
-                    echo -e " $COLOR_SUCCESS $package installed successfully. $COLOR_RESET "
-                else
-                    echo -e " $COLOR_ERROR Failed to install $package. $COLOR_RESET "
-                fi
-            fi
-        done
-    elif [ "$INPUT_METHOD" == "ibus" ]; then
-        for package in "${IBUS_PACKAGE[@]}"; do
-            if pacman -Qi "$package" &> /dev/null; then
-                echo -e " $COLOR_WARN $package is already installed, skip. $COLOR_RESET
-            else
-                echo -e " $COLOR_INFO Installing $package ... $COLOR_RESET "
-                if pacman -S --noconfirm "$package"; then
-                    echo -e " $COLOR_SUCCESS $package installed successfully. $COLOR_RESET "
-                else
-                    echo -e " $COLOR_ERROR Failed to install $package. $COLOR_RESET "
-                fi
-            fi
-        done
+        pacman -S --needed fcitx5
+    else
+        pacman -S --needed ibus
     fi
     #配置输入法
     INPUT_METHOD_CONFIG
