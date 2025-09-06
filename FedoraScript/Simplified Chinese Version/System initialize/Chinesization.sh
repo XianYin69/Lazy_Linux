@@ -108,10 +108,8 @@ UBUNTU_INSTALL() {
     #安装输入法
     if [ "$INPUT_METHOD" == "fcitx5" ]; then
         apt install fcitx5-* -y
-        apt install ibus-* -y
     else
         apt install ibus-* -y
-        apt rime-*
     fi
     #配置输入法
     INPUT_METHOD_CONFIG
@@ -171,7 +169,7 @@ FEDORA_INSTALL() {
     if [ "$INPUT_METHOD" == "fcitx5" ]; then
         dnf install fcitx5-* -y
     else
-        dnf install fcitx5-* -y
+        dnf install ibus-* -y
     fi
     #配置输入法
     INPUT_METHOD_CONFIG
