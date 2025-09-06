@@ -83,8 +83,6 @@ INPUT_METHOD_CONFIG() {
         echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
         #设置环境变量
         echo "export XMODIFIERS=@im=fcitx5" >> /etc/profile.d/fcitx5.sh
-        echo "export GTK_IM_MODULE=fcitx5" >> /etc/profile.d/fcitx5.sh
-        echo "export QT_IM_MODULE=fcitx5" >> /etc/profile.d/fcitx5.sh
         echo "export CLUTTER_IM_MODULE=fcitx5" >> /etc/profile.d/fcitx5.sh
         source /etc/profile.d/fcitx5.sh
         log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
@@ -92,8 +90,6 @@ INPUT_METHOD_CONFIG() {
         echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
         #设置环境变量
         echo "export XMODIFIERS=@im=ibus" >> /etc/profile.d/ibus.sh
-        echo "export GTK_IM_MODULE=ibus" >> /etc/profile.d/ibus.sh
-        echo "export QT_IM_MODULE=ibus" >> /etc/profile.d/ibus.sh
         echo "export CLUTTER_IM_MODULE=ibus" >> /etc/profile.d/ibus.sh
         source /etc/profile.d/ibus.sh
         log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
