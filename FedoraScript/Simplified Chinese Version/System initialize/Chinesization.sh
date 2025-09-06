@@ -78,22 +78,102 @@ INPUT_METHOD_SELECTION() {
     fi
 }
 #输入法配置
-INPUT_METHOD_CONFIG() {
-    if [ "$INPUT_METHOD" == "fcitx5" ]; then
-        echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
-        #设置环境变量
-        echo "export XMODIFIERS=@im=fcitx5" >> /etc/profile.d/fcitx5.sh
-        echo "export CLUTTER_IM_MODULE=fcitx5" >> /etc/profile.d/fcitx5.sh
-        source /etc/profile.d/fcitx5.sh
-        log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
-    elif [ "$INPUT_METHOD" == "ibus" ]; then
-        echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
-        #设置环境变量
-        echo "export XMODIFIERS=@im=ibus" >> /etc/profile.d/ibus.sh
-        echo "export CLUTTER_IM_MODULE=ibus" >> /etc/profile.d/ibus.sh
-        source /etc/profile.d/ibus.sh
-        log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
+ENVIRONMENT_INIT() {
+    local DE
+    local choice
+    log_info "Select your display server:"
+    echo "1.x11"
+    echo "2.wayland"
+    read -p ":" choice
+    if [[ "$choice" -eq 1 ]]; then
+        if [ "$INPUT_METHOD" == "fcitx5" ]; then
+            echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
+            #设置环境变量
+            echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+            echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
+            echo "QT_IM_MODULE=fcitx5" >> /etc/environment
+            echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+            echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+            source /etc/profile.d/fcitx5.sh
+            log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
+        elif [ "$INPUT_METHOD" == "ibus" ]; then
+            echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
+            #设置环境变量
+            echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+            echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+            echo "export QT_IM_MOUDLE=ibus" >> $HOME/.bashrc
+            source /etc/profile.d/ibus.sh
+            log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
+        fi
+    elif [[ "$choice" -eq 2 ]]; then
+        log_info "Select your DE"
+        echo "1.kde"
+        echo "2.gnome"
+        read -p ":" DE
+        if [[ "$DE" -eq 1 ]]; then
+            #kde
+            if [ "$INPUT_METHOD" == "fcitx5" ]; then
+                echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
+                #设置环境变量
+                echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+                echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+                echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+                source /etc/profile.d/fcitx5.sh
+                log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
+            elif [ "$INPUT_METHOD" == "ibus" ]; then
+                echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
+                #设置环境变量
+                echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+                echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+                echo "export QT_IM_MOUDLE=ibus" >> $HOME/.bashrc
+                source /etc/profile.d/ibus.sh
+                log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
+            fi
+        elif [[ "$DE" -eq 2 ]]; then
+            #gnome
+            if [ "$INPUT_METHOD" == "fcitx5" ]; then
+                echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
+                #设置环境变量
+                echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+                echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
+                echo "QT_IM_MODULE=fcitx5" >> /etc/environment
+                echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+                echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+                source /etc/profile.d/fcitx5.sh
+                log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
+            elif [ "$INPUT_METHOD" == "ibus" ]; then
+                echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
+                #设置环境变量
+                echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+                echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+                echo "export QT_IM_MOUDLE=ibus" >> $HOME/.bashrc
+                source /etc/profile.d/ibus.sh
+                log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
+            fi
+        else
+            log_error "This script doesn't support your DE"
+            exit 0
+        fi
+    else
+        log_error "This script dosen't support your display server"
+        exit 0            
     fi
+}
+INPUT_METHOD_CONFIG() {
+    local choice
+    if [[ -s "/etc/environment" ]]; then
+        echo ""environment" is exitst,do you want to rebuild it?"
+        read -p "(Y/n):" choice
+        if [[ "$choice" =~ ^[Yy]$ ]]; then
+            >/etc/environment
+            ENVIRONMENT_INIT
+        else
+            exit 0
+        fi
+    else
+        ENVIRONMENT_INIT
+    fi
+
 }
 
 #Ubuntu安装函数
