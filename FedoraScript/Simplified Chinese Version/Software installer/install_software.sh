@@ -37,24 +37,30 @@ ROOT_CHECK() {
     exit 1
     fi
 }
-#检查系统类型
-OS_TYPE() {
-    if [ -f /etc/fedora-release ]; then
-        OS_TYPE="fedora"
-        PACKAGE_MANAGER="dnf"
-    elif [ -f /etc/debian_version ]; then
-        OS_TYPE="debian"
-        PACKAGE_MANAGER="apt"
-    elif [ -f /etc/arch-release ]; then
-        OS_TYPE="arch"
-        PACKAGE_MANAGER="pacman"
-    else
-        log_error "不支持的操作系统。仅支持Fedora和Debian系发行统。"
-        exit 1
-    fi
-    log_info "检测到操作系统类型：$OS_TYPE"
 
+OS_TYPE() {
+    source /etc/os-release
+    case $ID in
+        fedora|centos|rhel)
+            OS_TYPE="fedora"
+            log_info "你的系统是fedora,cent os或rhel及他们的衍生物"
+        ;;
+        debian|ubuntu|kali)
+            OS_TYPE="debian"
+            log_info "你的系统是debian,ubuntu或kali及他们的衍生物"            
+        ;;
+        arch)
+            OS_TYPE="arch"
+            log_info "你的系统是arch及其衍生物"
+        ;;
+        *)
+            log_error "不受支持的操作系统"
+            exit 1
+        ;;
+    esac
 }
+
+
 # 读取用户软件列表（software_list.txt）
 SOFTWARE_LIST() {
     read -p "请输入文件路径:" FILE_PATH
@@ -78,14 +84,14 @@ FEDORA_INSTALL() {
     # 使用dnf安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
         if dnf list installed "$package" &> /dev/null; then
-            log_warn "$package 已经安装，跳过。"
-        else
             log_info "正在安装 $package ..."
             if dnf install -y "$package"; then
                 log_success "$package 安装成功。"
             else
                 log_error "$package 安装失败。"
             fi
+        else
+            log_warn "$package 已经安装，跳过。"
         fi
     done
 }
@@ -96,14 +102,14 @@ UBUNTU_INSTALL() {
     # 使用apt安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
         if apt list --installed "$package" &> /dev/null; then
-            log_warn "$package 已经安装，跳过。"
-        else
             log_info "正在安装 $package ..."
             if apt install -y "$package"; then
                 log_success "$package 安装成功。"
             else
                 log_error "$package 安装失败。"
             fi
+        else
+            log_warn "$package 已经安装，跳过。"
         fi
     done
 }
@@ -114,14 +120,14 @@ ARCH_INSTALL() {
     # 使用pacman安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
         if pacman -Qi "$package" &> /dev/null; then
-            log_warn "$package 已经安装，跳过。"
-        else
             log_info "正在安装 $package ..."
             if pacman -S --noconfirm "$package"; then
                 log_success "$package 安装成功。"
             else
                 log_error "$package 安装失败。"
             fi
+        else
+            log_warn "$package 已经安装，跳过。"
         fi
     done
 }
