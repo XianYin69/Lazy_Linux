@@ -44,8 +44,8 @@ check_os() {
             echo -e " $COLOR_SUCCESS System is  $COLOR_RESET fedora"
             OS_TYPE="fedora"
             ;;
-        debian|ubuntu)
-            echo -e " $COLOR_SUCCESS System is $COLOR_RESET debian/ubuntu"
+        debian|ubuntu|kali)
+            echo -e " $COLOR_SUCCESS System is $COLOR_RESET debian/ubuntu/kali"
             OS_TYPE="debian"
             ;;
         arch)
