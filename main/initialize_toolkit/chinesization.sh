@@ -63,7 +63,7 @@ check_os() {
 #输入法选择
 INPUT_METHOD_SELECTION() {
     echo -e "Choose your input method firmware："
-    echo "1) fcitx5"
+    echo "1) fcitx5(recommend when first install)"
     echo "2) ibus(recommend)"
     read -p "Option (1 or 2): " input_method_choice
     if [ "$input_method_choice" == "1" ]; then
