@@ -1,6 +1,6 @@
-# Toolkit_for_Linux
+# LL(Lazy_Linux, 慵懒Linux)
 
-Toolkit_for_Linux 是一个由面向小白的Linux工具集，旨在简化上手难度和缩短前期配置系统的时间。
+LL(Lazy_Linux， 慵懒Linux！) 是一个用于偷懒的Linux工具集，旨在缩短前期配置系统和折腾系统的时间。
 
 ---
 
@@ -15,7 +15,7 @@ Toolkit_for_Linux 是一个由面向小白的Linux工具集，旨在简化上手
 ## 使用方法
 1. 克隆此仓库：
    ```bash
-   git clone https://github.com/XianYin69/Toolkits_for_Linux.git
+   git clone https://github.com/XianYin69/Lazy_Linux.git
    ```
 2. 使用脚本 :
    ```bash
