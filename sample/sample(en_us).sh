@@ -1,10 +1,10 @@
 #!/bin/bash
 # =================================================================================================
-# Script name：   
-# Description：   
-# Author：       
-# Referance from：  
-# Date：       
+# Script name：name   
+# Description：explain your script   
+# Author：your name       
+# Referance from：if you refer other website, please lable in it  
+# Date：dd-mm-yyyy       
 # =================================================================================================
 
 Enter your code here
