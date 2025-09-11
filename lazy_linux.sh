@@ -42,6 +42,7 @@ select_luncher_language() {
             break
         else
             echo "You must select one!"
+        fi
     done
 }
 
