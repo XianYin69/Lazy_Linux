@@ -41,7 +41,7 @@ select_luncher_language() {
             sed 's/STATE_LANG=*/STATE_LANG=en' ./init/state/STATE.txt
             break
         else
-        
+            echo "You must select one!"
     done
 }
 
