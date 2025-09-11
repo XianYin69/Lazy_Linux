@@ -7,7 +7,7 @@
 # 日期：9-10-2025 
 # =================================================================================================
 
-source "./init/state/STATE.txt"
+source "./stack/state/STATE.txt"
 
 OS_TYPE=""
 KERNEL_VERSION=""
@@ -17,11 +17,11 @@ SESSION_TYPE=""
 system_check() {
     source "/etc/os-release"
     OS_TYPE=$ID
-    sed 's/OS_TYPE=*/OS_TYPE=$OS_TYPE' ./init/state/STATE.txt
+    sed -i 's/OS_TYPE=*/OS_TYPE=$OS_TYPE' ./stack/state/STATE.txt
     KERNEL_VERSION=${uname -r}
-    sed 's/KERNEL_VERSION=*/KERNEL_VERSION=$KERNEL_VERSION' ./init/state/STATE.txt
+    sed -i 's/KERNEL_VERSION=*/KERNEL_VERSION=$KERNEL_VERSION' ./stack/state/STATE.txt
     SESSION_TYPE=$XDG_SESSION_TYPE
-    sed 's/SESSION_TYPE=*/SESSION_TYPE=$SEESION_TYPE' ./init/state/STATE.txt
+    sed -i 's/SESSION_TYPE=*/SESSION_TYPE=$SEESION_TYPE' ./stack/state/STATE.txt
 }
 
 #语言选择
@@ -34,11 +34,11 @@ select_luncher_language() {
         read -p ":" LUNCHER_LANGUAGE
         if [ $LUNCHER_LANGUAGE -eq 1 ]
         then
-            sed 's/STATE_LANG=*/STATE_LANG=ch' ./init/state/STATE.txt
+            sed 's/STATE_LANG=*/STATE_LANG=ch' ./stack/state/STATE.txt
             break
         elif [ $LUNCHER_LANGUAGE -eq 2 ]
         then
-            sed 's/STATE_LANG=*/STATE_LANG=en' ./init/state/STATE.txt
+            sed 's/STATE_LANG=*/STATE_LANG=en' ./stack/state/STATE.txt
             break
         else
             echo "You must select one!"
@@ -72,11 +72,11 @@ initialize_toolkit() {
     do
         case $choice in
             1)
-                sudo bash ./main/initialize_toolkit/chinesization.sh
+                sudo bash ./lib/initialize_toolkit/chinesization.sh
                 break
             ;;
             2)
-                sudo bash ./main/initialize_toolkit/init_git.sh
+                sudo bash ./lib/initialize_toolkit/init_git.sh
                 break
             ;;
             *)
@@ -88,17 +88,17 @@ initialize_toolkit() {
 
 linux_configurer() {
     local choice
-    LOG_WARN 'cat ./main/linux_configurer/NOTICE.txt'
+    LOG_WARN 'cat ./lib/linux_configurer/NOTICE.txt'
     LAZY_LINUX_SH_LINUX_CONFIGURER_INFO
     read -p ":" choice
     while :
     do
         case $choice in
             1)
-                sudo bash ./main/linux_configurer/kernel_cleaner/super_clean_old_kernel.sh
+                sudo bash ./lib/linux_configurer/kernel_cleaner/super_clean_old_kernel.sh
             ;;
             2)
-                sudo bash ./main/linux_configurer/nvidia_driver_installer/nvidia_driver_installer_init.sh
+                sudo bash ./lib/linux_configurer/nvidia_driver_installer/nvidia_driver_installer_init.sh
             ;;
             *)
                 LAZY_LINUX_SH_LINUX_CONFIGURER_CHOICE_ERROR
@@ -115,11 +115,11 @@ backup_and_restore() {
     do
         case $choice in
             1)
-                sudo bash ./main/backup_and_restore/backup.sh
+                sudo bash ./lib/backup_and_restore/backup.sh
                 break
             ;;
             2)
-                sudo bash ./main/backup_and_restore/restore.sh
+                sudo bash ./lib/backup_and_restore/restore.sh
                 break
             ;;
             *)
@@ -137,7 +137,7 @@ software_installer() {
     do
         if choice ~= ^[Yy]
         then
-            sudo bash ./main/software_installer/software_installer.sh
+            sudo bash ./lib/software_installer/software_installer.sh
             break
         else
             LAZY_LINUX_SH_SOFTWARE_INSTALLER_CHOICE_ERROR
@@ -153,10 +153,10 @@ waydroid() {
     do
         case $choice in
             1)
-                sudo bash ./waydroid_installer_init.sh
+                sudo bash ./lib/waydroid_installer_init.sh
             ;;
             2)
-                sduo bash ./apk_installer.sh
+                sduo bash ./lib/apk_installer.sh
             ;;
             *)
                 LAZY_LINUX_SH_WAYDROID_ERROR
@@ -192,11 +192,20 @@ script_choice() {
     esac
 }
 
+
+#使用次数增加
+time_plus() {
+    local time=$(grep -oP 'TIME=\k.*' ./stack/state/STATE.txt)
+    time_plus=$(($time+1))
+    sed -i "s/TIME=.*/TIME=$time_plus/" ./stack/state/STATE.txt
+}
+
+#主函数
 language_choose
 system_check
 SYSTEM_OS_TYPE_INFO "OS_TYPE"
 SYSTEM_KERNEL_VERSION_INFO "KERNEL_VERSION"
 SYSTEM_SESSION_TYPE_INFO "SESSION_TYPE"
-sed "s/TIME=*/TIME=${* + 1}" ./init/state/STATE.txt
+time_plus
 script_choice
 exit 0
