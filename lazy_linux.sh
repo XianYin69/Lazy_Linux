@@ -7,7 +7,7 @@
 # 日期：9-10-2025 
 # =================================================================================================
 
-source "./stack/state/STATE.txt"
+source "./stack/state/STATE.sh"
 
 OS_TYPE=""
 KERNEL_VERSION=""
@@ -17,11 +17,12 @@ SESSION_TYPE=""
 system_check() {
     source "/etc/os-release"
     OS_TYPE=$ID
-    sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE" ./stack/state/STATE.txt
+    sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE" ./stack/state/STATE.sh
     KERNEL_VERSION=$(uname -r)
-    sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION" ./stack/state/STATE.txt
+    sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION" ./stack/state/STATE.sh
     SESSION_TYPE=$XDG_SESSION_TYPE
-    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=$SESSION_TYPE" ./stack/state/STATE.txt
+    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=$SESSION_TYPE" ./stack/state/STATE.sh
+    source "./stack/state/STATE.sh"
 }
 
 #语言选择
@@ -34,16 +35,17 @@ select_launcher_language() {
         read -p ":" LAUNCHER_LANGUAGE
         if [ $LAUNCHER_LANGUAGE -eq 1 ]
         then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=ch" ./stack/state/STATE.txt
+            sed -i "s/STATE_LANG=.*/STATE_LANG=ch" ./stack/state/STATE.sh
             break
         elif [ $LAUNCHER_LANGUAGE -eq 2 ]
         then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=en" ./stack/state/STATE.txt
+            sed -i "s/STATE_LANG=.*/STATE_LANG=en" ./stack/state/STATE.sh
             break
         else
             echo "You must select one!"
         fi
     done
+    source "./stack/state/STATE.sh"
 }
 
 #语言初始化
@@ -209,9 +211,9 @@ script_choice() {
 
 #使用次数增加
 time_plus() {
-    local time=$(awk -F '=' '/TIME/{print $2}' ./stack/state/STATE.txt)
+    local time=$(awk -F '=' '/TIME/{print $2}' ./stack/state/STATE.sh)
     time_plus=$(($time+1))
-    sed -i "s/TIME=.*/TIME=$time_plus/" ./stack/state/STATE.txt
+    sed -i "s/TIME=.*/TIME=$time_plus/" ./stack/state/STATE.sh
 }
 
 #主函数
