@@ -91,26 +91,30 @@ initialize_toolkit() {
 
 linux_configurer() {
     local choice
-    log_warning_custom " " 
-    cat ./lib/linux_configurer/NOTICE.txt
-    while :
-    do
-        LAZY_LINUX_SH_LINUX_CONFIGURER_INFO
-        read -p ":" choice
-        case $choice in
-            1)
-                sudo bash ./lib/linux_configurer/kernel_cleaner/super_clean_old_kernel.sh
-                break
-            ;;
-            2)
-                sudo bash ./lib/linux_configurer/nvidia_driver_installer/nvidia_driver_installer_init.sh
-                break
-            ;;
-            *)
-                LAZY_LINUX_SH_LINUX_CONFIGURER_CHOICE_ERROR
-            ;;
-        esac
-    done
+    if $OS_TYPE == "fedora" || $OS_TYPE == "centos" || $OS_TYPE == "rhel"
+    then
+        while :
+        do
+            LAZY_LINUX_SH_LINUX_CONFIGURER_INFO_FEDORA
+            read -p ":" choice
+            case $choice in
+                1)
+                    sudo bash ./lib/linux_configurer/nvidia_driver_installer/installer.sh
+                    break
+                ;;
+                2)
+                    sudo bash ./lib/linux_configurer/touchpad_configurer/touchpad_configurer.sh
+                    break
+                ;;
+                *)
+                    LAZY_LINUX_SH_LINUX_CONFIGURER_CHOICE_ERROR
+                ;;
+            esac
+        done
+    else
+        log_error "仅支持Fedora系发行版！！！(Only Fedora-based distributions are supported!!!)"
+        exit 1
+    fi
 }
 
 backup_and_restore() {
