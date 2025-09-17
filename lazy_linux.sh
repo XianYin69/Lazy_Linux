@@ -17,12 +17,20 @@ SESSION_TYPE=""
 system_check() {
     source "/etc/os-release"
     OS_TYPE=$ID
-    sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE" ./stack/state/STATE.sh
+    sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE/g" ./stack/state/STATE.sh
     KERNEL_VERSION=$(uname -r)
-    sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION" ./stack/state/STATE.sh
+    sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION/g" ./stack/state/STATE.sh
     SESSION_TYPE=$XDG_SESSION_TYPE
-    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=$SESSION_TYPE" ./stack/state/STATE.sh
+    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=$SESSION_TYPE/g" ./stack/state/STATE.sh
     source "./stack/state/STATE.sh"
+    #检测是否是TTY模式
+    if [ $SESSION_TYPE = "tty" ]; then
+        TTY_MODE="Y"
+        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" ./stack/state/STATE.sh
+    else
+        TTY_MODE="N"
+        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" ./stack/state/STATE.sh
+    fi
 }
 
 #语言选择
@@ -33,13 +41,13 @@ select_launcher_language() {
         echo  "1.中文"
         echo  "2.English"
         read -p ":" LAUNCHER_LANGUAGE
-        if [ $LAUNCHER_LANGUAGE -eq 1 ]
+        if [ "$LAUNCHER_LANGUAGE" -eq 1 ]
         then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=ch" ./stack/state/STATE.sh
+            sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" ./stack/state/STATE.sh
             break
-        elif [ $LAUNCHER_LANGUAGE -eq 2 ]
+        elif [ "$LAUNCHER_LANGUAGE" -eq 2 ]
         then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=en" ./stack/state/STATE.sh
+            sed -i "s/STATE_LANG=.*/STATE_LANG=en/g" ./stack/state/STATE.sh
             break
         else
             echo "You must select one!"
@@ -91,7 +99,7 @@ initialize_toolkit() {
 
 linux_configurer() {
     local choice
-    if $OS_TYPE == "fedora" || $OS_TYPE == "centos" || $OS_TYPE == "rhel"
+    if [[ $OS_TYPE == "fedora" || $OS_TYPE == "centos" || $OS_TYPE == "rhel" ]]
     then
         while :
         do
@@ -163,7 +171,7 @@ waydroid() {
         read -p ":" choice
         case $choice in
             1)
-                sudo bash ./lib/waydroid/waydroid_installer/waydroid_installer_init.sh
+                sudo bash ./lib/waydroid/waydroid_installer/waydroid_installer.sh
                 break
             ;;
             2)
@@ -217,7 +225,7 @@ script_choice() {
 time_plus() {
     local time=$(awk -F '=' '/TIME/{print $2}' ./stack/state/STATE.sh)
     time_plus=$(($time+1))
-    sed -i "s/TIME=.*/TIME=$time_plus/" ./stack/state/STATE.sh
+    sed -i "s/TIME=.*/TIME=$time_plus/g" ./stack/state/STATE.sh
 }
 
 #主函数

@@ -39,6 +39,12 @@ if [ $EUID -ne 0 ]; then
   exit 1
 fi
 
+#变量定义
+JUST_FOR_FUN="../../../src/picture/nvidia_fuck_you.txt"
+
+#只为了好玩
+cat $JUST_FOR_FUN
+
 #step 1
 echo  -e " ==================== NVIDIA驱动安装脚本 - 第1部分 ==================== "
 echo  -e " 步骤 1-安装必要软件包 "
