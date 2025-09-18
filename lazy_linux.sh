@@ -7,15 +7,9 @@
 # 日期：9-10-2025 
 # =================================================================================================
 
-#定义行为
-source_shell() {
-    source "./var/index/filepath.sh"
-    source $STATE_PATH
-}
-
-source_shell_end() {
-    source "./var/index/filepath.sh"
-}
+#引入函数
+. ./var/index/function.sh
+. ./var/index/filepath.sh
 
 OS_TYPE=""
 KERNEL_VERSION=""
@@ -23,7 +17,6 @@ SESSION_TYPE=""
 
 #系统检测
 system_check() {
-    source_shell
     source "/etc/os-release"
     OS_TYPE=$ID
     sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE/g" $STATE_PATH
@@ -40,12 +33,10 @@ system_check() {
         TTY_MODE="N"
         sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_PATH
     fi
-    source_shell_end
 }
 
 #语言选择
 select_launcher_language() {
-    source_shell
     while :
     do
         echo  "Please choose your language:"
@@ -64,32 +55,28 @@ select_launcher_language() {
             echo "You must select one!"
         fi
     done
-    source_shell_end
 }
 
 #语言初始化
 language_choose() {
-    source_shell
     if [ "$TTY_MODE" = "N" ]
     then
         if [ "$STATE_LANG" = "ch" ]; then
-            source "./lang/zh-CN-info.sh"
+            source "$LANG_ZH_CN_PATH"
         elif [ "$STATE_LANG" = "en" ]; then
-            source "./lang/en-US-info.sh"
+            source "$LANG_EN_US_PATH"
         elif [ "$STATE_LANG" = "initing" ]; then
             select_launcher_language
         else
-            source "./lang/en-US-info.sh"
+            source "$LANG_EN_US_PATH"
         fi
     else
-        source "./lang/en-US-info.sh"
+        source "$LANG_EN_US_PATH"
     fi
-    source_shell_end
 }
 
 #子菜单
 initialize_toolkit() {
-    source_shell
     local choice
     while :
     do
@@ -97,11 +84,11 @@ initialize_toolkit() {
         read -p ":" choice
         case $choice in
             1)
-                sudo bash ./lib/initialize_toolkit/chinesization.sh
+                sudo bash "$CHINESEIZATION_PATH"
                 break
             ;;
             2)
-                sudo bash ./lib/initialize_toolkit/init_git.sh
+                sudo bash "$INIT_GIT_PATH"
                 break
             ;;
             *)
@@ -109,11 +96,9 @@ initialize_toolkit() {
             ;;
         esac
     done
-    source_shell_end
 }
 
 linux_configurer() {
-    source_shell
     local choice
     if [[ $OS_TYPE == "fedora" || $OS_TYPE == "centos" || $OS_TYPE == "rhel" ]]
     then
@@ -121,13 +106,14 @@ linux_configurer() {
         do
             LAZY_LINUX_SH_LINUX_CONFIGURER_INFO_FEDORA
             read -p ":" choice
+            cat "$LINUX_CONFIGURER_WARNING_PATH"
             case $choice in
                 1)
-                    sudo bash ./lib/linux_configurer/nvidia_driver_installer/installer.sh
+                    sudo bash "$NVIDIA_DRIVER_INSTALLER_PATH"
                     break
                 ;;
                 2)
-                    sudo bash ./lib/linux_configurer/touchpad_configurer/touchpad_configurer.sh
+                    sudo bash "$TOUCHPAD_CONFIGURER_PATH"
                     break
                 ;;
                 *)
@@ -139,11 +125,9 @@ linux_configurer() {
         log_error "仅支持Fedora系发行版！！！(Only Fedora-based distributions are supported!!!)"
         exit 1
     fi
-    source_shell_end
 }
 
 backup_and_restore() {
-    source_shell
     local choice
     while :
     do
@@ -151,11 +135,11 @@ backup_and_restore() {
         read -p ":" choice
         case $choice in
             1)
-                sudo bash ./lib/backup_and_restore/backup.sh
+                sudo bash "$BACKUP_PATH"
                 break
             ;;
             2)
-                sudo bash ./lib/backup_and_restore/restore.sh
+                sudo bash "$RESTORE_PATH"
                 break
             ;;
             *)
@@ -163,11 +147,9 @@ backup_and_restore() {
             ;;
         esac
     done
-    source_shell_end
 }
 
 software_installer() {
-    source_shell
     local choice
     while :
     do
@@ -175,17 +157,15 @@ software_installer() {
         read -p ":" choice
         if [[ $choice =~ ^[Yy] ]]
         then
-            sudo bash ./lib/software_installer/software_installer.sh
+            sudo bash "$SOFTWARE_INSTALLER_PATH"
             break
         else
             LAZY_LINUX_SH_SOFTWARE_INSTALLER_CHOICE_ERROR
         fi
     done
-    source_shell_end
 }
 
 waydroid() {
-    source_shell
     local choice
     while :
     do
@@ -193,11 +173,11 @@ waydroid() {
         read -p ":" choice
         case $choice in
             1)
-                sudo bash ./lib/waydroid/waydroid_installer/installer.sh
+                sudo bash "$WAYDROID_INSTALLER_PATH"
                 break
             ;;
             2)
-                sudo bash ./lib/waydroid/waydroid_configurer/apk_installer.sh
+                sudo bash "$WAYDROID_APK_INSTALLER_PATH"
                 break
             ;;
             *)
@@ -205,12 +185,10 @@ waydroid() {
             ;;
         esac
     done
-    source_shell_end
 }
 
 #菜单
 script_choice() {
-    source_shell
     local choice
     while true
     do
@@ -242,17 +220,14 @@ script_choice() {
             ;;
         esac 
     done
-    source_shell_end
 }
 
 
 #使用次数增加
 time_plus() {
-    source_shell
-    local time=$(awk -F '=' '/TIME/{print $2}' ./stack/state/STATE.sh)
+    local time=$(awk -F '=' '/TIME/{print $2}' $STATE_PATH)
     time_plus=$(($time+1))
-    sed -i "s/TIME=.*/TIME=$time_plus/g" ./stack/state/STATE.sh
-    source_shell_end
+    sed -i "s/TIME=.*/TIME=$time_plus/g" $STATE_PATH
 }
 
 #主函数
