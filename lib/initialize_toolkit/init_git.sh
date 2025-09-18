@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # =================================================================================================
 # 脚本名称：   setup_git.sh
 # 描述：       Git配置与仓库克隆工具
@@ -11,61 +10,104 @@
 # 日期：       2025-08-19
 # =================================================================================================
 
-set -e  # 遇到错误立即退出
+# 定义变量
+INIT_GIT_RETRY=N
 
-# --- 日志工具函数 ---
-log_info() {
-    echo -e "\033[34m[信息]\033[0m $1"
-}
-
-log_success() {
-    echo -e "\033[32m[成功]\033[0m $1"
-}
-
-log_error() {
-    echo -e "\033[31m[错误]\033[0m $1"
-}
-
-log_warn() {
-    echo -e "\033[33m[警告]\033[0m $1"
+# 安装函数
+git_installer() {
+    case $OS_TYPE in
+        "debian"|"ubuntu"|"linuxmint"|"popos"|"kali"|"deepin")
+            sudo apt update
+            sudo apt install -y git
+            ;;
+        "fedora"|"centos"|"rhel")
+            sudo dnf install -y git
+            ;;
+        "arch"|"manjaro"|"endeavouros")
+            sudo pacman -Syu --noconfirm git
+            ;;
+        "opensuse")
+            sudo zypper install -y git
+            ;;
+        *)
+            INIT_GIT_GIT_INSTALL_ERROR
+            sleep 5
+            exit 1
+            ;;
+    esac
 }
 
 # 检查git是否安装
-if ! command -v git &> /dev/null; then
-    log_error "Git未安装，请先安装Git"
-    exit 1
-fi
-
-# --- 显示欢迎信息 ---
-log_info "========================================="
-log_info "        Git 配置与仓库克隆工具        "
-log_info "========================================="
-echo
+check_git() {
+    if ! command -v git &> /dev/null; then
+        INIT_GIT_GIT_ERROR
+        git_installer
+    fi
+}
 
 # --- 提示用户输入信息 ---
-log_info "此脚本将帮助您配置Git并克隆仓库。"
-read -p "请输入您的GitHub用户名：" GITHUB_USERNAME
-read -p "请输入您的GitHub邮箱：" GITHUB_EMAIL
-read -p "请输入要克隆的GitHub仓库URL：" REPO_URL
+config_infomation_of_git() {
+    INIT_GIT_INIT_INFO
+    while :
+    do
+        INIT_GIT_INIT_USERNAME_INFO
+        read -p "：" GITHUB_USERNAME
+        if [ -z "$GITHUB_USERNAME" ]; then
+            INIT_GIT_USERNAME_ERROR
+        else
+            break
+        fi
+    done
+
+    while :
+    do
+        INIT_GIT_INIT_EMAIL_INFO
+        read -p "：" GITHUB_EMAIL
+        if [ -z "$GITHUB_EMAIL" ]; then
+            INIT_GIT_EMAIL_ERROR
+        else
+            break
+        fi
+    done
+
+    while :
+    do
+        INIT_GIT_URL_INFO
+        read -p "：" REPO_URL
+        if [ -z "$REPO_URL" ]; then
+            INIT_GIT_URL_ERROR
+        else
+            break
+        fi
+    done
+}
 
 # --- 配置Git ---
-echo
-log_info "正在配置Git凭据..."
-git config --global user.name "$GITHUB_USERNAME"
-git config --global user.email "$GITHUB_EMAIL"
-log_success "Git用户名和邮箱已全局设置完成。"
+configure_git() {
+    INIT_GIT_CONFIG_INFO
+    git config --global user.name "$GITHUB_USERNAME"
+    git config --global user.email "$GITHUB_EMAIL"
+    INIT_GIT_CONFIG_SUCCESS
+}
 
 # --- 克隆仓库 ---
-echo
-log_info "正在从 $REPO_URL 克隆仓库..."
-if git clone "$REPO_URL"; then
-    log_success "仓库克隆成功。"
-else
-    log_error "仓库克隆失败。请检查URL和您的权限。"
-    exit 1
-fi
+clone_respository() {
+    INIT_GIT_CLONE_INFO
+    if git clone "$REPO_URL"; then
+        INIT_GIT_CLONE_SUCCESS
+        INIT_GIT_RETRY=N
+    else
+        INIT_GIT_CLONE_ERROR
+        INIT_GIT_RETRY=Y
+    fi
+}
 
-echo
-echo "========================================="
-echo "       所有任务已完成！      "
-echo "========================================="
+#主函数
+check_git
+INIT_GIT_WELCOME_INFO
+config_infomation_of_git
+configure_git
+while :
+do
+
+done

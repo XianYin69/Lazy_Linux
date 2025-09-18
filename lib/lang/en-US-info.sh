@@ -135,3 +135,196 @@ SYSTEM_SESSION_TYPE_INFO() {
 }
 #end
 
+#backup.sh tips
+BACKUP_INFO() {
+    echo "========================================"
+    echo "               Backup Tool              "
+    echo "========================================"
+}
+
+BACKUP_PATH_INFO() {
+    echo "Please provide the path of the file or directory to back up"
+}
+
+BACKUP_STORE_PATH_INFO() {
+    echo "Please provide the path to store the backup file"
+}
+
+BACKUP_SUCCESS_INFO() {
+    log_success "Backup successful!"
+}
+
+BACKUP_FAIL_INFO() {
+    log_error "Backup failed!"
+}
+
+#restore.sh tips
+RESTORE_INFO() {
+    echo "========================================"
+    echo "               Restore Tool            "
+    echo "========================================"
+}
+
+RESTORE_PATH_INFO() {
+    echo "Please provide the path of the file or directory to restore"
+}
+
+RESTORE_SUCCESS_INFO() {
+    log_success "Restore successful!"
+}
+
+RESTORE_FAIL_INFO() {
+    log_error "Restore failed!"
+}
+
+#end
+
+#first_run.sh tips
+FIRST_RUN_SH_ROOT_ERROR() {
+    log_error "Please run this script as root!"
+}
+#end
+
+
+#chinesization.sh tips
+##Input Method Selection
+CHINESIZATION_INPUT_METHOD_INFO() {
+    echo "========================================"
+    echo "         Input Method Selection         "
+    echo "========================================"
+    echo "1)Fcitx 5"
+    echo "2)ibus"
+    echo "Please select the input method (1 or 2)"
+}
+
+CHINESIZATION_INPUT_METHOD_FCITX_5_SELECT_INFO() {
+    echo "You have selected the input method: Fcitx 5"
+}
+
+CHINESIZATION_INPUT_METHOD_IBUS_SELECT_INFO() {
+    echo "You have selected the input method: ibus"
+}
+
+CHINESIZATION_INPUT_METHOD_CHOICE_ERROR() {
+    log_error "Invalid selection. Please choose 1 or 2."
+}
+
+##session type selection tips
+CHINESIZATION_ENVIRONMENT_INIT_INFO() {
+    echo "========================================"
+    echo "          Session Type Selection        "
+    echo "========================================"
+    echo "1)X11"
+    echo "2)Wayland"
+    echo "Please select the display server (1 or 2)"
+}
+
+CHINESIZATION_ADD_PROFILE_FCITX_5_INFO() {
+    echo "Adding Fcitx 5 configuration file..."
+}
+
+CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS() {
+    log_success "Fcitx 5 configuration file added successfully."
+}
+
+CHINESIZATION_ADD_PROFILE_IBUS_INFO() {
+    echo "Adding ibus configuration file..."
+}
+
+CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS() {
+    log_success "ibus configuration file added successfully."
+}
+
+#desktop environment selection tips
+CHINESIZATION_DESKTOP_ENVIRONMENT_INFO() {
+    echo "========================================"
+    echo "       Desktop Environment Selection    "
+    echo "========================================"
+    echo "1)KDE"
+    echo "2)GNOME"
+    echo "Please select the desktop environment (1 or 2)"
+}
+
+CHINESIZATION_DESKTOP_ENVIRONMENT_ERROR() {
+    log_error "Invalid selection. Please choose 1 or 2."
+}
+
+CHINESIZATION_ENVIRONMENT_INIT_ERROR() {
+    log_error "Invalid selection. Please choose 1 or 2."
+}
+
+##configure input method environment variables tips
+CHINESIZATION_INPUT_METHOD_CONFIG_INFO() {
+    echo "Do you want to reconfigure the input method environment variables? (Y/n)"
+}
+
+CHINESIZATION_INPUT_METHOD_CONFIG_ERROR() {
+    log_warn "If you need to configure the input method related variables, please re-run this script."
+}
+
+##input method installation tips
+###ubuntu and its derivatives
+CHINESIZATION_INSTALL_UBUNTU_INFO() {
+    echo "Installing input method for Ubuntu and its derivatives..."
+}
+
+CHINESIZATION_INSTALL_UBUNTU_SUCCESS() {
+    log_success "Input method installation successful."
+}
+
+###Fedora and its derivatives
+CHINESIZATION_INSTALL_FEDORA_INFO() {
+    echo "Installing input method for Fedora and its derivatives..."
+}
+
+CHINESIZATION_INSTALL_FEDORA_SUCCESS() {
+    log_success "Input method installation successful."
+}
+
+###arch and its derivatives
+CHINESIZATION_INSTALL_ARCH_INFO() {
+    echo "Installing input method for Arch and its derivatives..."
+}
+
+CHINESIZATION_INSTALL_ARCH_SUCCESS() {
+    log_success "Input method installation successful."
+}
+
+##modify locale
+CHINESIZATION_MODIFY_LOCALE_INFO() {
+    echo "Modifying system language to zh_CN.UTF-8..."
+}
+
+CHINESIZATION_MODIFY_LOCALE_ERROR() {
+    log_error "Did not find locale generation file."
+    log_error "Exiting..."
+}
+
+CHINESIZATION_REBUILD_LOCALE_ERROR() {
+    log_error "Did not find locale generation file."
+    log_error "If needed, please ensure to manually generate zh_CN.UTF-8."
+    log_error "Exiting..."
+}
+
+CHINESIZATION_MODIFY_LOCALE_ERROR() {
+    log_success "System language has been modified to zh_CN.UTF-8."
+}
+
+##main function
+###System Type Error
+CHINESIZATION_OS_TYPE_ERROR() {
+    log_error "Unsupported OS"
+    log_error "Exiting..."
+}
+
+###Reboot System
+CHINESIZATION_REBOOT_INFO() {
+    echo "System modification is complete. Do you want to reboot now? (Y/n)"
+}
+
+CHINESIZATION_REBOOT_CANCEL_INFO() {
+    log_info "Please remember to reboot the system later to apply changes."
+    log_info "Exiting..."
+}
+
+#end

@@ -135,3 +135,266 @@ SYSTEM_SESSION_TYPE_INFO() {
 }
 #结束
 
+#backup.sh提示信息
+BACKUP_INFO() {
+    echo "========================================"
+    echo "               备份工具                 "
+    echo "========================================"
+}
+
+BACKUP_PATH_INFO() {
+    echo "请提供要备份的文件或目录的路径"
+}
+
+BACKUP_STORE_PATH_INFO() {
+    echo "请提供备份文件存储的路径"
+}
+
+BACKUP_SUCCESS_INFO() {
+    log_success "备份成功！"
+}
+
+BACKUP_FAIL_INFO() {
+    log_error "备份失败！"
+}
+
+#restore.sh提示信息
+RESTORE_INFO() {
+    echo "========================================"
+    echo "               恢复工具                 "
+    echo "========================================"
+}
+
+RESTORE_PATH_INFO() {
+    echo "请提供要恢复的文件或目录的路径"
+}
+
+RESTORE_SUCCESS_INFO() {
+    log_success "恢复成功！"
+}
+
+RESTORE_FAIL_INFO() {
+    log_error "恢复失败！"
+}
+
+#结束
+
+#first_run.sh提示信息
+FIRST_RUN_SH_ROOT_ERROR() {
+    log_error "请以root用户运行此脚本！"
+}
+#结束
+
+
+#chinesization.sh提示信息
+##输入法选择
+CHINESIZATION_INPUT_METHOD_INFO() {
+    echo "========================================"
+    echo "               输入法选择               "
+    echo "========================================"
+    echo "1)Fcitx 5"
+    echo "2)ibus"
+    echo "请选择输入法（1或2）"
+}
+
+CHINESIZATION_INPUT_METHOD_FCITX_5_SELECT_INFO() {
+    echo "你选择的输入法是：Fcitx 5"
+}
+
+CHINESIZATION_INPUT_METHOD_IBUS_SELECT_INFO() {
+    echo "你选择的输入法是：ibus"
+}
+
+CHINESIZATION_INPUT_METHOD_CHOICE_ERROR() {
+    log_error "无效选择。请选择1或2。"
+}
+
+##显示服务器选择
+CHINESIZATION_ENVIRONMENT_INIT_INFO() {
+    echo "========================================"
+    echo "               显示服务器选择           "
+    echo "========================================"
+    echo "1)X11"
+    echo "2)Wayland"
+    echo "请选择显示服务器（1或2）"
+}
+
+CHINESIZATION_ADD_PROFILE_FCITX_5_INFO() {
+    echo "正在添加Fcitx 5配置文件..."
+}
+
+CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS() {
+    log_success " Fcitx 5配置文件添加成功。"
+}
+
+CHINESIZATION_ADD_PROFILE_IBUS_INFO() {
+    echo "正在添加ibus配置文件..."
+}
+
+CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS() {
+    log_success " ibus配置文件添加成功。"
+}
+
+#桌面环境选择
+CHINESIZATION_DESKTOP_ENVIRONMENT_INFO() {
+    echo "========================================"
+    echo "               桌面环境选择             "
+    echo "========================================"
+    echo "1)KDE"
+    echo "2)GNOME"
+    echo "请选择桌面环境（1或2）"
+}
+
+CHINESIZATION_DESKTOP_ENVIRONMENT_ERROR() {
+    log_error "无效选择。请选择1或2。"
+}
+
+CHINESIZATION_ENVIRONMENT_INIT_ERROR() {
+    log_error "无效选项。请选择1或2。"
+}
+
+#修改环境变量选择
+CHINESIZATION_INPUT_METHOD_CONFIG_INFO() {
+    echo "是否重新配置输入法环境变量？（Y/n）"
+}
+
+CHINESIZATION_INPUT_METHOD_CONFIG_ERROR() {
+    log_warn "如果你需要配置输入法相关变量，请重新运行此脚本。"
+}
+
+##输入法安装程序
+###ubuntu及其衍生版
+CHINESIZATION_INSTALL_UBUNTU_INFO() {
+    echo "正在为Ubuntu及其衍生版安装输入法..."
+}
+
+CHINESIZATION_INSTALL_UBUNTU_SUCCESS() {
+    log_success "输入法安装成功。"
+}
+
+###Fedora及其衍生版
+CHINESIZATION_INSTALL_FEDORA_INFO() {
+    echo "正在为Fedora及其衍生版安装输入法..."
+}
+
+CHINESIZATION_INSTALL_FEDORA_SUCCESS() {
+    log_success "输入法安装成功。"
+}
+
+###arch及其衍生版
+CHINESIZATION_INSTALL_ARCH_INFO() {
+    echo "正在为Arch及其衍生版安装输入法..."
+}
+
+CHINESIZATION_INSTALL_ARCH_SUCCESS() {
+    log_success "输入法安装成功。"
+}
+
+##修改locale
+CHINESIZATION_MODIFY_LOCALE_INFO() {
+    echo "正在将系统语言修改为zh_CN.UTF-8..."
+}
+
+CHINESIZATION_MODIFY_LOCALE_ERROR() {
+    log_error "找不到语言配置文件。"
+    log_error "正在退出..."
+}
+
+CHINESIZATION_REBUILD_LOCALE_ERROR() {
+    log_error "找不到语言生成文件。"
+    log_error "如果需要，请确保手动生成zh_CN.UTF-8。"
+    log_error "正在退出..."
+}
+
+CHINESIZATION_MODIFY_LOCALE_ERROR() {
+    log_success "系统语言已修改为zh_CN.UTF-8。"
+}
+
+##主函数
+###系统类型
+CHINESIZATION_OS_TYPE_ERROR() {
+    log_error "不支持的系统。"
+    log_error "正在退出..."
+}
+
+###重启系统
+CHINESIZATION_REBOOT_INFO() {
+    echo "是否现在重启系统以应用更改？（Y/n）"
+}
+
+CHINESIZATION_REBOOT_CANCEL_INFO() {
+    log_info "请记得稍后重启系统以应用更改。"
+    log_info "正在退出..."
+}
+
+#结束
+
+#init_git.sh提示信息
+##git 安装
+INIT_GIT_GIT_INSTALL_ERROR() {
+    log_error "不支持的系统。"
+    log_error "正在退出..."
+}
+
+INIT_GIT_GIT_ERROR() {
+    log_error "未检测到git。正在安装git..."
+}
+
+##欢迎信息
+INIT_GIT_WELCOME_INFO() {
+    echo "========================================="
+    echo "        Git 配置与仓库克隆工具        "
+    echo "========================================="
+    echo
+}
+
+##用户信息输入
+INIT_GIT_INIT_INFO() {
+    echo "此脚本将帮助您配置Git并克隆仓库。"
+}
+
+INIT_GIT_INIT_USERNAME_INFO() {
+    echo "请输入您的GitHub用户名"
+}
+
+INIT_GIT_USERNAME_ERROR() {
+    log_error "用户名不能为空。请重新输入。"
+}
+
+INIT_GIT_INIT_EMAIL_INFO() {
+    echo "请输入您的GitHub邮箱"
+}
+
+INIT_GIT_EMAIL_ERROR() {
+    log_error "邮箱不能为空。请重新输入。"
+}
+
+INIT_GIT_URL_INFO() {
+    echo "请输入要克隆的Git仓库URL"
+}
+
+INIT_GIT_URL_ERROR() {
+    log_error "URL不能为空。请重新输入。"
+}
+
+##git 配置
+INIT_GIT_CONFIG_INFO() {
+    log_info "正在配置Git凭据..."
+}
+
+INIT_GIT_CONFIG_SUCCESS() {
+    log_success "Git用户名和邮箱已全局设置完成。"
+}
+
+##克隆仓库
+INIT_GIT_CLONE_INFO() {
+    log_info "正在克隆仓库..."
+}
+
+INIT_GIT_CLONE_SUCCESS() {
+    log_success "仓库克隆成功。"
+}
+
+INIT_GIT_CLONE_ERROR() {
+    log_error "仓库克隆失败。请检查URL和您的权限。"
+}

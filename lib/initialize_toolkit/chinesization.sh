@@ -7,132 +7,37 @@
 # 日期：       9-2-2025
 # =================================================================================================
 
-# --- 颜色定义 ---
-readonly COLOR_INFO="\033[0;34m"     # 蓝色
-readonly COLOR_SUCCESS="\033[0;32m"   # 绿色
-readonly COLOR_ERROR="\033[0;31m"     # 红色
-readonly COLOR_WARN="\033[0;33m"      # 黄色
-readonly COLOR_RESET="\033[0m"        # 重置颜色
-
-#--日志函数---
-log_info() {
-    echo -e "${COLOR_INFO}[Info]${COLOR_RESET} $1"
-}
-log_success() {
-    echo -e "${COLOR_SUCCESS}[Success]${COLOR_RESET} $1"
-}
-log_error() {
-    echo -e "${COLOR_ERROR}[Error]${COLOR_RESET} $1"
-}
-log_warn() {
-    echo -e "${COLOR_WARN}[Warning]${COLOR_RESET} $1"
-}
-
-# --- 检查root权限 ---
-check_root() {
-    if [ "$EUID" -ne 0 ]; then
-        echo -e "Need root privileges"
-        echo -e "Please run it as root: sudo $0"
-        exit 1
-    fi
-}
-
-#检测系统
-check_os() {
-    case $ID in
-        fedora)
-            echo -e " $COLOR_SUCCESS System is  $COLOR_RESET fedora"
-            OS_TYPE="fedora"
-            ;;
-        debian|ubuntu|kali)
-            echo -e " $COLOR_SUCCESS System is $COLOR_RESET debian/ubuntu/kali"
-            OS_TYPE="debian"
-            ;;
-        arch)
-            echo -e " $COLOR_SUCCESS System is $COLOR_RESET arch"
-            OS_TYPE="arch"
-            ;;
-        *)
-            echo -e " $COLOR_ERROR Unsupported System: $ID $COLOR_RESET "
-            exit 1
-            ;;
-    esac
-}
-
 #输入法
-#输入法选择
-INPUT_METHOD_SELECTION() {
-    echo -e "Choose your input method firmware："
-    echo "1) fcitx5(recommend when first install)"
-    echo "2) ibus(recommend)"
-    read -p "Option (1 or 2): " input_method_choice
-    if [ "$input_method_choice" == "1" ]; then
-        INPUT_METHOD="fcitx5"
-        log_info " fcitx5 is selected "
-    elif [ "$input_method_choice" == "2" ]; then
-        INPUT_METHOD="ibus"
-        log_info " ibus is selected "
-    else
-        log_error " Invalid choice. Please run the script again and select 1 or 2. "
-        exit 1
-    fi
+##输入法选择
+input_method_selection() {
+    while :
+    do
+        CHINESIZATION_INPUT_METHOD_INFO
+        read -p ":" input_method_choice
+        if [ "$input_method_choice" == "1" ]; then
+            INPUT_METHOD="fcitx5"
+            CHINESIZATION_INPUT_METHOD_FCITX_5_SELECT_INFO
+            break
+        elif [ "$input_method_choice" == "2" ]; then
+            INPUT_METHOD="ibus"
+            CHINESIZATION_INPUT_METHOD_IBUS_SELECT_INFO
+            break
+        else
+            CHINESIZATION_INPUT_METHOD_CHOICE_ERROR
+        fi
+    done
 }
-#输入法配置
-ENVIRONMENT_INIT() {
+##输入法配置
+environment_init() {
     local DE
     local choice
-    log_info "Select your display server:"
-    echo "1.x11"
-    echo "2.wayland"
-    read -p ":" choice
-    if [[ "$choice" -eq 1 ]]; then
-        if [ "$INPUT_METHOD" == "fcitx5" ]; then
-            echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
-            #设置环境变量
-            echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
-            echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
-            echo "QT_IM_MODULE=fcitx5" >> /etc/environment
-            echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
-            echo "GLFW_IM_MODULE=ibus" >> /etc/environment
-            source /etc/profile.d/fcitx5.sh
-            log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
-        elif [ "$INPUT_METHOD" == "ibus" ]; then
-            echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
-            #设置环境变量
-            echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
-            echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
-            echo "export QT_IM_MOUDLE=ibus" >> $HOME/.bashrc
-            source /etc/profile.d/ibus.sh
-            log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
-        fi
-    elif [[ "$choice" -eq 2 ]]; then
-        log_info "Select your DE"
-        echo "1.kde"
-        echo "2.gnome"
-        read -p ":" DE
-        if [[ "$DE" -eq 1 ]]; then
-            #kde
+    while :
+    do
+        CHINESIZATION_ENVIRONMENT_INIT_INFO
+        read -p ":" choice
+        if [[ "$choice" -eq 1 ]]; then
             if [ "$INPUT_METHOD" == "fcitx5" ]; then
-                echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
-                #设置环境变量
-                echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
-                echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
-                echo "GLFW_IM_MODULE=ibus" >> /etc/environment
-                source /etc/profile.d/fcitx5.sh
-                log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
-            elif [ "$INPUT_METHOD" == "ibus" ]; then
-                echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
-                #设置环境变量
-                echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
-                echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
-                echo "export QT_IM_MOUDLE=ibus" >> $HOME/.bashrc
-                source /etc/profile.d/ibus.sh
-                log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
-            fi
-        elif [[ "$DE" -eq 2 ]]; then
-            #gnome
-            if [ "$INPUT_METHOD" == "fcitx5" ]; then
-                echo -e " $COLOR_INFO Configuring fcitx5 as the default input method... $COLOR_RESET "
+                CHINESIZATION_ADD_PROFILE_FCITX_5_INFO
                 #设置环境变量
                 echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
                 echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
@@ -140,45 +45,95 @@ ENVIRONMENT_INIT() {
                 echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
                 echo "GLFW_IM_MODULE=ibus" >> /etc/environment
                 source /etc/profile.d/fcitx5.sh
-                log_success " fcitx5 configured successfully. Please log out and log back in for changes to take effect. "
+                CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS
             elif [ "$INPUT_METHOD" == "ibus" ]; then
-                echo -e " $COLOR_INFO Configuring ibus as the default input method... $COLOR_RESET "
+                CHINESIZATION_ADD_PROFILE_IBUS_INFO
                 #设置环境变量
                 echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
                 echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
-                echo "export QT_IM_MOUDLE=ibus" >> $HOME/.bashrc
+                echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
                 source /etc/profile.d/ibus.sh
-                log_success " ibus configured successfully. Please log out and log back in for changes to take effect. "
+                CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS
             fi
+            break
+        elif [[ "$choice" -eq 2 ]]; then
+            while :
+            do
+                CHINESIZATION_DESKTOP_ENVIRONMENT_INFO
+                read -p ":" DE
+                if [[ "$DE" -eq 1 ]]; then
+                    #kde
+                    if [ "$INPUT_METHOD" == "fcitx5" ]; then
+                        CHINESIZATION_ADD_PROFILE_FCITX_5_INFO
+                        #设置环境变量
+                        echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+                        echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+                        echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+                        source /etc/profile.d/fcitx5.sh
+                        CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS
+                    elif [ "$INPUT_METHOD" == "ibus" ]; then
+                        CHINESIZATION_ADD_PROFILE_IBUS_INFO
+                        #设置环境变量
+                        echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+                        echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+                        echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
+                        source /etc/profile.d/ibus.sh
+                        CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS
+                    fi
+                    break
+                elif [[ "$DE" -eq 2 ]]; then
+                    #gnome
+                    if [ "$INPUT_METHOD" == "fcitx5" ]; then
+                        CHINESIZATION_ADD_PROFILE_FCITX_5_INFO
+                        #设置环境变量
+                        echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+                        echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
+                        echo "QT_IM_MODULE=fcitx5" >> /etc/environment
+                        echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+                        echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+                        source /etc/profile.d/fcitx5.sh
+                        CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS
+                    elif [ "$INPUT_METHOD" == "ibus" ]; then
+                        CHINESIZATION_ADD_PROFILE_IBUS_INFO
+                        #设置环境变量
+                        echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+                        echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+                        echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
+                        source /etc/profile.d/ibus.sh
+                        CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS
+                    fi
+                    break
+                else
+                    CHINESIZATION_DESKTOP_ENVIRONMENT_ERROR
+                fi
+            done
+            break
         else
-            log_error "This script doesn't support your DE"
-            exit 0
+            CHINESIZATION_ENVIRONMENT_INIT_ERROR           
         fi
-    else
-        log_error "This script dosen't support your display server"
-        exit 0            
-    fi
+    done
 }
-INPUT_METHOD_CONFIG() {
+
+input_method_config() {
     local choice
     if [[ -s "/etc/environment" ]]; then
-        echo ""environment" is exitst,do you want to rebuild it?"
-        read -p "(Y/n):" choice
+        CHINESIZATION_INPUT_METHOD_CONFIG_INFO
+        read -p ":" choice
         if [[ "$choice" =~ ^[Yy]$ ]]; then
             >/etc/environment
-            ENVIRONMENT_INIT
+            environment_init
         else
-            exit 0
+            CHINESIZATION_INPUT_METHOD_CONFIG_ERROR
         fi
     else
-        ENVIRONMENT_INIT
+        environment_init
     fi
 
 }
 
 #Ubuntu安装函数
-UBUNTU_INSTALL() {
-    echo -e " $COLOR_INFO Begin to chinesization your system... $COLOR_RESET "
+ubuntu_install() {
+    CHINESIZATION_INSTALL_UBUNTU_INFO
     #更新软件源
     apt upgrade -y
     #安装输入法
@@ -188,13 +143,45 @@ UBUNTU_INSTALL() {
         apt install ibus-* -y
     fi
     #配置输入法
-    INPUT_METHOD_CONFIG
-    echo -e " $COLOR_SUCCESS Chinesization completed. Please restart your system to apply all changes. $COLOR_RESET "
-}  
+    input_method_config
+    CHINESIZATION_INSTALL_UBUNTU_SUCCESS
+}
+
+#fedora安装函数
+fedora_install() {
+    CHINESIZATION_INSTALL_FEDORA_INFO
+    #更新软件源
+    dnf upgrade -y
+    #安装输入法
+    if [ "$INPUT_METHOD" == "fcitx5" ]; then
+        dnf install fcitx5-* -y
+    else
+        dnf install ibus-* -y
+    fi
+    #配置输入法
+    input_method_config
+    CHINESIZATION_INSTALL_FEDORA_SUCCESS
+}
+
+#arch安装函数
+ARCH_INSTALL() {
+    CHINESIZATION_INSTALL_ARCH_INFO
+    #更新软件源
+    pacman -Syu --noconfirm
+    #安装输入法
+    if [ "$INPUT_METHOD" == "fcitx5" ]; then
+        pacman -S --needed fcitx5
+    else
+        pacman -S --needed ibus
+    fi
+    #配置输入法
+    input_method_config
+    CHINESIZATION_INSTALL_ARCH_SUCCESS
+}
 
 #修改locale
 modify_locale() {
-    echo -e " $COLOR_INFO Modifying system locale to zh_CN.UTF-8... $COLOR_RESET "
+    CHINESIZATION_MODIFY_LOCALE_INFO
     if [ -f /etc/locale.conf ]; then
         locale_file="/etc/locale.conf"
     elif [ -f /etc/default/locale ]; then
@@ -206,8 +193,9 @@ modify_locale() {
     elif [ -d /etc/locale.gen.d/ ]; then
         locale_file="/etc/locale.gen.d/zh_CN.conf"
     else
-        log_error " Locale configuration file not found. "
-        return 1
+        CHINESIZATION_MODIFY_LOCALE_ERROR
+        sleep 5
+        exit 1
     fi
     
     # 备份当前locale文件
@@ -227,83 +215,51 @@ modify_locale() {
         echo "LANG=zh_CN.UTF-8" > /etc/default/locale
         locale-gen
     else
-        log_warn " Locale generation file not found. Please ensure zh_CN.UTF-8 is generated manually if necessary. "
+        CHINESIZATION_REBUILD_LOCALE_ERROR
+        sleep 5
+        exit 1
     fi
     
     # 应用新的locale设置
     source "$locale_file"
     
-    echo -e " $COLOR_SUCCESS System locale modified to zh_CN.UTF-8. $COLOR_RESET "
+    CHINRSIZATION_MODIFY_LOCALE_SUCCESS
 }
 
-#fedora安装函数
-FEDORA_INSTALL() {
-    echo -e " $COLOR_INFO Begin to chinesization your system... $COLOR_RESET "
-    #更新软件源
-    dnf upgrade -y
-    #安装输入法
-    if [ "$INPUT_METHOD" == "fcitx5" ]; then
-        dnf install fcitx5-* -y
-    else
-        dnf install ibus-* -y
-    fi
-    #配置输入法
-    INPUT_METHOD_CONFIG
-    echo -e " $COLOR_SUCCESS Chinesization completed. Please restart your system to apply all changes. $COLOR_RESET "
-}
-
-#arch安装函数
-ARCH_INSTALL() {
-    echo -e " $COLOR_INFO Begin to chinesization your system... $COLOR_RESET "
-    #更新软件源
-    pacman -Syu --noconfirm
-    #安装输入法
-    if [ "$INPUT_METHOD" == "fcitx5" ]; then
-        pacman -S --needed fcitx5
-    else
-        pacman -S --needed ibus
-    fi
-    #配置输入法
-    INPUT_METHOD_CONFIG
-    echo -e " $COLOR_SUCCESS Chinesization completed. Please restart your system to apply all changes. $COLOR_RESET "
-}
 
 # --- 主程序 ---
-check_root
-#检测系统
-if [ -f /etc/os-release ]; then
-    source /etc/os-release
-    check_os
-else
-    echo -e " $COLOR_ERROR Your system is not scanned $COLOR_RESET "
-    exit 1
-fi
 #选择输入法
-INPUT_METHOD_SELECTION
-#根据系统类型调用相应的安装函数
+input_method_selection
+#检测系统类型
+##根据系统类型调用相应的安装函数
 case $OS_TYPE in
     fedora)
-        FEDORA_INSTALL
+        fedora_install
         ;;
     debian)
-        UBUNTU_INSTALL
+        ubuntu_install
         ;;
     arch)
-        ARCH_INSTALL
+        arch_install
         ;;
     *)
-        echo -e " $COLOR_ERROR Unsupported System: $OS_TYPE $COLOR_RESET "
+        CHINESIZATION_OS_TYPE_ERROR
+        sleep 5
         exit 1
         ;;
 esac
 #修改locale
 modify_locale
 #提示
-echo -e " $COLOR_SUCCESS Please restart your system to apply all changes. $COLOR_RESET "
-read -p "You want to restart now? (y/n): " restart_choice
-if [[ "$restart_choice" =~ ^[Yy]$ ]]; then
-    reboot
-else
-    echo -e " $COLOR_INFO Please remember to restart your system later to apply all changes. $COLOR_RESET "
-fi
-exit 0
+while :
+do
+    CHINESIZATION_REBOOT_INFO
+    read -p ": " restart_choice
+    if [[ "$restart_choice" =~ ^[Yy]$ ]]; then
+        reboot
+    else
+        CHINESIZATION_REBOOT_CANCEL_INFO
+        sleep 5
+        exit 0
+    fi
+done
