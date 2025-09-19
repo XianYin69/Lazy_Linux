@@ -7,27 +7,11 @@
 # 日期：       2025-08-22
 # =================================================================================================
 
-# --- 颜色定义 ---
-readonly COLOR_INFO="\033[0;34m"     # 蓝色
-readonly COLOR_SUCCESS="\033[0;32m"   # 绿色
-readonly COLOR_ERROR="\033[0;31m"     # 红色
-readonly COLOR_WARN="\033[0;33m"      # 黄色
-readonly COLOR_RESET="\033[0m"        # 重置颜色
-
-# --- 检查root权限 ---
-check_root() {
-    if [ "$EUID" -ne 0 ]; then
-        echo -e "此脚本需要root权限"
-        echo -e "请使用 sudo 运行: sudo $0"
-        exit 1
-    fi
-}
-
-# --- 获取最新安装的内核版本 ---
+#定义函数
+## --- 获取最新安装的内核版本 ---
 get_lasted_kernel_version() {
     echo $(rpm -q kernel | sort -V | tail -n1 | sed 's/kernel-//')
 }
-
 
 #参数定义
 current_kernel=$(uname -r)
@@ -36,20 +20,20 @@ lasted_kernel=$(get_lasted_kernel_version)
 # --- 检查并处理内核版本不一致 ---
 check_kernel_version() {
     if [[ "$current_kernel" != "$lasted_kernel" ]]; then
-        echo -e "== $COLOR_ERROR 检测到内核版本不一致 $COLOR_RESET =="
-        echo -e "当前运行的内核版本: $current_kernel"
-        echo -e "最新安装的内核版本: $lasted_kernel"
-        echo -e "将为最新内核生成initramfs并更新引导配置"
+        SUPER_CLEAN_OLD_KERNEL_VERSION_DIFF_INFO
+        SUPER_CLEAN_OLD_KERNEL_VERSION_INFO "$current_kernel"
+        SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO  "$lasted_kernel"
+        SUPER_CLEAN_OLD_KERNEL_PROCESS_INITRAMFS_INFO
         return 1
     else
-        echo -e "== $COLOR_SUCCESS 内核版本一致：$current_kernel $COLOR_RESET =="
+        SUPER_CLEAN_OLD_KERNEL_VERSION_SAME_INFO "$current_kernel"
         return 0
     fi
 }
 
 # ---清理boot文件夹下的旧文件
 clean_old_files() {
-    echo -e "正在清理旧文件"
+    SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_BOOT_INFO
     find /boot -name "config-*" ! -name "config-${lasted_kernel}" -type f ! -delete
     find /boot -name "System.map-*" ! -name "System.map-${lasted_kernel}" -type f ! -delete
     find /boot -name "vmlinuz-*" ! -name "vmlinuz-${lasted_kernel}" -type f ! -name "vmlinuz-0-rescue-*" -type f ! -name "vmlinuz-${current_kernel}" -delete
@@ -57,45 +41,44 @@ clean_old_files() {
 
 # --- 清理旧的initramfs文件 ---
 clean_old_initramfs() {
-    echo -e "正在清理旧的initramfs文件..."
-    
+    SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_INFO
     # 找到并删除旧的initramfs文件，保留当前内核的
     find /boot -name "initramfs-*.img" ! -name "initramfs-${lasted_kernel}.img" -type f -delete
-    
-    echo -e "$COLOR_SUCCESS 旧的initramfs文件已清理完成 $COLOR_RESET"
+    SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_SUCCESS
 }
 
 # --- 重新生成initramfs ---
 regenerate_initramfs() {
-    echo -e "正在重新生成initramfs..."
+    SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_INFO
     # 为当前内核生成
     dracut --force "/boot/initramfs-${current_kernel}.img" "${current_kernel}"
     # 如果最新内核不同，也为其生成
     if [[ "$current_kernel" != "$lasted_kernel" ]]; then
-        echo -e "为最新内核 $lasted_kernel 生成initramfs..."
+        SUPER_CLEAN_OLD_KERNEL_REGENERATING_INITRAMFS_INFO
         dracut --force "/boot/initramfs-${lasted_kernel}.img" "${lasted_kernel}"
     fi
     
     if [ $? -eq 0 ]; then
-        echo -e "$COLOR_SUCCESS initramfs生成完成 $COLOR_RESET"
+        SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_SUCCESS
     else
-        echo -e "$COLOR_ERROR initramfs生成失败 $COLOR_RESET"
+        SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_ERROR
         exit 1
     fi
 }
 
 # --- 更新GRUB ---
 update_grub() {
-    echo -e "正在更新GRUB配置..."
+    SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO
     grub2-mkconfig -o /boot/grub2/grub.cfg
     if [ $? -eq 0 ]; then
-        echo -e "$COLOR_SUCCESS GRUB配置更新完成 $COLOR_RESET"
+        SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_SUCCESS
     else
-        echo -e "$COLOR_ERROR GRUB配置更新失败 $COLOR_RESET"
+        SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_ERROR
         exit 1
     fi
 }
 
+#主函数
 echo -e "==================================================="
 echo -e "    内核清理与更新工具"
 echo -e "==================================================="

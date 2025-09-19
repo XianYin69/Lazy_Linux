@@ -109,5 +109,8 @@ config_infomation_of_git
 configure_git
 while :
 do
-
+    clone_respository
+    if [ "$INIT_GIT_RETRY" = "N" ]; then
+        break
+    fi
 done

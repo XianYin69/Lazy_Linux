@@ -328,3 +328,76 @@ CHINESIZATION_REBOOT_CANCEL_INFO() {
 }
 
 #end
+
+#init_git.sh tips
+##git install
+INIT_GIT_GIT_INSTALL_ERROR() {
+    log_error "Unsupported system."
+    log_error "Exiting..."
+}
+
+INIT_GIT_GIT_ERROR() {
+    log_error "Git not detected. Installing git..."
+}
+
+##git welcome info
+INIT_GIT_WELCOME_INFO() {
+    echo "============================================="
+    echo "Git Configuration and Repository Cloning Tool"
+    echo "============================================="
+    echo
+}
+
+##user information input
+INIT_GIT_INIT_INFO() {
+    echo "This script will help you configure Git and clone repositories."
+}
+
+INIT_GIT_INIT_USERNAME_INFO() {
+    echo "Please enter your GitHub username"
+}
+
+INIT_GIT_USERNAME_ERROR() {
+    log_error "Username cannot be empty. Please re-enter."
+}
+
+INIT_GIT_INIT_EMAIL_INFO() {
+    echo "Please enter your GitHub email"
+}
+
+INIT_GIT_EMAIL_ERROR() {
+    log_error "Email cannot be empty. Please re-enter."
+}
+
+INIT_GIT_URL_INFO() {
+    echo "Please enter the Git repository URL to clone"
+}
+
+INIT_GIT_URL_ERROR() {
+    log_error "URL cannot be empty. Please re-enter."
+}
+
+##git configuration
+INIT_GIT_CONFIG_INFO() {
+    log_info "Configuring Git credentials..."
+}
+
+INIT_GIT_CONFIG_SUCCESS() {
+    log_success "Git username and email have been set globally."
+}
+
+##clone repository
+INIT_GIT_CLONE_INFO() {
+    log_info "Cloning repository..."
+}
+
+INIT_GIT_CLONE_SUCCESS() {
+    log_success "Repository cloned successfully."
+}
+
+INIT_GIT_CLONE_ERROR() {
+    log_error "Repository cloning failed. Please check the URL and your permissions."
+}
+
+#end
+

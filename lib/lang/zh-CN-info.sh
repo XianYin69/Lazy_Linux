@@ -398,3 +398,75 @@ INIT_GIT_CLONE_SUCCESS() {
 INIT_GIT_CLONE_ERROR() {
     log_error "仓库克隆失败。请检查URL和您的权限。"
 }
+
+#结束
+
+#super_clean_old_kernel.sh提示信息
+##内核检查
+SUPER_CLEAN_OLD_KERNEL_VERSION_DIFF_INFO() {
+    echo "========================================"
+    log_error_custom "           内核版本不一致               "
+    echo "========================================"
+}
+
+SUPER_CLEAN_OLD_KERNEL_VERSION_INFO() {
+    log_info "当前运行的内核版本: $1"
+}
+
+SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
+    log_warn "最新安装的内核版本: $1"
+}
+
+SUPER_CLEAN_OLD_KERNEL_PROCESS_INITRAMFS_INFO() {
+    log_info "将为最新内核生成initramfs并更新引导配置"
+}
+
+SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
+    echo "========================================"
+    log_success_custom "内核版本一致：$1"
+    echo "========================================"
+}
+
+##删除旧的启动文件
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_BOOT_INFO() {
+    log_info "正在清理旧的启动文件..."
+}
+
+##删除旧的initramfs文件
+SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_INFO() {
+    log_info "正在清理旧的initramfs文件..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_SUCCESS() {
+    log_success "旧的initramfs文件已清理完成"
+}
+
+##重新生成initramfs
+SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_INFO() {
+    log_info "正在重新生成initramfs..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_REGENERATING_INITRAMFS_INFO() {
+    log_info "为最新内核 $lasted_kernel 生成initramfs..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_SUCCESS() {
+    log_success "initramfs生成完成"
+}
+
+SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_ERROR() {
+    log_error "initramfs生成失败"
+}
+
+##更新GRUB
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
+    log_info "正在更新GRUB配置..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_SUCCESS() {
+    log_success "GRUB配置更新完成"
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_ERROR() {
+    log_error "GRUB配置更新失败"
+}
