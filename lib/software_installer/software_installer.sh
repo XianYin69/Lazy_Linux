@@ -7,54 +7,23 @@
 # 日期：       8-31-2025
 # =================================================================================================
 
-#颜色
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[0;33m'
-readonly BLUE='\033[0;34m'
-readonly NC='\033[0m' # No Color
-
-#日志函数
-log_info() {
-    echo -e "${BLUE}[信息]${NC} $1"
-}
-log_success() {
-    echo -e "${GREEN}[成功]${NC} $1"
-}
-log_error() {
-    echo -e "${RED}[错误]${NC} $1"
-}
-log_warn() {
-    echo -e "${YELLOW}[警告]${NC} $1"
-}
-
-set -e  # 遇到错误立即退出
-
-# 检查是否以root用户运行
-ROOT_CHECK() {
-    if [ $EUID -ne 0 ]; then
-    log_error "请以root用户运行此脚本"
-    exit 1
-    fi
-}
-
 OS_TYPE() {
     source /etc/os-release
     case $ID in
         fedora|centos|rhel)
             OS_TYPE="fedora"
-            log_info "你的系统是fedora,cent os或rhel及他们的衍生物"
+            SOFTWARE_INSTALLER_FEDORA_INFO
         ;;
         debian|ubuntu|kali)
             OS_TYPE="debian"
-            log_info "你的系统是debian,ubuntu或kali及他们的衍生物"            
+            SOFTWARE_INSTALLER_DEBIAN_INFO            
         ;;
         arch)
             OS_TYPE="arch"
-            log_info "你的系统是arch及其衍生物"
+            SOFTWARE_INSTALLER_ARCH_INFO
         ;;
         *)
-            log_error "不受支持的操作系统"
+            SOFTWARE_INSTALLER_OS_NOT_SUPPORTED_ERROR
             exit 1
         ;;
     esac
@@ -63,53 +32,70 @@ OS_TYPE() {
 
 # 读取用户软件列表（software_list.txt）
 SOFTWARE_LIST() {
-    read -p "请输入文件路径:" FILE_PATH
-    #检查文件是否存在
-    if [ ! -f "$FILE_PATH" ]; then
-        log_error "文件不存在，请检查路径后重试。"
-        exit 1
-    fi
+    check_software_list_file() {
+        SOFTWARE_INSTALLER_READING_SOFTWARE_LIST_INFO
+        read -p ":" FILE_PATH
+    }
+    while :
+    do
+        check_software_list_file
+        if [ -f "$FILE_PATH" ]; then
+            SOFTWARE_INSTALLER_SOFTWARE_LIST_PATH_SUCCESS
+            break
+        elif [ -f "$SOFTWARE_LIST_PATH" ]; then
+            FILE_PATH="$SOFTWARE_LIST_PATH"
+            SOFTWARE_INSTALLER_SOFTWARE_LIST_PATH_SUCCESS
+            break
+        else
+            check_software_list_file
+        fi
+    done
     # 读取文件内容
-    source "$FILE_PATH"
-    if  [ ${#SOFTWARE_LIST[@]} -eq 0 ] && [ ${#SNAP_PREFERRED_LIST[@]} -eq 0 ] && [ ${#FLATPKG_LIST[@]} -eq 0 ]; then
-        log_error "软件列表为空，请检查文件内容。"
-        exit 1
-    else
-        log_success "软件列表读取成功。"
-    fi
+    while :
+    do
+        source "$FILE_PATH"
+        if  [ ${#SOFTWARE_LIST[@]} -eq 0 ] && [ ${#SNAP_PREFERRED_LIST[@]} -eq 0 ] && [ ${#FLATPKG_LIST[@]} -eq 0 ]; then
+            SOFTWARE_INSTALLER_FILE_READING_ERROR
+            sleep 10
+            nano "$FILE_PATH"
+        else
+            SOFTWARE_INSTALLER_FILE_READING_SUCCESS
+            break
+        fi
+    done
 }
 #fedora安装函数
 FEDORA_INSTALL() {
-    log_info "开始安装软件..."
+    SOFTWARE_INSTALELR_FEDORA_INSTALLER_INFO
     # 使用dnf安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
         if dnf list installed "$package" &> /dev/null; then
-            log_info "正在安装 $package ..."
+            SOFTWARE_INSTALLER_FEODRA_DNF_INFO $package
             if dnf install -y "$package"; then
-                log_success "$package 安装成功。"
+                SOFTWARE_INSTALLER_FEDORA_DNF_SUCCESS $package
             else
-                log_error "$package 安装失败。"
+                SOFTWARE_INSTALLER_FEDORA_DNF_ERROR $package
             fi
         else
-            log_warn "$package 已经安装，跳过。"
+            SOFTWARE_INSTALLER_FEDORA_DNF_SKIP_WARN $package
         fi
     done
 }
 
 #ubuntu安装函数
 UBUNTU_INSTALL() {
-    log_info "开始安装软件..."
+    SOFTWARE_INSTALLER_DEBIAN_INFO
     # 使用apt安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
         if apt list --installed "$package" &> /dev/null; then
-            log_info "正在安装 $package ..."
+            SOFTWARE_INSTALLER_DEBIAN_APT_INFO
             if apt install -y "$package"; then
-                log_success "$package 安装成功。"
+                SOFTWARE_INSTALLER_DEBIAN_APT_SUCCESS $package
             else
-                log_error "$package 安装失败。"
+                SOFTWARE_INSTALLER_DEBIAN_APT_ERROR $package
             fi
         else
-            log_warn "$package 已经安装，跳过。"
+            SOFTWARE_INSTALLER_DEBIAN_APT_SKIP_WARN $package
         fi
     done
 }

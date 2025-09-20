@@ -470,3 +470,225 @@ SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_SUCCESS() {
 SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_ERROR() {
     log_error "GRUB配置更新失败"
 }
+
+##主函数
+SUPER_CLEAN_OLD_KERNEL_INFO() {
+    echo "========================================"
+    echo "         超级清理旧内核工具            "
+    echo "========================================"
+}
+
+SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING() {
+    log_warn "如果你使用nvidia显卡，则重启后需要重新安装nvidia驱动"
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
+    log_info "由于存在新内核，将更新引导配置..."
+}
+
+SUPER_CLEAN_OLD_KERNLE_END_INFO() {
+    log_success "所有操作已完成！"
+    log_success "建议重启系统以应用更改。"
+    log_success "如果系统无法启动，可以通过GRUB菜单选择备份的内核版本启动。"
+}
+
+#结束
+
+#nvidia_driver_installer_part1.sh提示信息
+NVIDIA_DRIVER_INSTALLER_PART_1_INFO() {
+    echo "========================================"
+    echo "       NVIDIA驱动安装脚本 - 第1部分    "
+    echo "========================================"
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_1_INFO() {
+    echo " 步骤 1-安装必要软件包 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_1_SUCCESS() {
+    log_success " 必要软件包安装完成 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_2_INFO() {
+    echo " 步骤 2-禁用nouveau "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_2_SUCCESS() {
+    log_success " nouveau禁用完成 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_END_INFO() {
+    log_info " 第1部分完成！ "
+    log_warn " 重启后请运行nvidia-driver-installer-part-2.sh继续安装NVIDIA驱动"
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_REBOOT_WARNING() {
+    log_warn " 系统将于10秒后重启,你可以按Ctrl+C取消重启"
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_REBOOTING_INFO() {
+    log_info " 系统正在重启..."
+}
+#结束
+
+#nvidia_driver_installer_part2.sh提示信息
+NVIDIA_DRIVER_INSTALLER_PART_2_ENVIRONMENT_ERROR() {
+    log_error " !!!现在需要在单用户模式下运行此脚本!!! "
+    log_warn " 请保存所有工作并关闭所有应用程序 "
+    log_warn " 按下Enter进入单用户模式，或按Ctrl+C取消 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_INFO() {
+    echo "========================================"
+    echo "       NVIDIA驱动安装脚本 - 第2部分    "
+    echo "========================================"
+    echo " 步骤 1-安装驱动 "
+    log_info " 请输入驱动程序的完整路径 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_PATH_ERROR() {
+    log_error " 驱动文件未找到 "
+    log_error " 请检查路径是否正确 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_PATH_SUCCESS() {
+    log_success " 驱动文件找到 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_READY_INFO() {
+    log_info " 驱动程序已准备好安装 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_INSTALLING_WARNING() {
+    log_warn " 驱动安装程序即将在30秒后运行 "
+    log_warn " 请确保已保存所有工作 "
+    log_warn " 安装程序里的选项全选“yes”"
+    log_warn " 按下Enter继续，或按Ctrl+C取消 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_1_INFO() {
+    echo "========================================"
+    echo "       NVIDIA驱动安装脚本 - 第3部分    "
+    echo "========================================"
+    echo " 步骤 1-启动守护进程 "
+}   
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_1_SUCCESS() {
+    log_success " 守护进程已启用 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_INFO() {
+    echo " 步骤 2-签署内核模块 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SECURE_BOOT_ENABLED_INFO() {
+    log_info " 检测到安全启动已启用 "
+    log_info " 正在签署内核模块 "
+    log_warn " 你可能需要输入MOK密码 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SUCCESS() {
+    log_success " 内核模块签署完成 "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_END_INFO() {
+    log_success " 安装完成，将在10秒后重启，你可以按Ctrl+C取消重启 "
+}
+#结束
+
+#software_installer.sh提示信息
+SOFTWARE_INSTALLER_FEDORA_INFO() {
+    log_info "你的系统是fedora,cent os或rhel及他们的衍生物"
+}
+
+SOFTWARE_INSTALLER_DEBIAN_INFO() {
+    log_info "你的系统是debian,ubuntu或kali及他们的衍生物"            
+}
+
+SOFTWARE_INSTALLER_ARCH_INFO() {
+    log_info "你的系统是arch及其衍生物"
+}
+
+SOFTWARE_INSTALLER_OS_NOT_SUPPORTED_ERROR() {
+    log_error "不受支持的操作系统"
+    log_error "正在退出..."
+}
+
+##读取用户软件列表
+SOFTWARE_INSTALLER_READING_SOFTWARE_LIST_INFO() {
+    log_info "请输入软件列表文件的路径"
+}
+
+##读取文件
+SOFTWSARE_INSTALLER_FILE_READING_ERROR() {
+    log_error "软件列表文件读取失败"
+    log_error "请检查文件格式是否正确"
+    log_error "将在10秒后重新编辑文件"
+}
+
+SOFTWARE_INSTALLER_FILE_READING_SUCCESS() {
+    log_success "软件列表文件读取成功"
+}
+
+##fedora安装函数
+SOFTWARE_INSTALELR_FEDORA_INSTALLER_INFO() {
+    log_info "开始安装软件..."
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_INFO() {
+    log_info "正在安装 $1 ..."
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_SUCCESS() {
+    log_success "$1 安装成功。"
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_ERROR() {
+    log_error "$1 安装失败。"
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_SKIP_WARN() {
+    log_warn "$1 已经安装，跳过。"
+}
+
+##debian安装函数
+SOFTWARE_INSTALLER_DEBIAN_INFO() {
+    log_info "开始安装软件..."
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_INFO() {
+    log_info "正在安装 $1 ..."
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_SUCCESS() {
+    log_success "$1 安装成功。"
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_ERROR() {
+    log_error "$1 安装失败。"
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_SKIP_WARN() {
+    log_warn "$1 已经安装，跳过。"
+}
+
+##fedora安装函数
+SOFTWARE_INSTALELR_ARCH_INSTALLER_INFO() {
+    log_info "开始安装软件..."
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_INFO() {
+    log_info "正在安装 $1 ..."
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_SUCCESS() {
+    log_success "$1 安装成功。"
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_ERROR() {
+    log_error "$1 安装失败。"
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_SKIP_WARN() {
+    log_warn "$1 已经安装，跳过。"
+}

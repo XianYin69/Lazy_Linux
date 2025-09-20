@@ -401,3 +401,191 @@ INIT_GIT_CLONE_ERROR() {
 
 #end
 
+#super_clean_old_kernel.sh tips
+##kernel version check
+SUPER_CLEAN_OLD_KERNEL_VERSION_DIFF_INFO() {
+    echo "========================================"
+    log_error_custom "           Kernel version mismatch               "
+    echo "========================================"
+}
+
+SUPER_CLEAN_OLD_KERNEL_VERSION_INFO() {
+    log_info "Current running kernel version: $1"
+}
+
+SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
+    log_warn "Latest installed kernel version: $1"
+}
+
+SUPER_CLEAN_OLD_KERNEL_PROCESS_INITRAMFS_INFO() {
+    log_info "Generating initramfs for the latest kernel and updating boot configuration..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
+    echo "========================================"
+    log_success_custom "Kernel version is consistent: $1"
+    echo "========================================"
+}
+
+##Delete old boot files
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_BOOT_INFO() {
+    log_info "Cleaning up old boot files..."
+}
+
+##Delete old initramfs files
+SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_INFO() {
+    log_info "Cleaning up old initramfs files..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_SUCCESS() {
+    log_success "Old initramfs files have been cleaned up."
+}
+
+##Regenerate initramfs
+SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_INFO() {
+    log_info "Generating initramfs..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_REGENERATING_INITRAMFS_INFO() {
+    log_info "Generating initramfs for the latest kernel $lasted_kernel..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_SUCCESS() {
+    log_success "initramfs generation complete"
+}
+
+SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_ERROR() {
+    log_error "initramfs generation failed"
+}
+
+##Update GRUB
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
+    log_info "Updating GRUB configuration..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_SUCCESS() {
+    log_success "GRUB configuration updated successfully."
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_ERROR() {
+    log_error "GRUB configuration update failed."
+}
+
+##main function
+SUPER_CLEAN_OLD_KERNEL_INFO() {
+    echo "========================================"
+    echo "         Super Clean Old Kernel Tool            "
+    echo "========================================"
+}
+
+SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING() {
+    log_warn "If you are using an NVIDIA graphics card, you need to reinstall the NVIDIA driver after rebooting."
+}
+
+SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
+    log_info "Updating boot configuration due to the presence of a new kernel..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_END_INFO() {
+    log_success "All operations have been completed!"
+    log_success "It is recommended to reboot the system to apply the changes."
+    log_success "If the system fails to boot, you can select the backup kernel version from the GRUB menu."
+}
+
+#end
+
+#nvidia_driver_installer_part1.sh tips
+NVIDIA_DRIVER_INSTALLER_PART_1_INFO() {
+    echo "========================================"
+    echo "       NVIDIA Driver Installer - Part 1     "
+    echo "========================================"
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_1_INFO() {
+    echo " Step 1 - Install Required Packages "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_1_SUCCESS() {
+    log_success " Required packages installed successfully "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_2_INFO() {
+    echo " Step 2 - Disable Nouveau "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_STEP_2_SUCCESS() {
+    log_success " Nouveau disabled successfully "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_END_INFO() {
+    log_info " All steps in Part 1 are complete. "
+    log_warn " The system will reboot in 10 seconds to apply changes. You can press Ctrl+C to cancel the reboot. "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_REBOOT_WARNING() {
+    log_warn " The system will reboot in 10 seconds to apply changes. You can press Ctrl+C to cancel the reboot. "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_1_REBOOTING_INFO() {
+    log_info " The system is rebooting..."
+}
+#end
+
+#nvidia_driver_installer_part2.sh tips
+NVIDIA_DRIVER_INSTALLER_PART_2_ENVIRONMENT_ERROR() {
+    log_error " Please run this script in a non-graphical environment "
+    log_warn " Please save all work and close all applications "
+    log_warn " Press Enter to enter single-user mode, or press Ctrl+C to cancel "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_INFO() {
+    echo "========================================"
+    echo "       NVIDIA Driver Installer - Part 2  "
+    echo "========================================"
+    echo " Step 1 - Install Driver "
+    log_info " Please enter the full path to the driver "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_PATH_ERROR() {
+    log_error " Driver file not found! "
+    log_error " Please check the path and try again. "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_PATH_SUCCESS() {
+    log_success " Driver file found. "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_READY_INFO() {
+    log_info " Driver is ready to install. "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_INSTALLING_WARNING() {
+    log_warn " Driver installation will begin in 30 seconds. "
+    log_warn " Please ensure all work is saved. "
+    log_warn " select "yes" when prompted during installation. "
+    log_warn " Press Enter to continue, or press Ctrl+C to cancel. "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_1_INFO() {
+    echo "========================================"
+    echo "       NVIDIA Driver Installer - Part 3  "
+    echo "========================================"
+    echo " Step 1 - Start Daemon "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_1_SUCCESS() {
+    log_success " Services enabled successfully "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_INFO() {
+    echo " Step 2 - Sign Kernel Modules "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SUCCESS() {
+    log_success " Kernel modules signed successfully "
+}
+
+NVIDIA_DRIVER_INSTALLER_PART_3_END_INFO() {
+    log_success " All steps in Part 3 are complete, the system will reboot in 10 seconds. You can press Ctrl+C to cancel the reboot. "
+}
+#end

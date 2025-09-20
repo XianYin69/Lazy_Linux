@@ -79,12 +79,9 @@ update_grub() {
 }
 
 #主函数
-echo -e "==================================================="
-echo -e "    内核清理与更新工具"
-echo -e "==================================================="
-echo
+SUPER_CLEAN_OLD_KERNEL_INFO
 
-log_warn "如果你使用nvidia显卡，则重启后需要重新安装nvidia驱动"
+SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING
 
 # 检查root权限
 check_root
@@ -104,14 +101,12 @@ regenerate_initramfs
 
 # 如果内核版本不一致或用户选择了备份，则更新GRUB
 if [[ $kernel_check_result -eq 1 ]]; then
-    echo -e "由于存在新内核，将更新引导配置..."
+    SUPER_CLEAN_OLD_KERNEL_UPDATE_GRUB_INFO
     update_grub
 fi
 
 #再次更新系统
 dnf update -y
 
-echo -e "$COLOR_INFO 所有操作已完成！"
-echo -e "建议重启系统以应用更改。"
-echo -e "如果系统无法启动，可以通过GRUB菜单选择备份的内核版本启动。$COLOR_RESET"
+SUPER_CLEAN_OLD_KERNEL_END_INFO
 exit 0
