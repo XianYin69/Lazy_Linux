@@ -1,5 +1,8 @@
-# LL(Lazy_Linux, 慵懒Linux)
+# LL(慵懒Linux)   
 
+语言： [中文](README.md) | [English](README_en.md)
+---
+## 介绍   
 LL(Lazy_Linux， 慵懒Linux！) 是一个用于偷懒的Linux工具集，旨在缩短前期配置系统和折腾系统的时间。
 
 ---
@@ -24,7 +27,7 @@ LL(Lazy_Linux， 慵懒Linux！) 是一个用于偷懒的Linux工具集，旨在
 
 ## 语言支持
 -  简体中文 
--  英文
+-  English
 
 ---
 
@@ -42,7 +45,7 @@ LL(Lazy_Linux， 慵懒Linux！) 是一个用于偷懒的Linux工具集，旨在
 2. 使用脚本 :
    ```bash
    chomod +x PATH/*
-   bash ./*.sh
+   bash (本地保存仓库的目录)/*.sh
 ---
 
 ## 许可证
