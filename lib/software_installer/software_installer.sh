@@ -7,6 +7,9 @@
 # 日期：       8-31-2025
 # =================================================================================================
 
+source "../../var/state/STATE.sh"
+source "../../var/index/filepath.sh"
+ 
 # 读取用户软件列表（software_list.txt）
 software_list() {
     check_software_list_file() {

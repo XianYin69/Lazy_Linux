@@ -7,6 +7,10 @@
 # 日期：9-11-2025       
 # =================================================================================================
 
+source "../../var/state/STATE.sh"
+source "../../var/index/filepath.sh"
+ 
+
 #定义颜色
 readonly INFO="\e[34m"
 readonly SUCCESS="\e[32m"
@@ -814,7 +818,6 @@ WAYDROID_INSTALLELR_PART_1_UNSUPPORTED_OS_INFO() {
 #结束
 
 #waydroid_installer_part.sh提示信息
-
 ##配置waydroid
 WAYDROID_INSTALLER_PART_2_CONFIG_WAYDROID_INFO() {
     echo "========================================"
@@ -822,3 +825,24 @@ WAYDROID_INSTALLER_PART_2_CONFIG_WAYDROID_INFO() {
     echo "========================================"
     log_info "正在配置waydroid..."
 }
+
+WAYDROID_INSTALLER_PART_2_FILES_STORE_INFO() {
+    log_info "需要你提供ARM支持补丁安装脚本的安装路径"
+}
+
+WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_INFO() {
+    log_info "正在运行补丁安装脚本..."
+}
+
+WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_SUCCESS() {
+    log_success "安装成功"
+}
+
+WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_ERROR() {
+    log_error "安装失败"
+}
+
+WAYDROID_INSTALLER_PART_2_END_INFO() {
+    log_info "Waydroid安装结束"
+}
+#结束

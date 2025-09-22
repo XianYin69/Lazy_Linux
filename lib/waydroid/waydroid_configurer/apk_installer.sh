@@ -7,6 +7,10 @@
 # 日期：       8-31-2025
 # =================================================================================================
 
+source "../../../var/state/STATE.sh"
+source "../../../var/index/filepath.sh"
+ 
+
 #check waydroid status
 if [ ! -d "/var/lib/waydroid" ]; then
     APK_INSTALLER_WAYDROID_NOT_INSTALLED_ERROR

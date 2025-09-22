@@ -8,7 +8,8 @@
 # =================================================================================================
 
 source "../../../var/state/STATE.sh"
-
+source "../../../var/index/filepath.sh"
+ 
 if [ $WAYDROID_INSTALLED_STAGE -eq 0 ]; then
     sed -i "s/WAYDROID_INSTALLED_STAGE=.*/WAYDROID_INSTALLED_STAGE=1/g" "../../../var/state/STATE.sh"
     ./waydroid_installer_lib/waydroid_installer_part1.sh

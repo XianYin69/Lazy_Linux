@@ -7,6 +7,9 @@
 # 日期：09-18-2025       
 # =================================================================================================
 
+source "../../var/state/STATE.sh"
+source "../../var/index/filepath.sh"
+ 
 BACKUP_INFO
 BACKUP_PATH_INFO
 read -p ":" BACKUP_PATH

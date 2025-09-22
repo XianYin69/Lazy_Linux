@@ -7,6 +7,10 @@
 # Date：Sep-11-2025       
 # =================================================================================================
 
+source "../../var/state/STATE.sh"
+source "../../var/index/filepath.sh"
+ 
+
 #define color
 readonly INFO="\e[34m"
 readonly SUCCESS="\e[32m"
@@ -582,10 +586,260 @@ NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_INFO() {
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SUCCESS() {
-    log_success " Kernel modules signed successfully "
+    log_info "Secure boot enabled in your bios"
+    log_info "Signing kernel moudle"
+    log_warn "You may set a password of MOK"
+
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_3_END_INFO() {
     log_success " All steps in Part 3 are complete, the system will reboot in 10 seconds. You can press Ctrl+C to cancel the reboot. "
+}
+#end
+
+#software_installer.sh tips
+
+##read software list
+SOFTWARE_INSTALLER_READING_SOFTWARE_LIST_INFO() {
+    log_info "software list path"
+}
+
+##read file
+SOFTWSARE_INSTALLER_FILE_READING_ERROR() {
+    log_error "Read file wrong :("
+    log_error "File format incurrent"
+    log_error "will re-edit after 10s"
+}
+
+SOFTWARE_INSTALLER_FILE_READING_SUCCESS() {
+    log_success "Read file successfully"
+}
+
+##fedora installing function
+SOFTWARE_INSTALELR_FEDORA_INSTALLER_INFO() {
+    log_info "Install software"
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_INFO() {
+    log_info "Installing $1 ..."
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_SUCCESS() {
+    log_success "$1 installed"
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_ERROR() {
+    log_error "$1 fail installed。"
+}
+
+SOFTWARE_INSTALLER_FEDORA_DNF_SKIP_WARN() {
+    log_warn "$1 installed then ignored"
+}
+
+##debian installing function
+SOFTWARE_INSTALLER_DEBIAN_INFO() {
+    log_info "Install software"
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_INFO() {
+    log_info "Installing $1 ..."
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_SUCCESS() {
+    log_success "$1 installed"
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_ERROR() {
+    log_error "$1 fail installed"
+}
+
+SOFTWARE_INSTALLER_DEBIAN_APT_SKIP_WARN() {
+    log_warn "$1 installed then ignored"
+}
+
+##arch安装函数
+SOFTWARE_INSTALLER_ARCH_INSTALLER_INFO() {
+    log_info "Install software"
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_INFO() {
+    log_info "Installing $1 ..."
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_SUCCESS() {
+    log_success "$1 installed"
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_ERROR() {
+    log_error "$1 fail installed"
+}
+
+SOFTWARE_INSTALLER_ARCH_PACMAN_SKIP_WARN() {
+    log_warn "$1 installed then ignored"
+}
+
+##snap check and install
+SOFTWARE_INSTALLER_SNAP_NOT_INSTALLED_INFO() {
+    log_warn "Snap not find and installing Snap..."
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALLED_INFO() {
+    log_info "Snap installed"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_SUCCESS() {
+    log_success "Snap installed successfully"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALLER_INFO() {
+    log_info "Installing $1 ..."
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_SUCCESS() {
+    log_success "$1 installed"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_ERROR() {
+    log_error "$1 fail installed"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_SKIP_WARN() {
+    log_warn "$1 installed then ignored"
+}
+
+##flatpak check and install
+SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO() {
+    log_warn "Flatpak not find and installing Flatpak..."
+}
+
+SOFTWARE_INSTALLER_FLATAPAK_INSTALL_SKIP_WARN() {
+    log_info "Flatpak installed"
+}
+
+SOFTWARE_INSTALLER_FLATPAK_INSTALL_SUCCESS() {
+    log_success "$1 installed"
+}
+
+SOFTWARE_INSTALLER_FLATPAK_INSTALL_ERROR() {
+    log_error "$1 fail installed"
+}
+
+SOFTWARE_INSTALLER_FLATPAK_INSTALLER_SKIP_WARN() {
+    log_warn "$1 installed then ignored"
+}
+
+#end
+
+#apk_installer.sh tips
+APK_INSTALLER_WAYDROID_NOT_INSTALLED_ERROR() {
+    log_error "Waydroid not find and please install Waydroid"
+}
+
+APK_INSTALLER_WAYDROID_INSTALLED_INFO() {
+    log_success "Waydroid installed"
+}
+
+APK_INSTALLER_FILE_PATH_INFO() {
+    echo "APK(.apk) file path"
+}
+
+APK_INSTALLER_FILE_PATH_ERROR() {
+    log_error "file not find:("
+}
+
+APK_INSTALLER_APP_INSTALL_SUCCESS() {
+    log_success "APK installed"
+}
+
+APK_INSTALLER_APP_INSTALL_ERROR() {
+    log_error "APK fail installed"
+}
+
+#end
+
+#waydroid_installer_part1.sh tips
+
+##debian universe
+WAYDROID_INSTALLER_PART_1_DEBIAN_INFO() {
+    echo "========================================"
+    echo "       Install Waydroid - part 1    "
+    echo "========================================"
+    echo "Checked that is Debian universe,installing Waydroid..."
+}
+
+WAYDROID_INSTALLER_PART_1_DEBIAN_SUCCESS() {
+    log_error "Neccesary packages installed"
+}
+
+WAYDROID_INSTALLER_PART_1_DEBIAN_ADD_REPO_SUCCESS() {
+    log_error "Add Waydroid repository successfully"
+}
+
+WAYDROID_INSTALLER_PART_1_DEBIAN_INSTALL_SUCCESS() {
+    log_error "Waydroid installed"
+}
+
+##red hat universe
+WAYDROID_INSTALLER_PART_1_FEDORA_INFO() {
+    echo "========================================"
+    echo "      Install Waydroid - part 1   "
+    echo "========================================"
+    echo "Checked that is Red Hat universe,installing Waydroid..."
+}
+
+WAYDROID_INSTALLER_PART_1_FEDORA_SUCCESS() {
+    log_error "Neccessary packages installed"
+}
+
+WAYDROID_INSTALLER_PART_1_FEDORA_ADD_REPO_SUCCESS() {
+    log_error "Add Waydroid repository successfully"
+}
+
+WAYDROID_INSTALLER_PART_1_FEDORA_INSTALL_SUCCESS() {
+    log_error "Waydroid installed"
+}
+
+##arch universe
+WAYDROID_INSTALLER_PART_1_ARCH_INFO() {
+    echo "========================================"
+    echo "       Install Waydroid - part 1       "
+    echo "========================================"
+    echo "Checked that Arch Linux universe，installing Waydroid..."
+}
+
+##unsupported os
+WAYDROID_INSTALLELR_PART_1_UNSUPPORTED_OS_INFO() {
+    log_error "Unsupported OS"
+}
+
+#end
+
+#waydroid_installer_part.sh tips
+##config waydroid
+WAYDROID_INSTALLER_PART_2_CONFIG_WAYDROID_INFO() {
+    echo "========================================"
+    echo "       Install Waydroid - part 2       "
+    echo "========================================"
+    log_info "Configing waydroid..."
+}
+
+WAYDROID_INSTALLER_PART_2_FILES_STORE_INFO() {
+    log_info "Where you want to store patcher"
+}
+
+WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_INFO() {
+    log_info "Running patcher ..."
+}
+
+WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_SUCCESS() {
+    log_success "Installed successfully"
+}
+
+WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_ERROR() {
+    log_error "fail installed"
+}
+
+WAYDROID_INSTALLER_PART_2_END_INFO() {
+    log_info "Waydroid installed"
 }
 #end

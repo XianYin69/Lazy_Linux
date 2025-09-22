@@ -7,8 +7,9 @@
 # 日期：09-16-2025       
 # =================================================================================================
 
-source "../../../var/state/STATE.sh"
-
+source "../../var/state/STATE.sh"
+source "../../var/index/filepath.sh"
+ 
 case $NVIDIA_DRIVER_INSTALLED_STAGE in
     0);
         sudo ./nvidia_driver/nvidia_driver_installer_part1.sh

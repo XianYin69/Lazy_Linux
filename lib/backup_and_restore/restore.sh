@@ -7,6 +7,9 @@
 # 日期：月-日-年       
 # =================================================================================================
 
+source "../../var/state/STATE.sh"
+source "../../var/index/filepath.sh"
+ 
 RESTORE_INFO
 RESTORE_PATH_INFO
 read -p ":" RESTORE_STORE_PATH

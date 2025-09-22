@@ -1,4 +1,6 @@
-source "../var/state/STATE.txt"
+source "../../var/state/STATE.sh"
+source "../../var/index/filepath.sh"
+ 
 
 if  [[ $EUID -ne 0 ]];
 then

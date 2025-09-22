@@ -17,14 +17,14 @@ waydroid prop set persist.waydroid.cursor_on_subsurface true
 
 #克隆 Waydroid ARM 支持仓库
 clone_repo() {
-    log_info "正在克隆 Waydroid ARM 支持仓库..."
-    read -p "输入保存路径：" GIT_PATH
+    WAYDROID_INSTALLER_PART_2_FILES_STORE_INFO
+    read -p "：" GIT_PATH
     cd "$GIT_PATH"
 }
 
 # 运行安装脚本
 run_python_script() {
-    log_info "正在运行安装脚本..."
+    WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_INFO
     while true; do
         if [ -d waydroid_script ]; then
                 cd waydroid_script
@@ -33,12 +33,12 @@ run_python_script() {
             venv/bin/python3 main.py
             sudo venv/bin/python3 main.py install libhoudini
             sudo systemctl restart waydroid-container
-            log_success "Waydroid ARM 支持安装成功！"
+            WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_SUCCESS
             break
         else
             git clone https://github.com/casualsnek/waydroid_script
             if [[ $? -ne 0 ]]; then
-                log_error "克隆仓库失败，请检查网络连接或仓库地址。"
+                WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_ERROR
                 exit 1
             fi
         fi
@@ -63,4 +63,4 @@ else
     run_python_script
 fi
 
-log_success "Waydroid installer 全部运行脚本已完成运行！"
+WAYDROID_INSTALLER_PART_2_END_INFO
