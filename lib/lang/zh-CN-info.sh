@@ -597,22 +597,6 @@ NVIDIA_DRIVER_INSTALLER_PART_3_END_INFO() {
 #结束
 
 #software_installer.sh提示信息
-SOFTWARE_INSTALLER_FEDORA_INFO() {
-    log_info "你的系统是fedora,cent os或rhel及他们的衍生物"
-}
-
-SOFTWARE_INSTALLER_DEBIAN_INFO() {
-    log_info "你的系统是debian,ubuntu或kali及他们的衍生物"            
-}
-
-SOFTWARE_INSTALLER_ARCH_INFO() {
-    log_info "你的系统是arch及其衍生物"
-}
-
-SOFTWARE_INSTALLER_OS_NOT_SUPPORTED_ERROR() {
-    log_error "不受支持的操作系统"
-    log_error "正在退出..."
-}
 
 ##读取用户软件列表
 SOFTWARE_INSTALLER_READING_SOFTWARE_LIST_INFO() {
@@ -672,8 +656,8 @@ SOFTWARE_INSTALLER_DEBIAN_APT_SKIP_WARN() {
     log_warn "$1 已经安装，跳过。"
 }
 
-##fedora安装函数
-SOFTWARE_INSTALELR_ARCH_INSTALLER_INFO() {
+##arch安装函数
+SOFTWARE_INSTALLER_ARCH_INSTALLER_INFO() {
     log_info "开始安装软件..."
 }
 
@@ -691,4 +675,150 @@ SOFTWARE_INSTALLER_ARCH_PACMAN_ERROR() {
 
 SOFTWARE_INSTALLER_ARCH_PACMAN_SKIP_WARN() {
     log_warn "$1 已经安装，跳过。"
+}
+
+##snap检测及安装
+SOFTWARE_INSTALLER_SNAP_NOT_INSTALLED_INFO() {
+    log_warn "Snap 未安装，正在安装 Snap..."
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALLED_INFO() {
+    log_info "已经安装 Snap，跳过。"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_SUCCESS() {
+    log_success "Snap 安装成功。"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALLER_INFO() {
+    log_info "正在安装 $1 ..."
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_SUCCESS() {
+    log_success "$1 通过 Snap 安装成功。"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_ERROR() {
+    log_error "$1 通过 Snap 安装失败。"
+}
+
+SOFTWARE_INSTALLER_SNAP_INSTALL_SKIP_WARN() {
+    log_warn "$1 已经通过 Snap 安装，跳过。"
+}
+
+##flatpak检测及安装
+SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO() {
+    log_warn "Flatpak 未安装，正在安装 Flatpak..."
+}
+
+SOFTWARE_INSTALLER_FLATAPAK_INSTALL_SKIP_WARN() {
+    log_info "已经安装 Flatpak，跳过。"
+}
+
+SOFTWARE_INSTALLER_FLATPAK_INSTALL_SUCCESS() {
+    log_success "$1 通过 Flatpak 安装成功。"
+}
+
+SOFTWARE_INSTALLER_FLATPAK_INSTALL_ERROR() {
+    log_error "$1 通过 Flatpak 安装失败。"
+}
+
+SOFTWARE_INSTALLER_FLATPAK_INSTALLER_SKIP_WARN() {
+    log_warn "$1 已经通过 Flatpak 安装，跳过。"
+}
+
+#结束
+
+#apk_installer.sh提示信息
+APK_INSTALLER_WAYDROID_NOT_INSTALLED_ERROR() {
+    log_error "Waydroid未安装或未初始化，请先安装并初始化Waydroid"
+}
+
+APK_INSTALLER_WAYDROID_INSTALLED_INFO() {
+    log_success "检测到Waydroid已安装"
+}
+
+APK_INSTALLER_FILE_PATH_INFO() {
+    echo "请输入要安装的APK文件路径"
+}
+
+APK_INSTALLER_FILE_PATH_ERROR() {
+    log_error "指定的APK文件不存在，请检查路径后重试"
+}
+
+APK_INSTALLER_APP_INSTALL_SUCCESS() {
+    log_success "APK安装成功"
+}
+
+APK_INSTALLER_APP_INSTALL_ERROR() {
+    log_error "APK安装失败，请检查文件是否有效"
+}
+
+#结束
+
+#waydroid_installer_part1.sh提示信息
+
+##debian及其衍生版
+WAYDROID_INSTALLER_PART_1_DEBIAN_INFO() {
+    echo "========================================"
+    echo "       Waydroid安装脚本 - 第1部分    "
+    echo "========================================"
+    echo "检测到Debian/Ubuntu系统，开始安装Waydroid..."
+}
+
+WAYDROID_INSTALLER_PART_1_DEBIAN_SUCCESS() {
+    log_error "依赖包安装成功"
+}
+
+WAYDROID_INSTALLER_PART_1_DEBIAN_ADD_REPO_SUCCESS() {
+    log_error "添加Waydroid仓库成功"
+}
+
+WAYDROID_INSTALLER_PART_1_DEBIAN_INSTALL_SUCCESS() {
+    log_error "Waydroid安装成功"
+}
+
+##fedora及其衍生版
+WAYDROID_INSTALLER_PART_1_FEDORA_INFO() {
+    echo "========================================"
+    echo "       Waydroid安装脚本 - 第1部分    "
+    echo "========================================"
+    echo "检测到Fedora/CentOS/Red Hat系统，开始安装Waydroid..."
+}
+
+WAYDROID_INSTALLER_PART_1_FEDORA_SUCCESS() {
+    log_error "依赖包安装成功"
+}
+
+WAYDROID_INSTALLER_PART_1_FEDORA_ADD_REPO_SUCCESS() {
+    log_error "添加Waydroid仓库成功"
+}
+
+WAYDROID_INSTALLER_PART_1_FEDORA_INSTALL_SUCCESS() {
+    log_error "Waydroid安装成功"
+}
+
+##arch及其衍生版
+WAYDROID_INSTALLER_PART_1_ARCH_INFO() {
+    echo "========================================"
+    echo "       Waydroid安装脚本 - 第1部分       "
+    echo "========================================"
+    echo "检测到Arch Linux系统，正在安装Waydroid..."
+}
+
+##不支持的系统
+WAYDROID_INSTALLELR_PART_1_UNSUPPORTED_OS_INFO() {
+    log_error "不支持的操作系统！"
+}
+
+#结束
+
+#waydroid_installer_part.sh提示信息
+
+##配置waydroid
+WAYDROID_INSTALLER_PART_2_CONFIG_WAYDROID_INFO() {
+    echo "========================================"
+    echo "       Waydroid安装脚本 - 第2部分       "
+    echo "========================================"
+    log_info "正在配置waydroid..."
 }

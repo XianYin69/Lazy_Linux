@@ -7,46 +7,29 @@
 # 日期：       8-31-2025
 # =================================================================================================
 
-# --- 颜色常量定义 ---
-readonly COLOR_INFO="\033[34m"      # 蓝色
-readonly COLOR_SUCCESS="\033[32m"    # 绿色
-readonly COLOR_ERROR="\033[31m"      # 红色
-readonly COLOR_WARN="\033[33m"       # 黄色
-readonly COLOR_RESET="\033[0m"       # 重置颜色
-# --- 日志工具函数 ---
-log_info() {
-    echo -e "${COLOR_INFO}[信息]${COLOR_RESET} $1"
-}
-log_success() {
-    echo -e "${COLOR_SUCCESS}[成功]${COLOR_RESET} $1"
-}
-log_error() {
-    echo -e "${COLOR_ERROR}[错误]${COLOR_RESET} $1"
-}
-log_warn() {
-    echo -e "${COLOR_WARN}[警告]${COLOR_RESET} $1"
-}
-
 #check waydroid status
 if [ ! -d "/var/lib/waydroid" ]; then
-    log_error "Waydroid未安装或未初始化，请先安装并初始化Waydroid"
+    APK_INSTALLER_WAYDROID_NOT_INSTALLED_ERROR
+    sleep 3
     exit 1
 else
-    log_success "检测到Waydroid已安装"
+    APK_INSTALLER_WAYDROID_INSTALLED_INFO
     systemctl start waydroid-container
-    echo "请输入要安装的APK文件路径："
-    read APK_PATH
-    if [ ! -f "$APK_PATH" ]; then
-        log_error "指定的APK文件不存在，请检查路径后重试"
-        exit 1
-    else
-        waydroid app install "$APK_PATH"
-        if [ $? -eq 0 ]; then
-            log_success "APK安装成功"
+    APK_INSTALLER_FILE_PATH_INFO
+    read -p ":" APK_PATH
+    while :
+    do
+        if [ ! -f "$APK_PATH" ]; then
+            APK_INSTALLER_FILE_PATH_ERROR
         else
-            log_error "APK安装失败，请检查文件是否有效"
-            exit 1
+            waydroid app install "$APK_PATH"
+            if [ $? -eq 0 ]; then
+                APK_INSTALLER_APP_INSTALL_SUCCESS
+                break
+            else
+                APK_INSTALLER_APP_INSTALL_ERROR
+            fi
         fi
-    fi
-
+    done
+    exit 0
 fi

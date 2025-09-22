@@ -7,31 +7,8 @@
 # 日期：       8-31-2025
 # =================================================================================================
 
-OS_TYPE() {
-    source /etc/os-release
-    case $ID in
-        fedora|centos|rhel)
-            OS_TYPE="fedora"
-            SOFTWARE_INSTALLER_FEDORA_INFO
-        ;;
-        debian|ubuntu|kali)
-            OS_TYPE="debian"
-            SOFTWARE_INSTALLER_DEBIAN_INFO            
-        ;;
-        arch)
-            OS_TYPE="arch"
-            SOFTWARE_INSTALLER_ARCH_INFO
-        ;;
-        *)
-            SOFTWARE_INSTALLER_OS_NOT_SUPPORTED_ERROR
-            exit 1
-        ;;
-    esac
-}
-
-
 # 读取用户软件列表（software_list.txt）
-SOFTWARE_LIST() {
+software_list() {
     check_software_list_file() {
         SOFTWARE_INSTALLER_READING_SOFTWARE_LIST_INFO
         read -p ":" FILE_PATH
@@ -65,12 +42,12 @@ SOFTWARE_LIST() {
     done
 }
 #fedora安装函数
-FEDORA_INSTALL() {
-    SOFTWARE_INSTALELR_FEDORA_INSTALLER_INFO
+fedora_install() {
+    SOFTWARE_INSTALLER_FEDORA_INSTALLER_INFO
     # 使用dnf安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
         if dnf list installed "$package" &> /dev/null; then
-            SOFTWARE_INSTALLER_FEODRA_DNF_INFO $package
+            SOFTWARE_INSTALLER_FEDORA_DNF_INFO $package
             if dnf install -y "$package"; then
                 SOFTWARE_INSTALLER_FEDORA_DNF_SUCCESS $package
             else
@@ -83,7 +60,7 @@ FEDORA_INSTALL() {
 }
 
 #ubuntu安装函数
-UBUNTU_INSTALL() {
+ubuntu_install() {
     SOFTWARE_INSTALLER_DEBIAN_INFO
     # 使用apt安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
@@ -101,27 +78,27 @@ UBUNTU_INSTALL() {
 }
 
 #arch安装函数
-ARCH_INSTALL() {
-    log_info "开始安装软件..."
+arch_installer() {
+    SOFTWARE_INSTALLER_ARCH_PACMAN_INFO
     # 使用pacman安装软件
     for package in "${SOFTWARE_LIST[@]}"; do
         if pacman -Qi "$package" &> /dev/null; then
-            log_info "正在安装 $package ..."
+            SOFTWARE_INSTALLER_ARCH_PACMAN_INFO $package
             if pacman -S --noconfirm "$package"; then
-                log_success "$package 安装成功。"
+                SOFTWARE_INSTALLER_ARCH_PACMAN_SUCCESS $package
             else
-                log_error "$package 安装失败。"
+                SOFTWARE_INSTALLER_ARCH_PACMAN_ERROR $package
             fi
         else
-            log_warn "$package 已经安装，跳过。"
+            SOFTWARE_INSTALLER_ARCH_PACMAN_SKIP_WARN $package
         fi
     done
 }
 
 #snap检测及安装
-SNAP_INSTALL() {
+snap_install() {
     if ! command -v snap &> /dev/null; then
-        log_warn "Snap 未安装，正在安装 Snap..."
+        SOFTWARE_INSTALLER_SNAP_NOT_INSTALLED_INFO
         case $OS_TYPE in
             fedora)
                 dnf install -y snapd
@@ -138,30 +115,30 @@ SNAP_INSTALL() {
                 systemctl enable --now snapd.socket
                 ;;
         esac
-        log_success "Snap 安装完成。"
+        SOFTWARE_INSTALLER_SNAP_INSTALL_SUCCESS
     else
-        log_info "Snap 已安装。"
+        SOFTWARE_INSTALLER_SNAP_INSTALLED_INFO
     fi
 
     # 使用snap安装软件
     for package in "${SNAP_PREFERRED_LIST[@]}"; do
         if snap list | grep -q "$package "; then
-            log_warn "$package 已经通过 Snap 安装，跳过。"
+            SOFTWARE_INSTALLER_SNAP_INSTALL_SKIP_WARN $package
         else
-            log_info "正在通过 Snap 安装 $package ..."
+            SOFTWARE_INSTALLER_SNAP_INSTALLER_INFO $package
             if snap install "$package"; then
-                log_success "$package 通过 Snap 安装成功。"
+                SOFTWARE_INSTALLER_SNAP_INSTALL_SUCCESS $package
             else
-                log_error "$package 通过 Snap 安装失败。"
+                SOFTWARE_INSTALLER_SNAP_INSTALL_ERROR $package
             fi
         fi
     done
 }
 
 #flatpak检测及安装
-FLATPKG_INSTALL() {
+flatpak_install() {
     if ! command -v flatpak &> /dev/null; then
-        log_warn "Flatpak 未安装，正在安装 Flatpak..."
+        SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO
         case $OS_TYPE in
             fedora)
                 dnf install -y flatpak
@@ -174,41 +151,27 @@ FLATPKG_INSTALL() {
                 pacman -S --noconfirm flatpak
                 ;;
         esac
-        log_success "Flatpak 安装完成。"
+        SOFTWARE_INSTALLER_FLATPAK_INSTALL_SUCCESS
     else
-        log_info "Flatpak 已安装。"
+        SOFTWARE_INSTALLER_FLATAPAK_INSTALL_SKIP_WARN
     fi
     # 使用flatpak安装软件
     for package in "${FLATPKG_LIST[@]}"; do
         if flatpak list | grep -q "^$package "; then
-            log_warn "$package 已经通过 Flatpak 安装，跳过。"
+            SOFTWARE_INSTALLER_FLATPAK_INSTALLER_SKIP_WARN $package
         else
-            log_info "正在通过 Flatpak 安装 $package ..."
+            SOFTWARE_INSTALLER_FLATPAK_INSTALL_INFO $package
             if flatpak install -y flathub "$package"; then
-                log_success "$package 通过 Flatpak 安装成功。"
+                SOFTWARE_INSTALLER_FLATPAK_INSTALL_SUCCESS $package
             else
-                log_error "$package 通过 Flatpak 安装失败。"
+                SOFTWARE_INSTALLER_FLATPAK_INSTALL_ERROR $package
             fi
         fi
     done
 }
 
 # 主程序
-ROOT_CHECK
-OS_TYPE
-SOFTWARE_LIST
-case $OS_TYPE in
-    fedora)
-        FEDORA_INSTALL
-        ;;
-    debian)
-        UBUNTU_INSTALL
-        ;;
-    arch)
-        ARCH_INSTALL
-        ;;
-esac
-SNAP_INSTALL
-FLATPKG_INSTALL
-log_success "所有软件安装过程完成。"
+software_list
+snap_install
+flatpak_install
 exit 0
