@@ -7,9 +7,12 @@
 # 日期：9-10-2025 
 # =================================================================================================
 
-#引入函数
-. ./var/index/function.sh
-. ./var/index/filepath.sh
+#变量定义
+source ./.index.sh
+
+source $VAR_FOLDER_PATH
+source $STATE_FOLDER_PATH
+source $STATE_SH_FILE_PATH
 
 OS_TYPE=""
 KERNEL_VERSION=""
@@ -19,19 +22,19 @@ SESSION_TYPE=""
 system_check() {
     source "/etc/os-release"
     OS_TYPE=$ID
-    sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE/g" $STATE_PATH
+    sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE/g" $STATE_SH_PATH
     KERNEL_VERSION=$(uname -r)
-    sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION/g" $STATE_PATH
+    sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION/g" $STATE_SH_PATH
     SESSION_TYPE=$XDG_SESSION_TYPE
-    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=$SESSION_TYPE/g" $STATE_PATH
+    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=$SESSION_TYPE/g" $STATE_SH_PATH
     source "./stack/state/STATE.sh"
     #检测是否是TTY模式
     if [ $SESSION_TYPE = "tty" ]; then
         TTY_MODE="Y"
-        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_PATH
+        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_SH_PATH
     else
         TTY_MODE="N"
-        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_PATH
+        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_SH_PATH
     fi
 }
 
@@ -45,11 +48,11 @@ select_launcher_language() {
         read -p ":" LAUNCHER_LANGUAGE
         if [ "$LAUNCHER_LANGUAGE" -eq 1 ]; 
         then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" $STATE_PATH
+            sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" $STATE_SH_PATH
             break
         elif [ "$LAUNCHER_LANGUAGE" -eq 2 ]; 
         then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=en/g" $STATE_PATH
+            sed -i "s/STATE_LANG=.*/STATE_LANG=en/g" $STATE_SH_PATH
             break
         else
             echo "You must select one!"
@@ -225,9 +228,9 @@ script_choice() {
 
 #使用次数增加
 time_plus() {
-    local time=$(awk -F '=' '/TIME/{print $2}' $STATE_PATH)
+    local time=$(awk -F '=' '/TIME/{print $2}' $STATE_SH_PATH)
     time_plus=$(($time+1))
-    sed -i "s/TIME=.*/TIME=$time_plus/g" $STATE_PATH
+    sed -i "s/TIME=.*/TIME=$time_plus/g" $STATE_SH_PATH
 }
 
 #主函数

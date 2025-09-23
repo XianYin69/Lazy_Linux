@@ -1,7 +1,3 @@
-source "../../var/state/STATE.sh"
-source "../../var/index/filepath.sh"
- 
-
 if  [[ $EUID -ne 0 ]];
 then
     FIRST_RUN_SH_ROOT_ERROR
