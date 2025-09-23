@@ -1,12 +1,7 @@
 #目录索引
-SUP_VAR_HOME_PATH=".."
-VAR_HOME_PATH="."
+SUP_WAYDROID_INSTALLER_HOME_PATH=".."
+WAYDROID_INSTALLER_HOME_PATH="."
 
 #文件索引
-STATE_FOLDER_PATH="$VAR_HOME_PATH/state/.index.sh"
-
-#索引行为
-source_sup_path() {
-    cd "$SUP_HOME_PATH"
-    source "./.index.sh"
-}
+INSTALLER_SH_PATH="$WAYDORID_INSTALLER_HOME_PATH/installer.sh"
+WAYDROID_INSTALLER_LIB_PATH="$WAYDROID_INSTALLER_HOME_PATH/index.sh"

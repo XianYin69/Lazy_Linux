@@ -1,12 +1,12 @@
 #目录索引
-SUP_VAR_HOME_PATH=".."
-VAR_HOME_PATH="."
+SUP_LIB_HOME_PATH=".."
+LIB_HOME_PATH="."
 
 #文件索引
-STATE_FOLDER_PATH="$VAR_HOME_PATH/state/.index.sh"
-
-#索引行为
-source_sup_path() {
-    cd "$SUP_HOME_PATH"
-    source "./.index.sh"
-}
+BACKUP_AND_RESTORE_FOLDER_PATH="$LIB_HOME_PATH/backup_and_restore/index.sh"
+INIT_FOLDER_PATH="$LIB_HOME_PATH/init/index.sh"
+INITIALIZE_TOOLKIT_FOLDER_PATH="$LIB_HOME_PATH/initialize_toolkit/index.sh"
+LANG_FOLDER_PATH="$LIB_HOME_PATH/lang/index.sh"
+LINUX_CONFIGURER_FOLDER_PATH="$LIB_HOME_PATH/linux_configurer/index.sh"
+SOFTWARE_INSTALLER_FOLDER_PATH="$LIB_HOME_PATH/software_installer/index.sh"
+WAYDROID_FOLDER_PATH="$LIB_HOME_PATH/waydroid/index.sh"
