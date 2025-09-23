@@ -7,14 +7,6 @@
 # 日期：9-23-2025       
 # =================================================================================================
 
-#定义变量
-source ./.index.sh
-
-source "./$SUP_LANG_HOME_PATH".index.sh
-source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH".index.sh
-source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
-source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
-STATE_SH_PATH="./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
 
 #主函数
 #语言选择
@@ -41,6 +33,12 @@ select_launcher_language() {
 
 #语言初始化
 language_choose() {
+    source ./.index.sh
+    source "./$SUP_LANG_HOME_PATH".index.sh
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH".index.sh
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    STATE_SH_PATH="./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
     while :
     do
         source $STATE_SH_PATH
