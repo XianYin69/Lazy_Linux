@@ -1,7 +1,9 @@
 #目录索引
-SUP_LANG_HOME_PATH=".."
-LANG_HOME_PATH="."
+SUP_LANG_HOME_PATH="../"
+LANG_HOME_PATH="./"
+
+LANG_LIB_FOLDER_PATH_INDEX="lang_lib/.index.sh"
+LANG_LIB_FOLDER_PATH="lang_lib/"
 
 #文件索引
-EN_US_SH_FILE_PATH="en_US.sh"
-ZH_CN_SH_FILE_PATH="zh_CN.sh"
+SELECTOR_SH_FILE_PATH="selector.sh"

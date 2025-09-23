@@ -1,5 +1,5 @@
 #目录索引
-ROOT_HOME_PATH="."
+ROOT_HOME_PATH="./"
 
 VAR_FOLDER_PATH_INDEX="var/.index.sh"
 SRC_FOLDER_PATH_INDEX="src/.index.sh"

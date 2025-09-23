@@ -1,6 +1,6 @@
 #目录索引
-SUP_PICTURE_HOME_PATH=".."
-PICTURE_HOME_PATH="."
+SUP_PICTURE_HOME_PATH="../"
+PICTURE_HOME_PATH="./"
 
 #文件索引
 NVIDIA_FUCK_U_TXT_PATH="nvidia_fuck_u.txt"

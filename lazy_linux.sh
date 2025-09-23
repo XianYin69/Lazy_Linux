@@ -13,7 +13,7 @@ source ./.index.sh
 source "./$VAR_FOLDER_PATH_INDEX"
 source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
 source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
-STATE_PATH="$STATE_SH_FILE_PATH"
+STATE_SH_PATH="./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
 
 
 OS_TYPE=""
@@ -27,11 +27,10 @@ system_check() {
     sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE/g" $STATE_SH_PATH
     KERNEL_VERSION=$(uname -r)
     sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION/g" $STATE_SH_PATH
-    SESSION_TYPE=$XDG_SESSION_TYPE
-    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=$SESSION_TYPE/g" $STATE_SH_PATH
-    source "./stack/state/STATE.sh"
+    SESSION_TYPE=${XDG_SESSION_TYPE}
+    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=${XDG_SESSION_TYPE}/g" $STATE_SH_PATH
     #检测是否是TTY模式
-    if [ $SESSION_TYPE = "tty" ]; then
+    if [[ ${SESSION_TYPE} == "tty" ]]; then
         TTY_MODE="Y"
         sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_SH_PATH
     else
@@ -41,43 +40,13 @@ system_check() {
 }
 
 #语言选择
-select_launcher_language() {
-    while :
-    do
-        echo  "Please choose your language:"
-        echo  "1.中文"
-        echo  "2.English"
-        read -p ":" LAUNCHER_LANGUAGE
-        if [ "$LAUNCHER_LANGUAGE" -eq 1 ]; 
-        then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" $STATE_SH_PATH
-            break
-        elif [ "$LAUNCHER_LANGUAGE" -eq 2 ]; 
-        then
-            sed -i "s/STATE_LANG=.*/STATE_LANG=en/g" $STATE_SH_PATH
-            break
-        else
-            echo "You must select one!"
-        fi
-    done
-}
-
-#语言初始化
-language_choose() {
-    if [ "$TTY_MODE" = "N" ]
-    then
-        if [ "$STATE_LANG" = "ch" ]; then
-            source "$LANG_ZH_CN_PATH"
-        elif [ "$STATE_LANG" = "en" ]; then
-            source "$LANG_EN_US_PATH"
-        elif [ "$STATE_LANG" = "initing" ]; then
-            select_launcher_language
-        else
-            source "$LANG_EN_US_PATH"
-        fi
-    else
-        source "$LANG_EN_US_PATH"
-    fi
+language_selector() {
+    source ./.index.sh
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH$SELECTOR_SH_FILE_PATH"
+    cd "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH"
+    select_launcher_language
 }
 
 #子菜单
@@ -230,14 +199,13 @@ script_choice() {
 
 #使用次数增加
 time_plus() {
-    local time=$(awk -F '=' '/TIME/{print $2}' $STATE_SH_PATH)
-    time_plus=$(($time+1))
+    time_plus=$(( TIME ++ ))
     sed -i "s/TIME=.*/TIME=$time_plus/g" $STATE_SH_PATH
 }
 
 #主函数
-language_choose
 system_check
+language_selector
 SYSTEM_OS_TYPE_INFO "$OS_TYPE"
 SYSTEM_KERNEL_VERSION_INFO "$KERNEL_VERSION"
 SYSTEM_SESSION_TYPE_INFO "$SESSION_TYPE"
