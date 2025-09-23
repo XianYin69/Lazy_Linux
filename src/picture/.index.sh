@@ -3,4 +3,4 @@ SUP_PICTURE_HOME_PATH=".."
 PICTURE_HOME_PATH="."
 
 #文件索引
-NVIDIA_FUCK_U_TXT_PATH="$PICTURE_HOME_PATH/nvidia_fuck_u.txt"
+NVIDIA_FUCK_U_TXT_PATH="nvidia_fuck_u.txt"
