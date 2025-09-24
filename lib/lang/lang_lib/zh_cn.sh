@@ -7,16 +7,12 @@
 # 日期：9-11-2025       
 # =================================================================================================
 
-source "../../var/state/STATE.sh"
-source "../../var/index/filepath.sh"
- 
-
 #定义颜色
-readonly INFO="\e[34m"
-readonly SUCCESS="\e[32m"
-readonly ERROR="\e[31m"
-readonly WARNING="\e[33m"
-readonly RESET="\e[0m"
+INFO="\e[34m"
+SUCCESS="\e[32m"
+ERROR="\e[31m"
+WARNING="\e[33m"
+RESET="\e[0m"
 
 #日志函数
 log_info() {

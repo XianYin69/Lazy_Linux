@@ -7,21 +7,20 @@
 # 日期：9-10-2025 
 # =================================================================================================
 
-#变量定义
-source ./.index.sh
-
-source "./$VAR_FOLDER_PATH_INDEX"
-source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
-source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
-STATE_SH_PATH="./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
-
-
-OS_TYPE=""
-KERNEL_VERSION=""
-SESSION_TYPE=""
 
 #系统检测
 system_check() {
+    #变量定义
+    source ./.index.sh
+    source "./$VAR_FOLDER_PATH_INDEX"
+    source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    local STATE_SH_PATH="./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+
+    OS_TYPE=""
+    KERNEL_VERSION=""
+    SESSION_TYPE=""
+
     source "/etc/os-release"
     OS_TYPE=$ID
     sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE/g" $STATE_SH_PATH
@@ -29,14 +28,24 @@ system_check() {
     sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION/g" $STATE_SH_PATH
     SESSION_TYPE=${XDG_SESSION_TYPE}
     sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=${XDG_SESSION_TYPE}/g" $STATE_SH_PATH
-    #检测是否是TTY模式
-    if [[ ${SESSION_TYPE} == "tty" ]]; then
+        # 获取会话类型
+    if [[ -z "${XDG_SESSION_TYPE}" ]]; then
+        SESSION_TYPE="tty"
+    else
+        SESSION_TYPE="${XDG_SESSION_TYPE}"
+    fi
+    sed -i "s/SESSION_TYPE=.*/SESSION_TYPE=${SESSION_TYPE}/g" $STATE_SH_PATH
+
+    # 根据会话类型赋值 TTY_MODE
+    if [[ "${SESSION_TYPE}" == "tty" ]]; then
         TTY_MODE="Y"
-        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_SH_PATH
     else
         TTY_MODE="N"
-        sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_SH_PATH
     fi
+    sed -i "s/TTY_MODE=.*/TTY_MODE=$TTY_MODE/g" $STATE_SH_PATH
+
+    # 重新引用 STATE.sh，确保变量同步
+    source "$STATE_SH_PATH"
 }
 
 #语言选择
@@ -50,9 +59,46 @@ language_selector() {
     cd "../../"
 }
 
+langguage_init() {
+    source "./.index.sh"
+    source "$VAR_FOLDER_PATH_INDEX"
+    source "$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    source "$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    local STATE_SH_PATH="$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+
+    source "./.index.sh"
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH$LANG_LIB_FOLDER_PATH_INDEX"
+    local EN_US_SH_PATH="./$LIB_FOLDER_PATH$LANG_FOLDER_PATH$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
+    local ZH_CN_SH_PATH="./$LIB_FOLDER_PATH$LANG_FOLDER_PATH$LANG_LIB_FOLDER_PATH$ZH_CN_SH_FILE_PATH"
+
+    source $STATE_SH_PATH
+    if [[ "$TTY_MODE" -eq "N" ]]
+    then
+        if [[ "$STATE_LANG" -eq "ch" ]]
+        then
+            source "$ZH_CN_SH_PATH"
+        else
+            source "$EN_US_SH_PATH"
+        fi
+    else
+        source "$EN_US_SH_PATH"
+    fi
+
+}
+
 #子菜单
 initialize_toolkit() {
+    source "./.index.sh"
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$INITIALIZE_TOOLKIT_FOLDER_PATH_INDEX"
+
+    local CHINESEIZATION_PATH="./$LIB_FOLDER_PATH$INITIALIZE_TOOLKIT_FOLDER_PATH$CHINEZIATION_SH_FILE_PATH"
+    local INIT_GIT_PATH="./$LIB_FOLDER_PATH$INITIALIZE_TOOLKIT_FOLDER_PATH$INIT_GIT_SH_FILE_PATH"
+    
     local choice
+
     while :
     do
         LAZY_LINUX_SH_INITIALIZE_TOOLKIT_INFO
@@ -74,6 +120,20 @@ initialize_toolkit() {
 }
 
 linux_configurer() {
+    source "./.index.sh"
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$LINUX_CONFIGURER_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$LINUX_CONFIGURER_FOLDER_PATH$KERNEL_CLEANER_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$LINUX_CONFIGURER_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_FOLDER_PATH_INDEX"
+    local NVIDIA_DRIVER_INSTALLER_PATH="$LIB_FOLDER_PATH$LINUX_CONFIGURER_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_FOLDER_PATH$INSTALLER_SH_FILE_PATH"
+    local CLEAN_BOOT_PATH="$LIB_FOLDER_PATH$LINUX_CONFIGURER_FOLDER_PATH$KERNEL_CLEANER_FOLDER_PATH$SUPER_CLEAN_OLD_KERNEL_SH_FILE_PATH"
+
+    source "./.index.sh"
+    source "$SRC_FOLDER_PATH_INDEX"
+    source "$SRC_FOLDER_PATH$PICTURE_FOLDER_PATH"
+    source "$SRC_FOLDER_PATH$LINUX_CONFIGURER_WARNING_FOLDER_PATH"
+    local LINUX_CONFIGURER_WARNING_PATH="$SRC_FOLDER_PATH$LINUX_CONFIGURER_WARNING_FOLDER$NOTICE_TXT_FILE_PATH"
+    
     local choice
     if [[ $OS_TYPE == "fedora" || $OS_TYPE == "centos" || $OS_TYPE == "rhel" ]]
     then
@@ -88,7 +148,7 @@ linux_configurer() {
                     break
                 ;;
                 2)
-                    sudo bash "$TOUCHPAD_CONFIGURER_PATH"
+                    sudo bash "$CLEAN_BOOT_PATH"
                     break
                 ;;
                 *)
@@ -103,6 +163,12 @@ linux_configurer() {
 }
 
 backup_and_restore() {
+    source "./.index.sh"
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$BACKUP_AND_RESTORE_FOLDER_PATH_INDEX"
+    local BACKUP_PATH="./$LIB_FOLDER_PATH$BACKUP_AND_RESTORE_FOLDER_PATH$BACKUP_SH_FILE_PATH"
+    local RESTOER_PATH="./$LIB_FOLDER_PATH$BACKUP_AND_RESTORE_FOLDER_PATH$RESTORE_SH_FILE_PATH"
+
     local choice
     while :
     do
@@ -125,7 +191,11 @@ backup_and_restore() {
 }
 
 software_installer() {
-    local choice
+    source "./.index.sh"
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$SOFTWARE_INSTALLER_FOLDER_PATH_INDEX"
+    local SOFTWARE_INSTALLER_PATH="./$LIB_FOLDER_PATH$SOFTWARE_INSTALLER_FOLDER_PATH$SOFTWARE_INSTALLER_SH_FILE"
+
     while :
     do
         LAZY_LINUX_SH_SOFTWARE_INSTALLER_INFO
@@ -141,6 +211,14 @@ software_installer() {
 }
 
 waydroid() {
+    source "./.index.sh"
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_INSTALLER_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_CONFIGURER_FOLDER_PATH_INDEX"
+    local WAYDROID_INSTALLER_PATH="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_INSTALLER_FOLDER_PATH$INSTALLER_SH_FILE_PATH"
+    local WAYDROID_APK_INSTALLER_PATH="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_CONFIGURER_FOLDER_PATH$APK_INSTALLER_SH_FILE_PATH"
+
     local choice
     while :
     do
@@ -200,7 +278,12 @@ script_choice() {
 
 #使用次数增加
 time_plus() {
-    time_plus=$(( TIME ++ ))
+    source ./.index.sh
+    source "./$VAR_FOLDER_PATH_INDEX"
+    source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    local STATE_SH_PATH="./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    time_plus=$(( TIME + 1 ))
     sed -i "s/TIME=.*/TIME=$time_plus/g" $STATE_SH_PATH
 }
 
@@ -208,6 +291,7 @@ time_plus() {
 time_plus
 system_check
 language_selector
+langguage_init
 SYSTEM_OS_TYPE_INFO "$OS_TYPE"
 SYSTEM_KERNEL_VERSION_INFO "$KERNEL_VERSION"
 SYSTEM_SESSION_TYPE_INFO "$SESSION_TYPE"

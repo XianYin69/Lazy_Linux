@@ -7,17 +7,15 @@
 # 日期：9-23-2025       
 # =================================================================================================
 
-
-#主函数
 #语言选择
 select_launcher_language() {
-    source "./.index.sh"
+    source ./.index.sh
     source "./$SUP_LANG_HOME_PATH".index.sh
     source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH".index.sh
     source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH_INDEX"
     source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
     source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
-    STATE_SH_PATH="./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    local STATE_SH_PATH="./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
 
     while :
     do
@@ -44,34 +42,19 @@ language_choose() {
     source ./.index.sh
     source "./$SUP_LANG_HOME_PATH".index.sh
     source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH".index.sh
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH_INDEX"
     source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
     source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
-    STATE_SH_PATH="./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
-    while :
-    do
-        source $STATE_SH_PATH
-        if [[ "$TTY_MODE" == "N" ]]
-        then
-            if [[ "$STATE_LANG" == "ch" ]]; then
-                source "./$LANG_LIB_FOLDER_PATH_INDEX"
-                source "./$LANG_LIB_FOLDER_PATH$ZH_CN_SH_FILE_PATH"
-                export "./$LANG_LIB_FOLDER_PATH$ZH_CN_SH_FILE_PATH"
-                break
-            elif [[ "$STATE_LANG" == "en" ]]; then
-                source "./$LANG_LIB_FOLDER_PATH_INDEX"
-                source "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
-                export "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
-                break
-            elif [[ "$STATE_LANG" == "initing" ]]; then
-                select_launcher_language
-            else
-                source "./$LANG_LIB_FOLDER_PATH_INDEX"
-                source "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
-                export "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
-                break
-            fi
-        else
-                select_launcher_language
+    local STATE_SH_PATH="./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+
+    source "$STATE_SH_PATH"
+    if [[ "$TTY_MODE" == "Y" || "$SESSION_TYPE" == "tty" ]]; then
+        # TTY模式下每次都选择语言
+        select_launcher_language
+    else
+        # 非TTY模式下仅STATE_LANG为空时选择语言
+        if [[ -z "$STATE_LANG" ]]; then
+            select_launcher_language
         fi
-    done
+    fi
 }

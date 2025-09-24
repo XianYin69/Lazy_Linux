@@ -4,7 +4,7 @@ LIB_HOME_PATH="./"
 
 BACKUP_AND_RESTORE_FOLDER_PATH_INDEX="backup_and_restore/.index.sh"
 INIT_FOLDER_PATH_INDEX="init/.index.sh"
-INITIALIZE_TOOLKIT_FOLDER_PATH_INDEX="initialize_toolkit/index.sh"
+INITIALIZE_TOOLKIT_FOLDER_PATH_INDEX="initialize_toolkit/.index.sh"
 LANG_FOLDER_PATH_INDEX="lang/.index.sh"
 LINUX_CONFIGURER_FOLDER_PATH_INDEX="linux_configurer/.index.sh"
 SOFTWARE_INSTALLER_FOLDER_PATH_INDEX="software_installer/.index.sh"
