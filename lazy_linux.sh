@@ -47,6 +47,7 @@ language_selector() {
     source "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH$SELECTOR_SH_FILE_PATH"
     cd "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH"
     select_launcher_language
+    cd "../../"
 }
 
 #子菜单
@@ -204,11 +205,11 @@ time_plus() {
 }
 
 #主函数
+time_plus
 system_check
 language_selector
 SYSTEM_OS_TYPE_INFO "$OS_TYPE"
 SYSTEM_KERNEL_VERSION_INFO "$KERNEL_VERSION"
 SYSTEM_SESSION_TYPE_INFO "$SESSION_TYPE"
-time_plus
 script_choice
 exit 0

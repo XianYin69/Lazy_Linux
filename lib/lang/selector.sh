@@ -11,6 +11,14 @@
 #主函数
 #语言选择
 select_launcher_language() {
+    source "./.index.sh"
+    source "./$SUP_LANG_HOME_PATH".index.sh
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH".index.sh
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH_INDEX"
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    source "./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    STATE_SH_PATH="./$SUP_LANG_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+
     while :
     do
         echo  "Please choose your language:"
@@ -42,21 +50,24 @@ language_choose() {
     while :
     do
         source $STATE_SH_PATH
-        if [ "$TTY_MODE" = "N" ]
+        if [[ "$TTY_MODE" == "N" ]]
         then
-            if [ "$STATE_LANG" = "ch" ]; then
+            if [[ "$STATE_LANG" == "ch" ]]; then
                 source "./$LANG_LIB_FOLDER_PATH_INDEX"
                 source "./$LANG_LIB_FOLDER_PATH$ZH_CN_SH_FILE_PATH"
+                export "./$LANG_LIB_FOLDER_PATH$ZH_CN_SH_FILE_PATH"
                 break
-            elif [ "$STATE_LANG" = "en" ]; then
+            elif [[ "$STATE_LANG" == "en" ]]; then
                 source "./$LANG_LIB_FOLDER_PATH_INDEX"
                 source "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
+                export "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
                 break
-            elif [ "$STATE_LANG" = "initing" ]; then
+            elif [[ "$STATE_LANG" == "initing" ]]; then
                 select_launcher_language
             else
                 source "./$LANG_LIB_FOLDER_PATH_INDEX"
                 source "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
+                export "./$LANG_LIB_FOLDER_PATH$EN_US_SH_FILE_PATH"
                 break
             fi
         else
