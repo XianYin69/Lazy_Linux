@@ -7,23 +7,22 @@
 # 日期：09-18-2025       
 # =================================================================================================
 
-source "../../var/state/STATE.sh"
-source "../../var/index/filepath.sh"
- 
-BACKUP_INFO
-BACKUP_PATH_INFO
-read -p ":" BACKUP_PATH
-BACKUP_STORE_INFO
-read -p ":" BACKUP_STORE_PATH
+main(){
+    BACKUP_INFO
+    BACKUP_PATH_INFO
+    read -p ":" BACKUP_PATH
+    BACKUP_STORE_INFO
+    read -p ":" BACKUP_STORE_PATH
 
-mkdir -p $BACKUP_STORE_PATH/backup
-tar -czvf $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).tar.gz $BACKUP_PATH
-touch $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
-echo "BACKUP_PATH=$BACKUP_PATH" >> $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
-echo "BACKUP_STORE_PATH=$BACKUP_STORE_PATH" >> $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
+    mkdir -p $BACKUP_STORE_PATH/backup
+    tar -czvf $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).tar.gz $BACKUP_PATH
+    touch $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
+    echo "BACKUP_PATH=$BACKUP_PATH" >> $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
+    echo "BACKUP_STORE_PATH=$BACKUP_STORE_PATH" >> $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
 
-if [ -f $BACKUP_STORE_PATH/backup/backup_*.tar.gz ] && [ -f $BACKUP_STORE_PATH/backup/backup_*.log ]; then
-    BACKUP_SUCCESS_INFO
-else
-    BACKUP_FAIL_INFO
-fi
+    if [ -f $BACKUP_STORE_PATH/backup/backup_*.tar.gz ] && [ -f $BACKUP_STORE_PATH/backup/backup_*.log ]; then
+        BACKUP_SUCCESS_INFO
+    else
+        BACKUP_FAIL_INFO
+    fi
+} 

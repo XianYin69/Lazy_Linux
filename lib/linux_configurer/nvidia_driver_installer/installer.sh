@@ -6,30 +6,43 @@
 # 参考来源：none   
 # 日期：09-16-2025       
 # =================================================================================================
-
-source "../../var/state/STATE.sh"
-source "../../var/index/filepath.sh"
  
-case $NVIDIA_DRIVER_INSTALLED_STAGE in
-    0);
-        sudo ./nvidia_driver/nvidia_driver_installer_part1.sh
-        sed -i 's/^INSTALL_STATE=.*/INSTALL_STATE=1/g' "../../../var/state/STATE.sh"
-    ;;
-    1);
-        if $NVIDIA_DRIVER_INSTALLED_PART_2_TIME == 0; then
-            sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2_TIME=.*/NVIDIA_DRIVER_INSTALLED_PART_2_TIME=1/g' "../../../var/state/STATE.sh"
-            sudo ./nvidia_driver/nvidia_driver_installer_part2.sh
-        else
-            sed -i 's/^INSTALL_STATE=.*/INSTALL_STATE=2/g' "../../../var/state/STATE.sh"
-            sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2_TIME=.*/NVIDIA_DRIVER_INSTALLED_PART_2_TIME=0/g' "../../../var/state/STATE.sh"
-            sudo ./nvidia_driver/nvidia_driver_installer_part2.sh
-        fi
-    ;;
-    2);
-        sed -i 's/^INSTALL_STATE=.*/INSTALL_STATE=3/g' "../../../var/state/STATE.sh"
-        sudo ./nvidia_driver/nvidia_driver_installer_part3.sh
-    ;;
-    3);
-        sed -i 's/^INSTALL_STATE=.*/INSTALL_STATE=0/g' "../../../var/state/STATE.sh"
-    ;;
-esac
+main() {
+    source "./.index.sh"
+    source "$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH".index.sh
+    source "$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LIB_HOME_PATH".index.sh
+    source "$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH_INDEX"
+    source "$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    local STATE_SH_PATH="$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    
+    source "./.index.sh"
+    source "$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH_INDEX"
+    local NVIDIA_DRVIER_INSTALLER_PART1_SH_PATH="$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART1_SH_FILE_PATH"
+    local NVIDIA_DRVIER_INSTALLER_PART2_SH_PATH="$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART2_SH_FILE_PATH"
+    local NVIDIA_DRVIER_INSTALLER_PART3_SH_PATH="$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART3_SH_FILE_PATH"
+
+    case $NVIDIA_DRIVER_INSTALLED_STAGE in
+        0)
+            source "$NVIDIA_DRIVER_INSTALLER_PART1_SH_FILE_PATH"
+            main
+            sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=1/g' $STATE_SH_PATH
+        ;;
+        1)
+            if $NVIDIA_DRIVER_INSTALLED_PART_2_TIME == 0; then
+                sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2=.*/NVIDIA_DRIVER_INSTALLED_PART_2=1/g' $STATE_SH_PATH
+                source "$NVIDIA_DRIVER_INSTALLED_PART_2_SH_PATH"
+                main
+            else
+                sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=2/g' $STATE_SH_PATH
+                sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2=.*/NVIDIA_DRIVER_INSTALLED_PART_2=0/g' $STATE_SH_PATH
+                source "$NVIDIA_DRIVER_INSTALLED_PART_2_SH_PATH"
+                main
+            fi
+        ;;
+        2)
+            sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=0/g' $STATE_SH_PATH
+            source "$NVIDIA_DRIVER_INSTALLED_PART_3_SH_PATH"
+            main
+        ;;
+    esac
+}

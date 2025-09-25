@@ -55,7 +55,7 @@ language_selector() {
     source "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH_INDEX"
     source "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH$SELECTOR_SH_FILE_PATH"
     cd "./$LIB_FOLDER_PATH$LANG_FOLDER_PATH"
-    select_launcher_language
+    language_choose
     cd "../../"
 }
 
@@ -105,11 +105,13 @@ initialize_toolkit() {
         read -p ":" choice
         case $choice in
             1)
-                sudo bash "$CHINESEIZATION_PATH"
+                source "$CHINESEIZATION_PATH"
+                main
                 break
             ;;
             2)
-                sudo bash "$INIT_GIT_PATH"
+                source "$INIT_GIT_PATH"
+                main
                 break
             ;;
             *)
@@ -144,11 +146,13 @@ linux_configurer() {
             cat "$LINUX_CONFIGURER_WARNING_PATH"
             case $choice in
                 1)
-                    sudo bash "$NVIDIA_DRIVER_INSTALLER_PATH"
+                    source "$NVIDIA_DRIVER_INSTALLER_PATH"
+                    main
                     break
                 ;;
                 2)
-                    sudo bash "$CLEAN_BOOT_PATH"
+                    source "$CLEAN_BOOT_PATH"
+                    main
                     break
                 ;;
                 *)
@@ -172,15 +176,17 @@ backup_and_restore() {
     local choice
     while :
     do
-        LAZY_LINUX_SH_BACKUP_AND_RESTORE_INFO
+        LAZY_LINUX_SH_BACKUP_AND_RESTORE_CHOICE_INFO
         read -p ":" choice
         case $choice in
             1)
-                sudo bash "$BACKUP_PATH"
+                source "$BACKUP_PATH"
+                main
                 break
             ;;
             2)
-                sudo bash "$RESTORE_PATH"
+                source "$RESTORE_PATH"
+                main
                 break
             ;;
             *)
@@ -202,7 +208,7 @@ software_installer() {
         read -p ":" choice
         if [[ $choice =~ ^[Yy] ]]
         then
-            sudo bash "$SOFTWARE_INSTALLER_PATH"
+            source "$SOFTWARE_INSTALLER_PATH"
             break
         else
             LAZY_LINUX_SH_SOFTWARE_INSTALLER_CHOICE_ERROR
@@ -226,11 +232,13 @@ waydroid() {
         read -p ":" choice
         case $choice in
             1)
-                sudo bash "$WAYDROID_INSTALLER_PATH"
+                source "$WAYDROID_INSTALLER_PATH"
+                main
                 break
             ;;
             2)
-                sudo bash "$WAYDROID_APK_INSTALLER_PATH"
+                source "$WAYDROID_APK_INSTALLER_PATH"
+                main
                 break
             ;;
             *)
