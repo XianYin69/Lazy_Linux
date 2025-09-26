@@ -770,18 +770,6 @@ WAYDROID_INSTALLER_PART_1_DEBIAN_INFO() {
     echo "Checked that is Debian universe,installing Waydroid..."
 }
 
-WAYDROID_INSTALLER_PART_1_DEBIAN_SUCCESS() {
-    log_error "Neccesary packages installed"
-}
-
-WAYDROID_INSTALLER_PART_1_DEBIAN_ADD_REPO_SUCCESS() {
-    log_error "Add Waydroid repository successfully"
-}
-
-WAYDROID_INSTALLER_PART_1_DEBIAN_INSTALL_SUCCESS() {
-    log_error "Waydroid installed"
-}
-
 ##red hat universe
 WAYDROID_INSTALLER_PART_1_FEDORA_INFO() {
     echo "========================================"
@@ -790,24 +778,37 @@ WAYDROID_INSTALLER_PART_1_FEDORA_INFO() {
     echo "Checked that is Red Hat universe,installing Waydroid..."
 }
 
-WAYDROID_INSTALLER_PART_1_FEDORA_SUCCESS() {
-    log_error "Neccessary packages installed"
-}
-
-WAYDROID_INSTALLER_PART_1_FEDORA_ADD_REPO_SUCCESS() {
-    log_error "Add Waydroid repository successfully"
-}
-
-WAYDROID_INSTALLER_PART_1_FEDORA_INSTALL_SUCCESS() {
-    log_error "Waydroid installed"
-}
-
 ##arch universe
 WAYDROID_INSTALLER_PART_1_ARCH_INFO() {
     echo "========================================"
     echo "       Install Waydroid - part 1       "
     echo "========================================"
     echo "Checked that Arch Linux universe，installing Waydroid..."
+}
+
+#Installing
+WAYDROID_INSTALLER_PART_1_INSTALL_1_SUCCESS() {
+    log_success "Waydroid dependences installed"
+}
+
+WAYDROID_INSTALLER_PART_1_INSTALL_1_ERROR() {
+    log_error "Waydroid dependences fail installed"
+}
+
+WAYDROID_INSTALLER_PART_1_ADD_REPO_SUCCESS() {
+    log_success "Waydroid repository added"
+}
+
+WAYDROID_INSTALLER_PART_1_ADD_REPO_ERROR() {
+    log_error "Waydroid repository fail added"
+}
+
+WAYDROID_INSTALLER_PART_1_INSTALL_2_SUCCESS() {
+    log_success "Waydroid installer installed"
+}
+
+WAYDROID_INSTALLER_PART_1_INSTALL_2_ERROR() {
+    log_error "Waydroid installer fail installed"
 }
 
 ##unsupported os

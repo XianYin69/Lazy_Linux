@@ -31,22 +31,81 @@ main() {
     case $OS_TYPE in
         debian)
             WAYDROID_INSTALLER_PART_1_DEBIAN_INFO
-            sudo apt install -y "${DEBIAN_DEPS[@]}" ; WAYDROID_INSTALLER_PART_1_DEBIAN_SUCCESS
-            sudo curl "${WAYDROID_REPO_URL}" | bash ; WAYDROID_INSTALLER_PART_1_DEBIAN_ADD_REPO_SUCCESS
-            sudo apt install -y waydroid ; WAYDROID_INSTALLER_PART_1_DEBIAN_INSTALL_SUCCESS
+            if sudo apt install -y "${DEBIAN_DEPS[@]}"
+            then
+                WAYDROID_INSTALLER_PART_1_INSTALL_1_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_INSTALL_1_ERROR
+                exit 1
+            fi
+
+            if sudo curl "${WAYDROID_REPO_URL}" | bash 
+            then
+                WAYDROID_INSTALLER_PART_1_ADD_REPO_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_ADD_REPO_SUCCESS
+                exit 1
+            fi
+
+            if sudo apt install -y waydroid
+            then
+                WAYDROID_INSTALLER_PART_1_INSTALL_2_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_INSTALL_2_ERROR
+                exit 1
+            fi
             ;;
-            
         fedora)
             WAYDROID_INSTALLER_PART_1_FEDORA_INFO
-            sudo dnf install -y "${FEDORA_DEPS[@]}" ; WAYDROID_INSTALLER_PART_1_FEDORA_SUCCESS
-            sudo curl "${WAYDROID_REPO_URL}" | bash ; WAYDROID_INSTALLER_PART_1_FEDORA_ADD_REPO_SUCCESS
-            sudo dnf install -y waydroid ; WAYDROID_INSTALLER_PART_1_FEDORA_INSTALL_SUCCESS
+            if sudo dnf install -y "${DEBIAN_DEPS[@]}"
+            then
+                WAYDROID_INSTALLER_PART_1_INSTALL_1_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_INSTALL_1_ERROR
+                exit 1
+            fi
+
+            if sudo curl "${WAYDROID_REPO_URL}" | bash 
+            then
+                WAYDROID_INSTALLER_PART_1_ADD_REPO_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_ADD_REPO_SUCCESS
+                exit 1
+            fi
+
+            if sudo dnf install -y waydroid
+            then
+                WAYDROID_INSTALLER_PART_1_INSTALL_2_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_INSTALL_2_ERROR
+                exit 1
+            fi
             ;;
         arch)
             WAYDROID_INSTALLELR_PART_1_ARCH_INFO
-            sudo pacman -S lxc python3 adb --noconfirm
-            sudo curl https://repo.waydro.id | sudo bash
-            sudo pacman -S waydroid --noconfirm
+            if sudo pacman -S lxc python3 adb --noconfirm
+            then 
+                WAYDROID_INSTALLER_PART_1_INSTALL_1_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_INSTALL_1_ERROR
+                exit 1
+            fi
+
+            if sudo curl https://repo.waydro.id | sudo bash
+            then
+                WAYDROID_INSTALLER_PART_1_ADD_REPO_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_ADD_REPO_ERROR
+                exit 1
+            fi
+
+            if sudo pacman -S waydroid --noconfirm
+            then
+                WAYDROID_INSTALLER_PART_1_INSTALL_2_SUCCESS
+            else
+                WAYDROID_INSTALLER_PART_1_INSTALL_2_ERROR
+                exit 1
+            fi
             ;;
         *)
             WAYDROID_INSTALLELR_PART_1_UNSUPPORTED_OS_INFO

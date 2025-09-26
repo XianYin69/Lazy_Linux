@@ -22,7 +22,21 @@ system_check() {
     SESSION_TYPE=""
 
     source "/etc/os-release"
-    OS_TYPE=$ID
+    case $ID in
+        debian|ubuntu|kali)
+            OS_TYPE="debian"
+        ;;
+        fedora|rhel|centos)
+            OS_TYPE="fedora"
+        ;;
+        arch)
+            OS_TYPE="arch"
+        ;;
+        *)
+            OS_TYPE="Linux"
+        ;;
+    esac
+
     sed -i "s/OS_TYPE=.*/OS_TYPE=$OS_TYPE/g" $STATE_SH_PATH
     KERNEL_VERSION=$(uname -r)
     sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=$KERNEL_VERSION/g" $STATE_SH_PATH
@@ -159,6 +173,7 @@ linux_configurer() {
                     source "$NVIDIA_DRIVER_INSTALLER_FILE"
                     cd "$NVIDIA_DRIVER_INSTALLER_PATH"
                     main
+                    cd "../../.."
                     break
                 ;;
                 *)
@@ -228,13 +243,15 @@ waydroid() {
     source "./$LIB_FOLDER_PATH_INDEX"
     source "./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH_INDEX"
     source "./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_INSTALLER_FOLDER_PATH_INDEX"
-    local WAYDROID_INSTALLER_PATH="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_INSTALLER_FOLDER_PATH$INSTALLER_SH_FILE_PATH"
+    local WAYDROID_INSTALLER_FILE="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_INSTALLER_FOLDER_PATH$INSTALLER_SH_FILE_PATH"
+    local WAYDROID_INSTALLER_PATH="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_INSTALLER_FOLDER_PATH"
     
     source "./.index.sh"
     source "./$LIB_FOLDER_PATH_INDEX"
     source "./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH_INDEX"
     source "./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_CONFIGURER_FOLDER_PATH_INDEX"
-    local WAYDROID_APK_INSTALLER_PATH="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_CONFIGURER_FOLDER_PATH$APK_INSTALLER_SH_FILE_PATH"
+    local WAYDROID_APK_INSTALLER_FILE="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_CONFIGURER_FOLDER_PATH$APK_INSTALLER_SH_FILE_PATH"
+    local WAYDROID_APK_INSTALLER_PATH="./$LIB_FOLDER_PATH$WAYDROID_FOLDER_PATH$WAYDROID_CONFIGURER_FOLDER_PATH"
 
     local choice
     while :
@@ -243,13 +260,17 @@ waydroid() {
         read -p ":" choice
         case $choice in
             1)
-                source "$WAYDROID_INSTALLER_PATH"
+                source "$WAYDROID_INSTALLER_FILE"
+                cd "$WAYDROID_INSTALLER_PATH"
                 main
+                cd "../../.."
                 break
             ;;
             2)
-                source "$WAYDROID_APK_INSTALLER_PATH"
+                source "$WAYDROID_APK_INSTALLER_FILE"
+                cd "$WAYDROID_APK_INSTALLER_PATH"
                 main
+                cd "../../.."
                 break
             ;;
             *)
@@ -311,7 +332,7 @@ time_plus
 system_check
 language_selector
 langguage_init
-SYSTEM_OS_TYPE_INFO "$OS_TYPE"
+SYSTEM_OS_TYPE_INFO "$ID"
 SYSTEM_KERNEL_VERSION_INFO "$KERNEL_VERSION"
 SYSTEM_SESSION_TYPE_INFO "$SESSION_TYPE"
 script_choice

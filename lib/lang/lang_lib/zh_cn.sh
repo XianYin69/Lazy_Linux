@@ -777,18 +777,6 @@ WAYDROID_INSTALLER_PART_1_DEBIAN_INFO() {
     echo "检测到Debian/Ubuntu系统，开始安装Waydroid..."
 }
 
-WAYDROID_INSTALLER_PART_1_DEBIAN_SUCCESS() {
-    log_error "依赖包安装成功"
-}
-
-WAYDROID_INSTALLER_PART_1_DEBIAN_ADD_REPO_SUCCESS() {
-    log_error "添加Waydroid仓库成功"
-}
-
-WAYDROID_INSTALLER_PART_1_DEBIAN_INSTALL_SUCCESS() {
-    log_error "Waydroid安装成功"
-}
-
 ##fedora及其衍生版
 WAYDROID_INSTALLER_PART_1_FEDORA_INFO() {
     echo "========================================"
@@ -797,24 +785,37 @@ WAYDROID_INSTALLER_PART_1_FEDORA_INFO() {
     echo "检测到Fedora/CentOS/Red Hat系统，开始安装Waydroid..."
 }
 
-WAYDROID_INSTALLER_PART_1_FEDORA_SUCCESS() {
-    log_error "依赖包安装成功"
-}
-
-WAYDROID_INSTALLER_PART_1_FEDORA_ADD_REPO_SUCCESS() {
-    log_error "添加Waydroid仓库成功"
-}
-
-WAYDROID_INSTALLER_PART_1_FEDORA_INSTALL_SUCCESS() {
-    log_error "Waydroid安装成功"
-}
-
 ##arch及其衍生版
 WAYDROID_INSTALLER_PART_1_ARCH_INFO() {
     echo "========================================"
     echo "       Waydroid安装脚本 - 第1部分       "
     echo "========================================"
     echo "检测到Arch Linux系统，正在安装Waydroid..."
+}
+
+#安装
+WAYDROID_INSTALLER_PART_1_INSTALL_1_SUCCESS() {
+    log_success "Waydroid 依赖安装成功"
+}
+
+WAYDROID_INSTALLER_PART_1_INSTALL_1_ERROR() {
+    log_error "Waydroid 依赖安装失败"
+}
+
+WAYDROID_INSTALLER_PART_1_ADD_REPO_SUCCESS() {
+    log_success "Waydroid 仓库添加成功"
+}
+
+WAYDROID_INSTALLER_PART_1_ADD_REPO_ERROR() {
+    log_error "Waydroid 仓库添加失败"
+}
+
+WAYDROID_INSTALLER_PART_1_INSTALL_2_SUCCESS() {
+    log_success "Waydroid 安装器安装成功"
+}
+
+WAYDROID_INSTALLER_PART_1_INSTALL_2_ERROR() {
+    log_error "Waydroid 安装器安装失败"
 }
 
 ##不支持的系统
