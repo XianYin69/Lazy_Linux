@@ -22,28 +22,39 @@ main() {
     local NVIDIA_DRIVER_INSTALLER_PART2_SH_PATH="./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART2_SH_FILE_PATH"
     local NVIDIA_DRIVER_INSTALLER_PART3_SH_PATH="./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART3_SH_FILE_PATH"
 
+    local NVIDIA_DRIVER_INSTALLER_PATH="./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH"
+
     case $NVIDIA_DRIVER_INSTALLED_STAGE in
         0)
             source "$NVIDIA_DRIVER_INSTALLER_PART1_SH_PATH"
-            main
             sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=1/g' $STATE_SH_PATH
+            cd "$NVIDIA_DRIVER_INSTALLER_PATH"
+            main
+            cd ".."
         ;;
         1)
             if $NVIDIA_DRIVER_INSTALLED_PART_2_TIME == 0; then
                 sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2=.*/NVIDIA_DRIVER_INSTALLED_PART_2=1/g' $STATE_SH_PATH
+                cd "$NVIDIA_DRIVER_INSTALLER_PATH"
                 source "$NVIDIA_DRIVER_INSTALLER_PART2_SH_PATH"
                 main
+                cd ".."
             else
                 sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=2/g' $STATE_SH_PATH
                 sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2=.*/NVIDIA_DRIVER_INSTALLED_PART_2=0/g' $STATE_SH_PATH
                 source "$NVIDIA_DRIVER_INSTALLER_PART2_SH_PATH"
+                cd "$NVIDIA_DRIVER_INSTALLER_PATH"
                 main
+                cd ".."
+
             fi
         ;;
         2)
             sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=0/g' $STATE_SH_PATH
             source "$NVIDIA_DRIVER_INSTALLER_PART3_SH_PATH"
+            cd "$NVIDIA_DRIVER_INSTALLER_PATH"
             main
+            cd ".."
         ;;
     esac
 }
