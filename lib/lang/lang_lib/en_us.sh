@@ -146,7 +146,7 @@ BACKUP_PATH_INFO() {
     echo "Please provide the path of the file or directory to back up"
 }
 
-BACKUP_STORE_PATH_INFO() {
+BACKUP_STORE_INFO() {
     echo "Please provide the path to store the backup file"
 }
 

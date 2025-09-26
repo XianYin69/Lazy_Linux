@@ -150,7 +150,7 @@ BACKUP_PATH_INFO() {
     echo "请提供要备份的文件或目录的路径"
 }
 
-BACKUP_STORE_PATH_INFO() {
+BACKUP_STORE_INFO() {
     echo "请提供备份文件存储的路径"
 }
 

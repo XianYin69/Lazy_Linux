@@ -11,9 +11,6 @@
 # =================================================================================================
  
 main() {
-    # 定义变量
-    local INIT_GIT_RETRY=N
-
     # 安装函数
     git_installer() {
         case $OS_TYPE in
@@ -96,10 +93,8 @@ main() {
         INIT_GIT_CLONE_INFO
         if git clone "$REPO_URL"; then
             INIT_GIT_CLONE_SUCCESS
-            INIT_GIT_RETRY=N
         else
             INIT_GIT_CLONE_ERROR
-            INIT_GIT_RETRY=Y
         fi
     }
 
@@ -108,11 +103,5 @@ main() {
     INIT_GIT_WELCOME_INFO
     config_infomation_of_git
     configure_git
-    while :
-    do
-        clone_respository
-        if [ "$INIT_GIT_RETRY" = "N" ]; then
-            break
-        fi
-    done
+    clone_respository
 }

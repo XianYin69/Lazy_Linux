@@ -4,7 +4,7 @@ LINUX_CONFIGURER_HOME_PATH="./"
 
 #文件索引
 KERNEL_CLEANER_FOLDER_PATH_INDEX="kernel_cleaner/.index.sh"
-NVIDIA_DRIVER_INSTALLLER_FOLDER_PATH_INDEX="nvidia_driver_installer/.index.sh"
+NVIDIA_DRIVER_INSTALLER_FOLDER_PATH_INDEX="nvidia_driver_installer/.index.sh"
 
 KERNEL_CLEANER_FOLDER_PATH="kernel_cleaner/"
 NVIDIA_DRIVER_INSTALLLER_FOLDER_PATH="nvidia_driver_installer/"
