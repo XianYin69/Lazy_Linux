@@ -259,7 +259,7 @@ CHINESIZATION_INPUT_METHOD_CONFIG_INFO() {
 }
 
 CHINESIZATION_INPUT_METHOD_CONFIG_ERROR() {
-    log_warn "If you need to configure the input method related variables, please re-run this script."
+    log_warning "If you need to configure the input method related variables, please re-run this script."
 }
 
 ##input method installation tips
@@ -421,7 +421,7 @@ SUPER_CLEAN_OLD_KERNEL_VERSION_INFO() {
 }
 
 SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
-    log_warn "Latest installed kernel version: $1"
+    log_warning "Latest installed kernel version: $1"
 }
 
 SUPER_CLEAN_OLD_KERNEL_PROCESS_INITRAMFS_INFO() {
@@ -486,7 +486,7 @@ SUPER_CLEAN_OLD_KERNEL_INFO() {
 }
 
 SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING() {
-    log_warn "If you are using an NVIDIA graphics card, you need to reinstall the NVIDIA driver after rebooting."
+    log_warning "If you are using an NVIDIA graphics card, you need to reinstall the NVIDIA driver after rebooting."
 }
 
 SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
@@ -526,11 +526,11 @@ NVIDIA_DRIVER_INSTALLER_PART_1_STEP_2_SUCCESS() {
 
 NVIDIA_DRIVER_INSTALLER_PART_1_END_INFO() {
     log_info " All steps in Part 1 are complete. "
-    log_warn " The system will reboot in 10 seconds to apply changes. You can press Ctrl+C to cancel the reboot. "
+    log_warning " The system will reboot in 10 seconds to apply changes. You can press Ctrl+C to cancel the reboot. "
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_1_REBOOT_WARNING() {
-    log_warn " The system will reboot in 10 seconds to apply changes. You can press Ctrl+C to cancel the reboot. "
+    log_warning " The system will reboot in 10 seconds to apply changes. You can press Ctrl+C to cancel the reboot. "
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_1_REBOOTING_INFO() {
@@ -541,8 +541,8 @@ NVIDIA_DRIVER_INSTALLER_PART_1_REBOOTING_INFO() {
 #nvidia_driver_installer_part2.sh tips
 NVIDIA_DRIVER_INSTALLER_PART_2_ENVIRONMENT_ERROR() {
     log_error " Please run this script in a non-graphical environment "
-    log_warn " Please save all work and close all applications "
-    log_warn " Press Enter to enter single-user mode, or press Ctrl+C to cancel "
+    log_warning " Please save all work and close all applications "
+    log_warning " Press Enter to enter single-user mode, or press Ctrl+C to cancel "
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_2_INFO() {
@@ -567,10 +567,10 @@ NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_READY_INFO() {
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_INSTALLING_WARNING() {
-    log_warn " Driver installation will begin in 30 seconds. "
-    log_warn " Please ensure all work is saved. "
-    log_warn " select "yes" when prompted during installation. "
-    log_warn " Press Enter to continue, or press Ctrl+C to cancel. "
+    log_warning " Driver installation will begin in 30 seconds. "
+    log_warning " Please ensure all work is saved. "
+    log_warning " select "yes" when prompted during installation. "
+    log_warning " Press Enter to continue, or press Ctrl+C to cancel. "
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_3_STEP_1_INFO() {
@@ -591,7 +591,7 @@ NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_INFO() {
 NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SUCCESS() {
     log_info "Secure boot enabled in your bios"
     log_info "Signing kernel moudle"
-    log_warn "You may set a password of MOK"
+    log_warning "You may set a password of MOK"
 
 }
 
@@ -636,7 +636,7 @@ SOFTWARE_INSTALLER_FEDORA_DNF_ERROR() {
 }
 
 SOFTWARE_INSTALLER_FEDORA_DNF_SKIP_WARN() {
-    log_warn "$1 installed then ignored"
+    log_warning "$1 installed then ignored"
 }
 
 ##debian installing function
@@ -657,7 +657,7 @@ SOFTWARE_INSTALLER_DEBIAN_APT_ERROR() {
 }
 
 SOFTWARE_INSTALLER_DEBIAN_APT_SKIP_WARN() {
-    log_warn "$1 installed then ignored"
+    log_warning "$1 installed then ignored"
 }
 
 ##arch安装函数
@@ -678,12 +678,12 @@ SOFTWARE_INSTALLER_ARCH_PACMAN_ERROR() {
 }
 
 SOFTWARE_INSTALLER_ARCH_PACMAN_SKIP_WARN() {
-    log_warn "$1 installed then ignored"
+    log_warning "$1 installed then ignored"
 }
 
 ##snap check and install
 SOFTWARE_INSTALLER_SNAP_NOT_INSTALLED_INFO() {
-    log_warn "Snap not find and installing Snap..."
+    log_warning "Snap not find and installing Snap..."
 }
 
 SOFTWARE_INSTALLER_SNAP_INSTALLED_INFO() {
@@ -707,12 +707,12 @@ SOFTWARE_INSTALLER_SNAP_INSTALL_ERROR() {
 }
 
 SOFTWARE_INSTALLER_SNAP_INSTALL_SKIP_WARN() {
-    log_warn "$1 installed then ignored"
+    log_warning "$1 installed then ignored"
 }
 
 ##flatpak check and install
 SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO() {
-    log_warn "Flatpak not find and installing Flatpak..."
+    log_warning "Flatpak not find and installing Flatpak..."
 }
 
 SOFTWARE_INSTALLER_FLATAPAK_INSTALL_SKIP_WARN() {
@@ -728,7 +728,7 @@ SOFTWARE_INSTALLER_FLATPAK_INSTALL_ERROR() {
 }
 
 SOFTWARE_INSTALLER_FLATPAK_INSTALLER_SKIP_WARN() {
-    log_warn "$1 installed then ignored"
+    log_warning "$1 installed then ignored"
 }
 
 #end

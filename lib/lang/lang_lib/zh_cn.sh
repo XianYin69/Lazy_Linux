@@ -263,7 +263,7 @@ CHINESIZATION_INPUT_METHOD_CONFIG_INFO() {
 }
 
 CHINESIZATION_INPUT_METHOD_CONFIG_ERROR() {
-    log_warn "如果你需要配置输入法相关变量，请重新运行此脚本。"
+    log_warning "如果你需要配置输入法相关变量，请重新运行此脚本。"
 }
 
 ##输入法安装程序
@@ -425,7 +425,7 @@ SUPER_CLEAN_OLD_KERNEL_VERSION_INFO() {
 }
 
 SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
-    log_warn "最新安装的内核版本: $1"
+    log_warning "最新安装的内核版本: $1"
 }
 
 SUPER_CLEAN_OLD_KERNEL_PROCESS_INITRAMFS_INFO() {
@@ -490,7 +490,7 @@ SUPER_CLEAN_OLD_KERNEL_INFO() {
 }
 
 SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING() {
-    log_warn "如果你使用nvidia显卡，则重启后需要重新安装nvidia驱动"
+    log_warning "如果你使用nvidia显卡，则重启后需要重新安装nvidia驱动"
 }
 
 SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
@@ -530,11 +530,11 @@ NVIDIA_DRIVER_INSTALLER_PART_1_STEP_2_SUCCESS() {
 
 NVIDIA_DRIVER_INSTALLER_PART_1_END_INFO() {
     log_info " 第1部分完成！ "
-    log_warn " 重启后请运行nvidia-driver-installer-part-2.sh继续安装NVIDIA驱动"
+    log_warning " 重启后请运行nvidia-driver-installer-part-2.sh继续安装NVIDIA驱动"
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_1_REBOOT_WARNING() {
-    log_warn " 系统将于10秒后重启,你可以按Ctrl+C取消重启"
+    log_warning " 系统将于10秒后重启,你可以按Ctrl+C取消重启"
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_1_REBOOTING_INFO() {
@@ -545,8 +545,8 @@ NVIDIA_DRIVER_INSTALLER_PART_1_REBOOTING_INFO() {
 #nvidia_driver_installer_part2.sh提示信息
 NVIDIA_DRIVER_INSTALLER_PART_2_ENVIRONMENT_ERROR() {
     log_error " !!!现在需要在单用户模式下运行此脚本!!! "
-    log_warn " 请保存所有工作并关闭所有应用程序 "
-    log_warn " 按下Enter进入单用户模式，或按Ctrl+C取消 "
+    log_warning " 请保存所有工作并关闭所有应用程序 "
+    log_warning " 按下Enter进入单用户模式，或按Ctrl+C取消 "
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_2_INFO() {
@@ -571,10 +571,10 @@ NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_READY_INFO() {
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_INSTALLING_WARNING() {
-    log_warn " 驱动安装程序即将在30秒后运行 "
-    log_warn " 请确保已保存所有工作 "
-    log_warn " 安装程序里的选项全选“yes”"
-    log_warn " 按下Enter继续，或按Ctrl+C取消 "
+    log_warning " 驱动安装程序即将在30秒后运行 "
+    log_warning " 请确保已保存所有工作 "
+    log_warning " 安装程序里的选项全选“yes”"
+    log_warning " 按下Enter继续，或按Ctrl+C取消 "
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_3_STEP_1_INFO() {
@@ -595,7 +595,7 @@ NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_INFO() {
 NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SECURE_BOOT_ENABLED_INFO() {
     log_info " 检测到安全启动已启用 "
     log_info " 正在签署内核模块 "
-    log_warn " 你可能需要输入MOK密码 "
+    log_warning " 你可能需要输入MOK密码 "
 }
 
 NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SUCCESS() {
@@ -643,7 +643,7 @@ SOFTWARE_INSTALLER_FEDORA_DNF_ERROR() {
 }
 
 SOFTWARE_INSTALLER_FEDORA_DNF_SKIP_WARN() {
-    log_warn "$1 已经安装，跳过。"
+    log_warning "$1 已经安装，跳过。"
 }
 
 ##debian安装函数
@@ -664,7 +664,7 @@ SOFTWARE_INSTALLER_DEBIAN_APT_ERROR() {
 }
 
 SOFTWARE_INSTALLER_DEBIAN_APT_SKIP_WARN() {
-    log_warn "$1 已经安装，跳过。"
+    log_warning "$1 已经安装，跳过。"
 }
 
 ##arch安装函数
@@ -685,12 +685,12 @@ SOFTWARE_INSTALLER_ARCH_PACMAN_ERROR() {
 }
 
 SOFTWARE_INSTALLER_ARCH_PACMAN_SKIP_WARN() {
-    log_warn "$1 已经安装，跳过。"
+    log_warning "$1 已经安装，跳过。"
 }
 
 ##snap检测及安装
 SOFTWARE_INSTALLER_SNAP_NOT_INSTALLED_INFO() {
-    log_warn "Snap 未安装，正在安装 Snap..."
+    log_warning "Snap 未安装，正在安装 Snap..."
 }
 
 SOFTWARE_INSTALLER_SNAP_INSTALLED_INFO() {
@@ -714,12 +714,12 @@ SOFTWARE_INSTALLER_SNAP_INSTALL_ERROR() {
 }
 
 SOFTWARE_INSTALLER_SNAP_INSTALL_SKIP_WARN() {
-    log_warn "$1 已经通过 Snap 安装，跳过。"
+    log_warning "$1 已经通过 Snap 安装，跳过。"
 }
 
 ##flatpak检测及安装
 SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO() {
-    log_warn "Flatpak 未安装，正在安装 Flatpak..."
+    log_warning "Flatpak 未安装，正在安装 Flatpak..."
 }
 
 SOFTWARE_INSTALLER_FLATAPAK_INSTALL_SKIP_WARN() {
@@ -735,7 +735,7 @@ SOFTWARE_INSTALLER_FLATPAK_INSTALL_ERROR() {
 }
 
 SOFTWARE_INSTALLER_FLATPAK_INSTALLER_SKIP_WARN() {
-    log_warn "$1 已经通过 Flatpak 安装，跳过。"
+    log_warning "$1 已经通过 Flatpak 安装，跳过。"
 }
 
 #结束

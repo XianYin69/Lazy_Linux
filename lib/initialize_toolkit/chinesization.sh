@@ -215,6 +215,8 @@ main() {
         elif [ -f /etc/default/locale ]; then
             sudo echo "LANG=zh_CN.UTF-8" > /etc/default/locale
             sudo locale-gen
+        elif [ -f /etc/locale.conf ]; then
+            
         else
             CHINESIZATION_REBUILD_LOCALE_ERROR
             sleep 5
