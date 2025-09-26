@@ -133,6 +133,10 @@ SYSTEM_KERNEL_VERSION_INFO() {
 SYSTEM_SESSION_TYPE_INFO() {
     log_info_custom "你的桌面服务器是：$1"
 }
+
+LAZY_LINUX_SH_FEDORA_ONLY_ERROR() {
+    log_error "仅支持Fedora系发行版！！！(Only Fedora-based distributions are supported!!!)"
+}
 #结束
 
 #backup.sh提示信息

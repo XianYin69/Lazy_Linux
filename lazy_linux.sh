@@ -147,6 +147,7 @@ linux_configurer() {
             case $choice in
                 1)
                     source "$NVIDIA_DRIVER_INSTALLER_PATH"
+                    cd "$NVIDIA_DRIVER_INSTALLER_PATH"
                     main
                     break
                 ;;
@@ -161,7 +162,7 @@ linux_configurer() {
             esac
         done
     else
-        log_error "仅支持Fedora系发行版！！！(Only Fedora-based distributions are supported!!!)"
+        LAZY_LINUX_SH_FEDORA_ONLY_ERROR
         exit 1
     fi
 }
@@ -209,6 +210,7 @@ software_installer() {
         if [[ $choice =~ ^[Yy] ]]
         then
             source "$SOFTWARE_INSTALLER_PATH"
+            main
             break
         else
             LAZY_LINUX_SH_SOFTWARE_INSTALLER_CHOICE_ERROR
