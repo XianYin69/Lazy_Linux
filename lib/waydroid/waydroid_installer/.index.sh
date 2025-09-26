@@ -1,7 +1,11 @@
 #目录索引
 SUP_WAYDROID_INSTALLER_HOME_PATH=".."
 WAYDROID_INSTALLER_HOME_PATH="."
+
 WAYDROID_INSTALLLER_LIB_FOLDER_PATH_INDEX="waydroid_installer_lib/.index.sh"
+
+WAYDROID_INSTALLLER_LIB_FOLDER_PATH="waydroid_installer_lib/"
+
 
 #文件索引
 INSTALLER_SH_FILE_PATH="installer.sh"
