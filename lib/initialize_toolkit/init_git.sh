@@ -78,6 +78,18 @@ main() {
                 break
             fi
         done
+
+        while :
+        do 
+            INIT_GIT_PATH_INFO
+            read -p ":" REPO_PATH
+            if [ -z "$REPO_PATH" ]
+                then
+                    INIT_GIT_PATH_ERROR
+            else
+                break
+            fi
+        done
     }
 
     # --- 配置Git ---
@@ -91,7 +103,7 @@ main() {
     # --- 克隆仓库 ---
     clone_respository() {
         INIT_GIT_CLONE_INFO
-        if git clone "$REPO_URL"; then
+        if git clone "$REPO_URL" "$REPO_PATH"; then
             INIT_GIT_CLONE_SUCCESS
         else
             INIT_GIT_CLONE_ERROR

@@ -50,13 +50,13 @@ main() {
     if ! command -v git &> /dev/null; then
         case $OS_TYPE in
         debian)
-            apt install git lzip -y
+            sudo apt install git lzip -y
         ;;
         fedora)
-            dnf install git lzip -y
+            sudo dnf install git lzip -y
         ;;
         arch)
-            pacman -S git lzip --noconfirm
+            sudo pacman -S git lzip --noconfirm
         ;;
         esac
     else

@@ -14,7 +14,7 @@ main() {
   if systemctl is-active graphical.target &> /dev/null; then
     NVIDIA_DRIVER_INSTALLER_PART_2_ENVIRONMENT_ERROR
     read -p ":"
-    systemctl isolate rescue.target
+    sudo systemctl isolate rescue.target
   else 
     #step 1
     while :
@@ -33,6 +33,6 @@ main() {
     log_warn ":"
     NVIDIA_DRIVER_INSTALLER_PART_2_DRIVER_INSTALLING_WARNING
     sleep 30
-    export CC="gcc -std=gnu17" $DRIVER_PATH
+    sudo export CC="gcc -std=gnu17" $DRIVER_PATH
   fi
 }

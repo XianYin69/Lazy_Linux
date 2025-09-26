@@ -377,6 +377,13 @@ INIT_GIT_URL_ERROR() {
     log_error "URL cannot be empty. Please re-enter."
 }
 
+INIT_GIT_PATH_INFO() {
+    echo "Please enter the path to store your files"
+}
+
+INIT_GIT_PATH_ERROR() {
+    log_error "Path cannot be empty. Please re-enter"
+}
 ##git configuration
 INIT_GIT_CONFIG_INFO() {
     log_info "Configuring Git credentials..."

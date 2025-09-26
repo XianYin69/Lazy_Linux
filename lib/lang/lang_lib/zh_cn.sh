@@ -381,6 +381,13 @@ INIT_GIT_URL_ERROR() {
     log_error "URL不能为空。请重新输入。"
 }
 
+INIT_GIT_PATH_INFO() {
+    echo "请输入克隆到本地的路径"
+}
+
+INIT_GIT_PATH_ERROR() {
+    log_error "路径不能为空，请重新输入。"
+}
 ##git 配置
 INIT_GIT_CONFIG_INFO() {
     log_info "正在配置Git凭据..."
@@ -490,7 +497,7 @@ SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
     log_info "由于存在新内核，将更新引导配置..."
 }
 
-SUPER_CLEAN_OLD_KERNLE_END_INFO() {
+SUPER_CLEAN_OLD_KERNEL_END_INFO() {
     log_success "所有操作已完成！"
     log_success "建议重启系统以应用更改。"
     log_success "如果系统无法启动，可以通过GRUB菜单选择备份的内核版本启动。"

@@ -13,7 +13,7 @@ main() {
     read -p ":" RESTORE_STORE_PATH
 
     uncompress() {
-        tar -xzvf $RESTORE_STORE_PATH/backup/backup_*.tar.gz -C / $1
+        sudo tar -xzvf $RESTORE_STORE_PATH/backup/backup_*.tar.gz -C / $1
     }
 
     if [ -f $RESTORE_STORE_PATH/backup/backup_*.tar.gz ] && [ -f $RESTORE_STORE_PATH/backup/backup_*.log ]; then

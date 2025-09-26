@@ -47,9 +47,9 @@ main() {
         SOFTWARE_INSTALLER_FEDORA_INSTALLER_INFO
         # 使用dnf安装软件
         for package in "${SOFTWARE_LIST[@]}"; do
-            if dnf list installed "$package" &> /dev/null; then
+            if sudo dnf list installed "$package" &> /dev/null; then
                 SOFTWARE_INSTALLER_FEDORA_DNF_INFO $package
-                if dnf install -y "$package"; then
+                if sudo dnf install -y "$package"; then
                     SOFTWARE_INSTALLER_FEDORA_DNF_SUCCESS $package
                 else
                     SOFTWARE_INSTALLER_FEDORA_DNF_ERROR $package
@@ -65,9 +65,9 @@ main() {
         SOFTWARE_INSTALLER_DEBIAN_INFO
         # 使用apt安装软件
         for package in "${SOFTWARE_LIST[@]}"; do
-            if apt list --installed "$package" &> /dev/null; then
+            if sudo apt list --installed "$package" &> /dev/null; then
                 SOFTWARE_INSTALLER_DEBIAN_APT_INFO
-                if apt install -y "$package"; then
+                if sudo apt install -y "$package"; then
                     SOFTWARE_INSTALLER_DEBIAN_APT_SUCCESS $package
                 else
                     SOFTWARE_INSTALLER_DEBIAN_APT_ERROR $package
@@ -83,9 +83,9 @@ main() {
         SOFTWARE_INSTALLER_ARCH_PACMAN_INFO
         # 使用pacman安装软件
         for package in "${SOFTWARE_LIST[@]}"; do
-            if pacman -Qi "$package" &> /dev/null; then
+            if sudo pacman -Qi "$package" &> /dev/null; then
                 SOFTWARE_INSTALLER_ARCH_PACMAN_INFO $package
-                if pacman -S --noconfirm "$package"; then
+                if sudo pacman -S --noconfirm "$package"; then
                     SOFTWARE_INSTALLER_ARCH_PACMAN_SUCCESS $package
                 else
                     SOFTWARE_INSTALLER_ARCH_PACMAN_ERROR $package
@@ -102,18 +102,18 @@ main() {
             SOFTWARE_INSTALLER_SNAP_NOT_INSTALLED_INFO
             case $OS_TYPE in
                 fedora)
-                    dnf install -y snapd
-                    systemctl enable --now snapd.socket
-                    ln -s /var/lib/snapd/snap /snap
+                    sudo dnf install -y snapd
+                    sudo systemctl enable --now snapd.socket
+                    sudo ln -s /var/lib/snapd/snap /snap
                     ;;
                 debian)
-                    apt update
-                    apt install -y snapd
-                    systemctl enable --now snapd.socket
+                    sudo apt update
+                    sudo apt install -y snapd
+                    sudo systemctl enable --now snapd.socket
                     ;;
                 arch)
-                    pacman -S --noconfirm snapd
-                    systemctl enable --now snapd.socket
+                    sudo pacman -S --noconfirm snapd
+                    sudo systemctl enable --now snapd.socket
                     ;;
             esac
             SOFTWARE_INSTALLER_SNAP_INSTALL_SUCCESS
@@ -142,14 +142,14 @@ main() {
             SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO
             case $OS_TYPE in
                 fedora)
-                    dnf install -y flatpak
+                    sudo dnf install -y flatpak
                     ;;
                 debian)
-                    apt update
-                    apt install -y flatpak
+                    sudo apt update
+                    sudo apt install -y flatpak
                     ;;
                 arch)
-                    pacman -S --noconfirm flatpak
+                    sudo pacman -S --noconfirm flatpak
                     ;;
             esac
             SOFTWARE_INSTALLER_FLATPAK_INSTALL_SUCCESS

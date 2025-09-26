@@ -35,16 +35,16 @@ main() {
     # ---清理boot文件夹下的旧文件
     clean_old_files() {
         SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_BOOT_INFO
-        find /boot -name "config-*" ! -name "config-${lasted_kernel}" -type f ! -delete
-        find /boot -name "System.map-*" ! -name "System.map-${lasted_kernel}" -type f ! -delete
-        find /boot -name "vmlinuz-*" ! -name "vmlinuz-${lasted_kernel}" -type f ! -name "vmlinuz-0-rescue-*" -type f ! -name "vmlinuz-${current_kernel}" -delete
+        sudo find /boot -name "config-*" ! -name "config-${lasted_kernel}" -type f ! -delete
+        sudo find /boot -name "System.map-*" ! -name "System.map-${lasted_kernel}" -type f ! -delete
+        sudo find /boot -name "vmlinuz-*" ! -name "vmlinuz-${lasted_kernel}" -type f ! -name "vmlinuz-0-rescue-*" -type f ! -name "vmlinuz-${current_kernel}" -delete
     }
 
     # --- 清理旧的initramfs文件 ---
     clean_old_initramfs() {
         SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_INFO
         # 找到并删除旧的initramfs文件，保留当前内核的
-        find /boot -name "initramfs-*.img" ! -name "initramfs-${lasted_kernel}.img" -type f -delete
+        sudo find /boot -name "initramfs-*.img" ! -name "initramfs-${lasted_kernel}.img" -type f -delete
         SUPER_CLEAN_OLD_KERNEL_DELETE_INITRAMFS_SUCCESS
     }
 
@@ -52,11 +52,11 @@ main() {
     regenerate_initramfs() {
         SUPER_CLEAN_OLD_KERNEL_REGENERATE_INITRAMFS_INFO
         # 为当前内核生成
-        dracut --force "/boot/initramfs-${current_kernel}.img" "${current_kernel}"
+        sudo dracut --force "/boot/initramfs-${current_kernel}.img" "${current_kernel}"
         # 如果最新内核不同，也为其生成
         if [[ "$current_kernel" != "$lasted_kernel" ]]; then
             SUPER_CLEAN_OLD_KERNEL_REGENERATING_INITRAMFS_INFO
-            dracut --force "/boot/initramfs-${lasted_kernel}.img" "${lasted_kernel}"
+            sudo dracut --force "/boot/initramfs-${lasted_kernel}.img" "${lasted_kernel}"
         fi
         
         if [ $? -eq 0 ]; then
@@ -70,7 +70,7 @@ main() {
     # --- 更新GRUB ---
     update_grub() {
         SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO
-        grub2-mkconfig -o /boot/grub2/grub.cfg
+        sudo grub2-mkconfig -o /boot/grub2/grub.cfg
         if [ $? -eq 0 ]; then
             SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_SUCCESS
         else
@@ -84,11 +84,8 @@ main() {
 
     SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING
 
-    # 检查root权限
-    check_root
-
     #更新系统
-    dnf update -y
+    sudo dnf update -y
 
     # 检查内核版本一致性
     check_kernel_version
@@ -107,7 +104,7 @@ main() {
     fi
 
     #再次更新系统
-    dnf update -y
+    sudo dnf update -y
 
     SUPER_CLEAN_OLD_KERNEL_END_INFO
     exit 0

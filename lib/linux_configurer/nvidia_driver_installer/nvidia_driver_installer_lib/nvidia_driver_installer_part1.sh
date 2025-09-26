@@ -31,10 +31,10 @@ main() {
 
     #step 2
     NVIDIA_DRIVER_INSTALLER_PART_1_STEP_2_INFO
-    echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
-    echo "blacklist nova_core" >> /etc/modprobe.d/blacklist.conf
-    echo "options nvidia NVreg_PreserveVideoMemoryAllocations=1" >> /etc/modprobe.d/nvidia.conf
-    echo "options nvidia-drm modeset=1 fbdev=0" >> /etc/modprobe.d/nvidia.conf
+    sduo echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
+    sudo echo "blacklist nova_core" >> /etc/modprobe.d/blacklist.conf
+    sudo echo "options nvidia NVreg_PreserveVideoMemoryAllocations=1" >> /etc/modprobe.d/nvidia.conf
+    sudo echo "options nvidia-drm modeset=1 fbdev=0" >> /etc/modprobe.d/nvidia.conf
     sudo grub2-mkconfig -o /boot/grub2/grub.cfg
     sudo mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r)-nouveau-nova.img 
     sudo dracut /boot/initramfs-$(uname -r).img $(uname -r)

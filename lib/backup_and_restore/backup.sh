@@ -15,12 +15,12 @@ main(){
     read -p ":" BACKUP_STORE_PATH
 
     mkdir -p $BACKUP_STORE_PATH/backup
-    tar -czvf $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).tar.gz $BACKUP_PATH
+    sudo tar -czvf $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).tar.gz $BACKUP_PATH
     touch $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
     echo "BACKUP_PATH=$BACKUP_PATH" >> $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
     echo "BACKUP_STORE_PATH=$BACKUP_STORE_PATH" >> $BACKUP_STORE_PATH/backup/backup_$(date +%Y%m%d_%H%M%S).txt
 
-    if [ -f $BACKUP_STORE_PATH/backup/backup_*.tar.gz ] && [ -f $BACKUP_STORE_PATH/backup/backup_*.log ]; then
+    if [ -f $BACKUP_STORE_PATH/backup/backup_*.tar.gz ] && [ -f $BACKUP_STORE_PATH/backup/backup_*.txt ]; then
         BACKUP_SUCCESS_INFO
     else
         BACKUP_FAIL_INFO

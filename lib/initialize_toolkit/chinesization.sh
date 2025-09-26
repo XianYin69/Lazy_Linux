@@ -40,19 +40,19 @@ main() {
                 if [ "$INPUT_METHOD" == "fcitx5" ]; then
                     CHINESIZATION_ADD_PROFILE_FCITX_5_INFO
                     #设置环境变量
-                    echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
-                    echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
-                    echo "QT_IM_MODULE=fcitx5" >> /etc/environment
-                    echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
-                    echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+                    sudo echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+                    sudo echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
+                    sudo echo "QT_IM_MODULE=fcitx5" >> /etc/environment
+                    sudo echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+                    sudo echo "GLFW_IM_MODULE=ibus" >> /etc/environment
                     source /etc/profile.d/fcitx5.sh
                     CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS
                 elif [ "$INPUT_METHOD" == "ibus" ]; then
                     CHINESIZATION_ADD_PROFILE_IBUS_INFO
                     #设置环境变量
-                    echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
-                    echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
-                    echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
+                    sudo echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+                    sudo echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+                    sudo echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
                     source /etc/profile.d/ibus.sh
                     CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS
                 fi
@@ -67,17 +67,17 @@ main() {
                         if [ "$INPUT_METHOD" == "fcitx5" ]; then
                             CHINESIZATION_ADD_PROFILE_FCITX_5_INFO
                             #设置环境变量
-                            echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
-                            echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
-                            echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+                            sudo echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+                            sudo echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+                            sudo echo "GLFW_IM_MODULE=ibus" >> /etc/environment
                             source /etc/profile.d/fcitx5.sh
                             CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS
                         elif [ "$INPUT_METHOD" == "ibus" ]; then
                             CHINESIZATION_ADD_PROFILE_IBUS_INFO
                             #设置环境变量
-                            echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
-                            echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
-                            echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
+                            sudo echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+                            sudo echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+                            sudo echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
                             source /etc/profile.d/ibus.sh
                             CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS
                         fi
@@ -87,19 +87,19 @@ main() {
                         if [ "$INPUT_METHOD" == "fcitx5" ]; then
                             CHINESIZATION_ADD_PROFILE_FCITX_5_INFO
                             #设置环境变量
-                            echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
-                            echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
-                            echo "QT_IM_MODULE=fcitx5" >> /etc/environment
-                            echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
-                            echo "GLFW_IM_MODULE=ibus" >> /etc/environment
+                            sudo echo "XMODIFIERS=@im=fcitx5" >> /etc/environment
+                            sudo echo "GTK_IM_MODULE=fcitx5" >> /etc/environment
+                            sduo echo "QT_IM_MODULE=fcitx5" >> /etc/environment
+                            sudo echo "SDL_IM_MODULE=fcitx5" >> /etc/environment
+                            sudo echo "GLFW_IM_MODULE=ibus" >> /etc/environment
                             source /etc/profile.d/fcitx5.sh
                             CHINESIZATION_ADD_PROFILE_FCITX_5_SUCCESS
                         elif [ "$INPUT_METHOD" == "ibus" ]; then
                             CHINESIZATION_ADD_PROFILE_IBUS_INFO
                             #设置环境变量
-                            echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
-                            echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
-                            echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
+                            sudo echo "export XMODIFIERS=@im=ibus" >> $HOME/.bashrc
+                            sudo echo "export GTK_IM_MODULE=ibus" >> $HOME/.bashrc
+                            sudo echo "export QT_IM_MODULE=ibus" >> $HOME/.bashrc
                             source /etc/profile.d/ibus.sh
                             CHINESIZATION_ADD_PROFILE_IBUS_SUCCESS
                         fi
@@ -136,12 +136,12 @@ main() {
     ubuntu_install() {
         CHINESIZATION_INSTALL_UBUNTU_INFO
         #更新软件源
-        apt upgrade -y
+        sudo apt upgrade -y
         #安装输入法
         if [ "$INPUT_METHOD" == "fcitx5" ]; then
-            apt install fcitx5-* -y
+            sudo apt install fcitx5-* -y
         else
-            apt install ibus-* -y
+            sudo apt install ibus-* -y
         fi
         #配置输入法
         input_method_config
@@ -152,12 +152,12 @@ main() {
     fedora_install() {
         CHINESIZATION_INSTALL_FEDORA_INFO
         #更新软件源
-        dnf upgrade -y
+        sudo dnf upgrade -y
         #安装输入法
         if [ "$INPUT_METHOD" == "fcitx5" ]; then
-            dnf install fcitx5-* -y
+            sudo dnf install fcitx5-* -y
         else
-            dnf install ibus-* -y
+            sudo dnf install ibus-* -y
         fi
         #配置输入法
         input_method_config
@@ -168,12 +168,12 @@ main() {
     ARCH_INSTALL() {
         CHINESIZATION_INSTALL_ARCH_INFO
         #更新软件源
-        pacman -Syu --noconfirm
+        sudo pacman -Syu --noconfirm
         #安装输入法
         if [ "$INPUT_METHOD" == "fcitx5" ]; then
-            pacman -S --needed fcitx5
+            sudo pacman -S --needed fcitx5
         else
-            pacman -S --needed ibus
+            sudo pacman -S --needed ibus
         fi
         #配置输入法
         input_method_config
@@ -200,21 +200,21 @@ main() {
         fi
         
         # 备份当前locale文件
-        cp "$locale_file" "${locale_file}.bak_$(date +%Y%m%d_%H%M%S)"
+        sudo cp "$locale_file" "${locale_file}.bak_$(date +%Y%m%d_%H%M%S)"
         
         # 修改locale文件
-        echo "LANG=zh_CN.UTF-8" > "$locale_file"
+        sudo echo "LANG=zh_CN.UTF-8" > "$locale_file"
         
         # 重新生成locale
         if [ -f /etc/locale.gen ]; then
-            sed -i 's/^# *\(zh_CN.UTF-8 UTF-8\)/\1/' /etc/locale.gen
-            locale-gen
+            sudo sed -i 's/^# *\(zh_CN.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+            sudo locale-gen
         elif [ -f /etc/locale.gen.d/ ]; then
-            echo "zh_CN.UTF-8 UTF-8" > /etc/locale.gen.d/zh_CN.conf
-            locale-gen
+            sudo echo "zh_CN.UTF-8 UTF-8" > /etc/locale.gen.d/zh_CN.conf
+            sudo locale-gen
         elif [ -f /etc/default/locale ]; then
-            echo "LANG=zh_CN.UTF-8" > /etc/default/locale
-            locale-gen
+            sudo echo "LANG=zh_CN.UTF-8" > /etc/default/locale
+            sudo locale-gen
         else
             CHINESIZATION_REBUILD_LOCALE_ERROR
             sleep 5
