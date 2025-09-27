@@ -1,0 +1,62 @@
+#!/bin/bash
+# =================================================================================================
+# 脚本名称：installer.sh
+# 描述：英伟达安装脚本前端       
+# 作者：XianYin69       
+# 参考来源：none   
+# 日期：09-16-2025       
+# =================================================================================================
+ 
+main() {
+    source "./.index.sh"
+    source "./$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH".index.sh
+    source "./$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LINUX_CONFIGURER_HOME_PATH".index.sh
+    source "./$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LINUX_CONFIGURER_HOME_PATH$SUP_LIB_HOME_PATH".index.sh
+    source "./$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LINUX_CONFIGURER_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH_INDEX"
+    source "./$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LINUX_CONFIGURER_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    local STATE_SH_PATH="./$SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH$SUP_LINUX_CONFIGURER_HOME_PATH$SUP_LIB_HOME_PATH$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    
+    source "./.index.sh"
+    source "./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH_INDEX"
+    local NVIDIA_DRIVER_INSTALLER_PART1_SH_PATH="./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART1_SH_FILE_PATH"
+    local NVIDIA_DRIVER_INSTALLER_PART2_SH_PATH="./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART2_SH_FILE_PATH"
+    local NVIDIA_DRIVER_INSTALLER_PART3_SH_PATH="./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH$NVIDIA_DRIVER_INSTALLER_PART3_SH_FILE_PATH"
+
+    local NVIDIA_DRIVER_INSTALLER_PATH="./$NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH"
+
+    case $NVIDIA_DRIVER_INSTALLED_STAGE in
+        0)
+            source "$NVIDIA_DRIVER_INSTALLER_PART1_SH_PATH"
+            sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=1/g' $STATE_SH_PATH
+            cd "$NVIDIA_DRIVER_INSTALLER_PATH"
+            main
+            cd ".."
+        ;;
+        1)
+            case $NVIDIA_DRIVER_INSTALLED_PART_2_TIME in
+                0)
+                    sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2=.*/NVIDIA_DRIVER_INSTALLED_PART_2=1/g' $STATE_SH_PATH
+                    cd "$NVIDIA_DRIVER_INSTALLER_PATH"
+                    source "$NVIDIA_DRIVER_INSTALLER_PART2_SH_PATH"
+                    main
+                    cd ".."
+                ;;
+                1)
+                    sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=2/g' $STATE_SH_PATH
+                    sed -i 's/^NVIDIA_DRIVER_INSTALLED_PART_2=.*/NVIDIA_DRIVER_INSTALLED_PART_2=0/g' $STATE_SH_PATH
+                    source "$NVIDIA_DRIVER_INSTALLER_PART2_SH_PATH"
+                    cd "$NVIDIA_DRIVER_INSTALLER_PATH"
+                    main
+                    cd ".."
+                ;;
+            esac
+        ;;
+        2)
+            sed -i 's/^NVIDIA_DRIVER_INSTALLED_STAGE=.*/NVIDIA_DRIVER_INSTALLED_STAGE=0/g' $STATE_SH_PATH
+            source "$NVIDIA_DRIVER_INSTALLER_PART3_SH_PATH"
+            cd "$NVIDIA_DRIVER_INSTALLER_PATH"
+            main
+            cd ".."
+        ;;
+    esac
+}

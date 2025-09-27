@@ -1,0 +1,6 @@
+#目录索引
+SUP_KERNEL_CLEANER_HOME_PATH="../"
+KERNEL_CLEANER_HOME_PATH="./"
+
+#文件索引
+SUPER_CLEAN_OLD_KERNEL_SH_FILE_PATH="super_clean_old_kernel.sh"

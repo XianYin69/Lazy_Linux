@@ -1,0 +1,10 @@
+#目录索引
+SUP_NVIDIA_DRIVER_INSTALLER_HOME_PATH="../"
+NVIDIA_DRIVER_INSTALLER_HOME_PATH="./"
+
+NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH_INDEX="nvidia_driver_installer_lib/.index.sh"
+
+NVIDIA_DRIVER_INSTALLER_LIB_FOLDER_PATH="nvidia_driver_installer_lib/"
+
+#文件索引
+INSTALLER_SH_FILE_PATH="installer.sh"

@@ -1,0 +1,6 @@
+#目录索引
+SUP_SOFTWARE_LIST_HOME_PATH="../"
+SOFTWARE_LIST_HOME_PATH="./"
+
+#文件索引
+SOFTWARE_LIST_TXT_PATH="software_list.txt"
