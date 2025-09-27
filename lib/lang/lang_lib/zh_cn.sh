@@ -137,6 +137,15 @@ SYSTEM_SESSION_TYPE_INFO() {
 LAZY_LINUX_SH_FEDORA_ONLY_ERROR() {
     log_error "仅支持Fedora系发行版！！！(Only Fedora-based distributions are supported!!!)"
 }
+
+LAZY_LINUX_SH_LANGUAGE_OPTION_INFO() {
+    echo "=========================="
+    echo "         语言选择         "
+    echo "=========================="
+    echo "1.中文"
+    echo "2.English"
+    echo "请输入选项"
+}
 #结束
 
 #backup.sh提示信息

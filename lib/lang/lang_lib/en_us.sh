@@ -133,6 +133,15 @@ SYSTEM_KERNEL_VERSION_INFO() {
 SYSTEM_SESSION_TYPE_INFO() {
     log_info_custom "Your sessoin：$1"
 }
+
+LAZY_LINUX_SH_LANGUAGE_OPTION_INFO() {
+    echo "=========================="
+    echo "     Select Language      "
+    echo "=========================="
+    echo "1.中文"
+    echo "2.English"
+    echo "Please enter the option"
+}
 #end
 
 #backup.sh tips

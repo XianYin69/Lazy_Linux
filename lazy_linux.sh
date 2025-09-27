@@ -280,6 +280,27 @@ waydroid() {
     done
 }
 
+#语言选择
+language_option() {
+    source ./.index.sh
+    source "./$VAR_FOLDER_PATH_INDEX"
+    source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH_INDEX"
+    source "./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+    local STATE_SH_PATH="./$VAR_FOLDER_PATH$STATE_FOLDER_PATH$STATE_SH_FILE_PATH"
+
+    LAZY_LINUX_SH_LANGUAGE_OPTION_INFO
+    local OPTION
+    read -p ":" OPTION
+    case $OPTION in
+        1)
+            sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" $STATE_SH_PATH
+        ;;
+        2)
+            sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" $STATE_SH_PATH
+        ;;
+    esac
+}
+
 #菜单
 script_choice() {
     local choice
@@ -307,6 +328,9 @@ script_choice() {
             5)
                 backup_and_restore
                 break
+            ;;
+            6)
+                language_option
             ;;
             *)
                 LAZY_LINUX_SH_SCRIPTS_SELECT_ERROR
