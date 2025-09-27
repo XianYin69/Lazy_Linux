@@ -299,6 +299,7 @@ language_option() {
             sed -i "s/STATE_LANG=.*/STATE_LANG=en/g" $STATE_SH_PATH
         ;;
     esac
+    LAZY_LINUX_SH_LANGUAGE_OPTION_WARN
 }
 
 #菜单

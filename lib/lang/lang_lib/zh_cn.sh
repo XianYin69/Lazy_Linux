@@ -147,6 +147,10 @@ LAZY_LINUX_SH_LANGUAGE_OPTION_INFO() {
     echo "2.English"
     echo "请输入选项"
 }
+
+LAZY_LINUX_SH_LANGUAGE_OPTION_WARN() {
+    log_warn "需要重新运行此脚本以应用修改！！！"
+}
 #结束
 
 #backup.sh提示信息

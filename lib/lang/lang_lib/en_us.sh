@@ -143,6 +143,10 @@ LAZY_LINUX_SH_LANGUAGE_OPTION_INFO() {
     echo "2.English"
     echo "Please enter the option"
 }
+
+LAZY_LINUX_SH_LANGUAGE_OPTION_WARN() {
+    log_warn "Need re-run Lazy_Linux.sh to apply change!!!"
+}
 #end
 
 #backup.sh tips
