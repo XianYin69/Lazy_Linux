@@ -15,7 +15,7 @@ LL(Lazy_Linux， 慵懒Linux！) 是一个用于偷懒的Linux工具集，旨在
 - 初期配置你的系统
    - chinesization.sh   
    - init_git.sh     
-- 配置你的系统 
+- 配置你的系统(实验性)
    - super_clean_old_kernel.sh(Only on fedora)    
    - nvidia_driver_installer(Only on fedora)    
 - 软件一键安装
@@ -44,12 +44,16 @@ LL(Lazy_Linux， 慵懒Linux！) 是一个用于偷懒的Linux工具集，旨在
    ```
 2. 使用脚本 :
    ```bash
-   chomod +x PATH/*
-   bash (本地保存仓库的目录)/*.sh
+   chomod +x <本地保存仓库的目录>/*
+   bash <本地保存仓库的目录>/*.sh
 ---
 
 ## 许可证
 本项目基于 MIT 许可证开源，详情请参阅 [LICENSE](./LICENSE)。
+
+---
+## 开发文档
+[LL 工具开发指导](./doc/dev_doc_cn.md)
 
 ---
 

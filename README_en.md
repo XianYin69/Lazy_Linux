@@ -15,7 +15,7 @@ LL(Lazy_Linux， 慵懒Linux！) is a toolkit for linux，purpose to simplify th
 - Configur your Linux
    - chinesization.sh   
    - init_git.sh     
-- System toolkit(Only on Fedora now)
+- System toolkit(Only on Fedora now)(Experimental)
    - super_clean_old_kernel.sh(Only on fedora)    
    - nvidia_driver_installer(Only on fedora)    
 - Software installer
@@ -50,6 +50,11 @@ LL(Lazy_Linux， 慵懒Linux！) is a toolkit for linux，purpose to simplify th
 
 ## License
 Based on MIT license to open all source code，refer to [LICENSE](./LICENSE) to learn more details。
+
+---
+
+## Development guidebook
+[LL Tool Development Guidance](./doc/dev_doc_en.md)
 
 ---
 
