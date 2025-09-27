@@ -115,6 +115,7 @@ LAZY_LINUX_SH_SCRIPTS_SELECT_INFO() {
     echo "3.系统配置"
     echo "4.WayDroid"
     echo "5.备份与恢复"
+    echo "6.语言选择"
     echo "请输入你要使用的脚本的选项"
 }
 

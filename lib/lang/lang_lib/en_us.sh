@@ -115,6 +115,7 @@ LAZY_LINUX_SH_SCRIPTS_SELECT_INFO() {
     echo "3.System Configuration"
     echo "4.WayDroid Tools"
     echo "5.Backup and Restore"
+    echo "6.Seclect language"
     echo "Please enter the option you want to use"
 }
 

@@ -280,7 +280,7 @@ waydroid() {
     done
 }
 
-#语言选择
+##语言选择
 language_option() {
     source ./.index.sh
     source "./$VAR_FOLDER_PATH_INDEX"
@@ -296,7 +296,7 @@ language_option() {
             sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" $STATE_SH_PATH
         ;;
         2)
-            sed -i "s/STATE_LANG=.*/STATE_LANG=ch/g" $STATE_SH_PATH
+            sed -i "s/STATE_LANG=.*/STATE_LANG=en/g" $STATE_SH_PATH
         ;;
     esac
 }
