@@ -43,26 +43,34 @@ Language：[中文](./dev_guide_cn.md) | [English](./dev_guide_en.md)
 #Your and script's description
 #================================================
 
-#index file
-INDEX
-
-#define variable
-
-local <var_name>="<parameter>"
-
 #define sub_function
 
 function_name() {
-    command
+    #index file
+    INDEX
+
+    #define variable
+    local <var_name>="<parameter>"
+
+    code
 }
 
 #define main_function
 
 main() {
-    function_name
+    #index file
+    INDEX
+
+    #define variable
+    local <var_name>="<parameter>"
+    
+    sub_function
 }
 
 ```
+
+> You need add "main" to your defined script functionin lazy_linux if you want to open your script in main menu.
+
 ---
 ## Index
 ### Index a path    

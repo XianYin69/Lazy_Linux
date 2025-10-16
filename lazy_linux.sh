@@ -302,6 +302,21 @@ language_option() {
     LAZY_LINUX_SH_LANGUAGE_OPTION_WARN
 }
 
+##系统更新
+system_update() {
+    source ./.index.sh
+    source "./$LIB_FOLDER_PATH_INDEX"
+    source "./$LIB_FOLDER_PATH$SYSTEM_UPDATE_FOLDER_PATH_INDEX"
+
+    local SYSTEM_UPDATE_PATH="./$LIB_FOLDER_PATH$SYSTEM_UPDATE_FOLDER_PATH"
+    local SYSTEM_UPDATE_FILE="./$LIB_FOLDER_PATH$SYSTEM_UPDATE_FOLDER_PATH$UBUNTU_UPDATE_SH_FILE_PATH"
+
+    source "$SYSTEM_UPDATE_FILE"
+    cd "$SYSTEM_UPDATE_PATH"
+
+    main
+}
+
 #菜单
 script_choice() {
     local choice
@@ -331,10 +346,16 @@ script_choice() {
                 break
             ;;
             6)
+                system_update
+                break
+            ;;
+            7)
                 language_option
+                break
             ;;
             *)
                 LAZY_LINUX_SH_SCRIPTS_SELECT_ERROR
+                break
             ;;
         esac 
     done
