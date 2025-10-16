@@ -115,7 +115,8 @@ LAZY_LINUX_SH_SCRIPTS_SELECT_INFO() {
     echo "3.系统配置"
     echo "4.WayDroid"
     echo "5.备份与恢复"
-    echo "6.语言选择"
+    echo "6.系统更新"
+    echo "7.语言选择"
     echo "请输入你要使用的脚本的选项"
 }
 
@@ -866,5 +867,16 @@ WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_ERROR() {
 
 WAYDROID_INSTALLER_PART_2_END_INFO() {
     log_info "Waydroid安装结束"
+}
+#结束
+
+##system_update.sh提示信息
+UBUNTU_UPDATE_SH_OS_TYPE_INFO() {
+    log_info "检测到系统为Ubuntu，开始更新..."
+}
+
+UBUNTU_UPDATE_SH_UNSUPPORTED_OS_TYPE_ERROR() {
+    log_error "不支持的操作系统类型！此脚本仅支持Ubuntu。"
+    log_error_custom "将在5秒后退出..."
 }
 #结束

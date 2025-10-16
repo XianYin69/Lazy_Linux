@@ -115,7 +115,8 @@ LAZY_LINUX_SH_SCRIPTS_SELECT_INFO() {
     echo "3.System Configuration"
     echo "4.WayDroid Tools"
     echo "5.Backup and Restore"
-    echo "6.Seclect language"
+    echo "6.System Update"
+    echo "7.Seclect language"
     echo "Please enter the option you want to use"
 }
 
@@ -859,5 +860,16 @@ WAYDROID_INSTALLLER_PART_2_RUN_SCRIPT_ERROR() {
 
 WAYDROID_INSTALLER_PART_2_END_INFO() {
     log_info "Waydroid installed"
+}
+#end
+
+##system_update.sh tips
+UBUNTU_UPDATE_SH_OS_TYPE_INFO() {
+    log_info "Detected Ubuntu system, starting update..."
+}
+
+UBUNTU_UPDATE_SH_UNSUPPORTED_OS_TYPE_ERROR() {
+    log_error "Unsupported operating system type! This script only supports Ubuntu."
+    log_error_custom "Exiting in 5 seconds..."
 }
 #end
