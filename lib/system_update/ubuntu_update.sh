@@ -21,7 +21,7 @@ main() {
         sudo apt update
         sudo apt upgrade -y
         sudo apt autoremove -y
-        sudo do-release-upgrade
+        sudo do-release-upgrade -d
     else 
         UBUNTU_UPDATE_SH_UNSUPPORTED_OS_TYPE_ERROR
         sleep 5
