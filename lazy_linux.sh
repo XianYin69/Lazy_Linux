@@ -88,14 +88,9 @@ langguage_init() {
     local ZH_CN_SH_PATH="./$LIB_FOLDER_PATH$LANG_FOLDER_PATH$LANG_LIB_FOLDER_PATH$ZH_CN_SH_FILE_PATH"
 
     source $STATE_SH_PATH
-    if [[ "$TTY_MODE" == "N" ]]
+    if [[ "STATE_LANG" == "ch" ]]
     then
-        if [[ "$STATE_LANG" == "ch" ]]
-        then
-            source "$ZH_CN_SH_PATH"
-        else
-            source "$EN_US_SH_PATH"
-        fi
+        source "$ZH_CN_SH_PATH"
     else
         source "$EN_US_SH_PATH"
     fi

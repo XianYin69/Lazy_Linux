@@ -1,0 +1,3 @@
+#ignore vsc fold
+.vscode
+.vscode/*
