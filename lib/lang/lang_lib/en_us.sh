@@ -449,6 +449,10 @@ SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
     echo "========================================"
 }
 
+SUPER_CLEAN_OLD_KERNEL_VERSION_SAME_INFO() {
+    log_success "Kernel version is consistent: $1"
+}
+
 ##Delete old boot files
 SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_BOOT_INFO() {
     log_info "Cleaning up old boot files..."
@@ -506,6 +510,10 @@ SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING() {
 
 SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
     log_info "Updating boot configuration due to the presence of a new kernel..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_UPDATE_GRUB_INFO() {
+    log_info "Updating GRUB configuration due to kernel changes..."
 }
 
 SUPER_CLEAN_OLD_KERNEL_END_INFO() {
@@ -603,6 +611,12 @@ NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_INFO() {
     echo " Step 2 - Sign Kernel Modules "
 }
 
+NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SECURE_BOOT_ENABLED_INFO() {
+    log_info "Secure boot enabled in your BIOS"
+    log_info "Signing kernel modules"
+    log_warning "You may need to set a MOK password"
+}
+
 NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SUCCESS() {
     log_info "Secure boot enabled in your bios"
     log_info "Signing kernel moudle"
@@ -633,8 +647,18 @@ SOFTWARE_INSTALLER_FILE_READING_SUCCESS() {
     log_success "Read file successfully"
 }
 
+SOFTWARE_INSTALLER_SOFTWARE_LIST_PATH_SUCCESS() {
+    log_success "Software list file found and loaded successfully"
+}
+
 ##fedora installing function
 SOFTWARE_INSTALELR_FEDORA_INSTALLER_INFO() {
+        log_info "Install software"
+    }
+
+    SOFTWARE_INSTALLER_FEDORA_INSTALLER_INFO() {
+        log_info "Installing software for Fedora..."
+    } {
     log_info "Install software"
 }
 
@@ -730,6 +754,10 @@ SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO() {
     log_warning "Flatpak not find and installing Flatpak..."
 }
 
+SOFTWARE_INSTALLER_FLATPAK_INSTALL_INFO() {
+    log_info "Installing $1 via Flatpak..."
+}
+
 SOFTWARE_INSTALLER_FLATAPAK_INSTALL_SKIP_WARN() {
     log_info "Flatpak installed"
 }
@@ -802,6 +830,13 @@ WAYDROID_INSTALLER_PART_1_ARCH_INFO() {
 }
 
 #Installing
+WAYDROID_INSTALLELR_PART_1_ARCH_INFO() {
+    echo "========================================"
+    echo "       Install Waydroid - part 1       "
+    echo "========================================"
+    echo "Checked that Arch Linux universe，installing Waydroid..."
+}
+
 WAYDROID_INSTALLER_PART_1_INSTALL_1_SUCCESS() {
     log_success "Waydroid dependences installed"
 }

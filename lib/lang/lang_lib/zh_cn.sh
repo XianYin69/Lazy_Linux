@@ -453,6 +453,10 @@ SUPER_CLEAN_OLD_KERNEL_LASTED_VERSION_INFO() {
     echo "========================================"
 }
 
+SUPER_CLEAN_OLD_KERNEL_VERSION_SAME_INFO() {
+    log_success "内核版本一致：$1"
+}
+
 ##删除旧的启动文件
 SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_BOOT_INFO() {
     log_info "正在清理旧的启动文件..."
@@ -510,6 +514,10 @@ SUPER_CLEAN_OLD_KERNEL_IF_INSTALLED_NVIDIA_WARNING() {
 
 SUPER_CLEAN_OLD_KERNEL_DELETE_OLD_GRUB_INFO() {
     log_info "由于存在新内核，将更新引导配置..."
+}
+
+SUPER_CLEAN_OLD_KERNEL_UPDATE_GRUB_INFO() {
+    log_info "正在更新GRUB配置..."
 }
 
 SUPER_CLEAN_OLD_KERNEL_END_INFO() {
@@ -640,10 +648,18 @@ SOFTWARE_INSTALLER_FILE_READING_SUCCESS() {
     log_success "软件列表文件读取成功"
 }
 
+SOFTWARE_INSTALLER_SOFTWARE_LIST_PATH_SUCCESS() {
+    log_success "软件列表文件找到并加载成功"
+}
+
 ##fedora安装函数
 SOFTWARE_INSTALELR_FEDORA_INSTALLER_INFO() {
     log_info "开始安装软件..."
 }
+
+    SOFTWARE_INSTALLER_FEDORA_INSTALLER_INFO() {
+        log_info "正在为Fedora安装软件..."
+    }
 
 SOFTWARE_INSTALLER_FEDORA_DNF_INFO() {
     log_info "正在安装 $1 ..."
@@ -737,6 +753,10 @@ SOFTWARE_INSTALLER_FLATPAK_NOT_INSTALLED_INFO() {
     log_warning "Flatpak 未安装，正在安装 Flatpak..."
 }
 
+SOFTWARE_INSTALLER_FLATPAK_INSTALL_INFO() {
+    log_info "正在通过 Flatpak 安装 $1..."
+}
+
 SOFTWARE_INSTALLER_FLATAPAK_INSTALL_SKIP_WARN() {
     log_info "已经安装 Flatpak，跳过。"
 }
@@ -798,6 +818,13 @@ WAYDROID_INSTALLER_PART_1_FEDORA_INFO() {
     echo "       Waydroid安装脚本 - 第1部分    "
     echo "========================================"
     echo "检测到Fedora/CentOS/Red Hat系统，开始安装Waydroid..."
+}
+
+WAYDROID_INSTALLELR_PART_1_ARCH_INFO() {
+    echo "========================================"
+    echo "       Waydroid安装脚本 - 第1部分       "
+    echo "========================================"
+    echo "检测到Arch Linux系统，正在安装Waydroid..."
 }
 
 ##arch及其衍生版

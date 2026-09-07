@@ -305,3 +305,30 @@
 - **函数变量**：格式为 `FUNCTION_NAME()`，其值为函数体内的 echo/log 输出内容
 - **`-`** 表示该变量仅存在于一种语言包中
 - 相同功能但不同拼写的变量（如 `WAYDROID_INSTALLLER_` 与 `WAYDROID_INSTALLER_`）保留原样
+
+## 新增语言变量 (2025-09-07)
+
+以下变量在本次扫描中发现但之前未在语言文件中定义，现已补充：
+
+| 变量名 | 英文值 (en_us) | 中文值 (zh_cn) | 来源脚本 |
+|--------|---------------|---------------|---------|
+| `SUPER_CLEAN_OLD_KERNEL_VERSION_SAME_INFO()` | `log_success "Kernel version is consistent: $1"` | `log_success "内核版本一致：$1"` | `super_clean_old_kernel.sh` |
+| `SUPER_CLEAN_OLD_KERNEL_UPDATE_GRUB_INFO()` | `log_info "Updating GRUB configuration due to kernel changes..."` | `log_info "正在更新GRUB配置..."` | `super_clean_old_kernel.sh` |
+| `SOFTWARE_INSTALLER_SOFTWARE_LIST_PATH_SUCCESS()` | `log_success "Software list file found and loaded successfully"` | `log_success "软件列表文件找到并加载成功"` | `software_installer.sh` |
+| `SOFTWARE_INSTALLER_FEDORA_INSTALLER_INFO()` | `log_info "Installing software for Fedora..."` | `log_info "正在为Fedora安装软件..."` | `software_installer.sh` |
+| `SOFTWARE_INSTALLER_FLATPAK_INSTALL_INFO()` | `log_info "Installing $1 via Flatpak..."` | `log_info "正在通过 Flatpak 安装 $1..."` | `software_installer.sh` |
+| `NVIDIA_DRIVER_INSTALLER_PART_3_STEP_2_SECURE_BOOT_ENABLED_INFO()` | `log_info "Secure boot enabled in your BIOS"
+log_info "Signing kernel modules"
+log_warning "You may need to set a MOK password"` | `log_info "检测到安全启动已启用"
+log_info "正在签署内核模块"
+log_warning "你可能需要输入MOK密码"` | `nvidia_driver_installer_part3.sh` |
+| `WAYDROID_INSTALLELR_PART_1_ARCH_INFO()` | `echo "========================================"
+       Install Waydroid - part 1       
+========================================
+Checked that Arch Linux universe，installing Waydroid...` | `echo "========================================"
+       Waydroid安装脚本 - 第1部分       
+========================================
+检测到Arch Linux系统，正在安装Waydroid...` | `waydroid_installer_part1.sh` |
+
+---
+
